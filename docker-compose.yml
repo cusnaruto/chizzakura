@@ -1,0 +1,11 @@
+services:
+  db-mysql:
+    image: mysql:8.0
+    container_name: db-mysql-chizzakura
+    #restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chizzakura
+    ports:
+      - "3308:3306"
+#docker compose -f docker-compose.yml -p chizzakura up -d
