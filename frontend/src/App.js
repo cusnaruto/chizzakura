@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import "./styles/App.css";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -17,6 +18,9 @@ function App() {
     <div>
       <h1>Frontend - Backend Connection</h1>
       <p>{message}</p>
+      <button>
+        <Link to="/um-o-eregister">Go to UM_O_ERegister</Link>
+      </button>
     </div>
   );
   //   return (
