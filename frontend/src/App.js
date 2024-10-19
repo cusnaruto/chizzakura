@@ -19,7 +19,7 @@ function App() {
       <h1>Frontend - Backend Connection</h1>
       <p>{message}</p>
       <button>
-        <Link to="/um-o-eregister">Go to UM_O_ERegister</Link>
+        <Link to="/um_o_eregister">Go to UM_O_ERegister</Link>
       </button>
     </div>
   );
