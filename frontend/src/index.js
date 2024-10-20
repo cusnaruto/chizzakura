@@ -12,7 +12,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/um_o_eregister" />} />
+        <Route path="/" element={<Navigate to="/um_oe_login" />} />
         <Route path="/um_o_eregister" element={<UM_O_ERegister />} />
         <Route path="/um_oe_login" element={<UM_OE_Login />} />
         <Route path="/app" element={<App />} />
