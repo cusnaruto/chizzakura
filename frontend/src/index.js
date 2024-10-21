@@ -1,13 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import "./styles/index.css";
 import App from "./App";
+import UM_O_ERegister from "./pages/UM_O_ERegister";
 import reportWebVitals from "./reportWebVitals";
+import UM_OE_Login from "./pages/UM_OE_Login";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/um_o_eregister" />} />
+        <Route path="/um_o_eregister" element={<UM_O_ERegister />} />
+        <Route path="/um_oe_login" element={<UM_OE_Login />} />
+        <Route path="/app" element={<App />} />
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 
