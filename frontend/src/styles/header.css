@@ -1,0 +1,78 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #F9BDC0;
+  border-bottom: 1px solid #eee;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 50px;
+  width: 50px;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  padding: 5px 15px; /* Add padding to make space for the border */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+}
+
+.nav a.active-link {
+  color: #333;
+  background-color: #fff; 
+  border: 2px solid #fff;
+  padding: 3px 13px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  padding: 5px;
+  width: 150px;
+}
+
+.icon {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.user-icon {
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.user-icon.active-link {
+  color: #333;
+  background-color: #fff; 
+  border: 2px solid #fff;
+  border-radius: 50%; /* Make the border rounded */
+  padding: 3px; /* Add padding to make space for the border */
+}
