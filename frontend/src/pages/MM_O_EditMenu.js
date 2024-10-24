@@ -265,7 +265,7 @@ const MmOEditMenu = () => {
                 </div>
               </div>
               <button type="submit" className="save-button">Save</button>
-              <button type="button" className="delete-button" onClick={handleDelete}>Delete</button>
+              <button type="button" className="del-button" onClick={handleDelete}>Delete</button>
               <button type="button" className="cancel-button" onClick={() => setIsModalOpen(false)}>Cancel</button>
             </form>
           </div>
