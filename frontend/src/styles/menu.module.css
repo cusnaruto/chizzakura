@@ -1,21 +1,23 @@
 .container {
   padding: 20px;
   background-color: #ffccd2;
+  align-items: flex-start; /* Change from center to flex-start for natural flow */
+  min-height: 90vh; /* Default full-screen height */
 }
 
-.top-bar {
+.topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.search-container {
+.searchContainer {
   display: flex;
   align-items: center;
 }
 
-.search-input {
+.searchInput {
   padding: 10px;
   font-size: 16px;
   border-radius: 10px;
@@ -23,7 +25,7 @@
   width: 200px;
 }
 
-.sort-container select {
+.sortContainer select {
   padding: 10px;
   font-size: 16px;
   border-radius: 10px;
@@ -32,7 +34,7 @@
   background-color: #f9f9f9;
 }
 
-.edit-button {
+.editButton {
   background-color: #333;
   color: #fff;
   padding: 5px 10px;
@@ -46,7 +48,7 @@
   justify-content: center;
 }
 
-.edit-button:hover {
+.editButton:hover {
   background-color: #555;
 }
 
@@ -72,17 +74,17 @@
   margin: 10px 0;
 }
 
-.card .item-text {
+.card .itemText {
   font-size: 1.5em;
   font-weight: bold;
 }
 
-.card .item-price {
+.card .itemPrice {
   font-size: 1.2em;
   color: #555;
 }
 
-.image-placeholder {
+.imagePlaceholder {
   width: 100%;
   height: 150px;
   border-radius: 5px;
@@ -102,7 +104,7 @@
   padding: 5px 10px;
 }
 
-.page-button {
+.pageButton {
   background-color: #333;
   width: 55px;
   color: #fff;
@@ -112,20 +114,19 @@
   border: none;
 }
 
-.page-button:hover {
+.pageButton:hover {
   background-color: #555;
 }
 
-.page-button.disabled {
+.pageButton.disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-.page-button.active {
+.pageButton.active {
   background-color: #f0e9e9;
   color: #000000;
 }
-
 
 /* css for box open to edit the item */
 .modal {
@@ -140,7 +141,7 @@
   align-items: center;
 }
 
-.modal-content {
+.modalContent {
   background-color: pink;
   padding: 20px;
   border-radius: 10px;
@@ -151,33 +152,34 @@
   align-items: center;
 }
 
-.form-group {
+.formGroupMenuRow {
+  display: flex;
+  align-items: center;
   margin-bottom: 15px;
   width: 100%;
 }
 
-.form-group label {
-  display: block;
+.formGroupMenuRow label {
   margin-bottom: 5px;
 }
 
-.form-group input {
+.formGroupMenuRow input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.form-group select {
+.formGroupMenuRow select {
   width: 66%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.save-button,
-.delete-button,
-.cancel-button {
+.saveButton,
+.deleteButton,
+.cancelButton {
   background-color: #333;
   color: #fff;
   padding: 10px 20px;
@@ -188,13 +190,13 @@
   margin-top: 10px;
 }
 
-.save-button:hover,
-.delete-button:hover,
-.cancel-button:hover {
+.saveButton:hover,
+.deleteButton:hover,
+.cancelButton:hover {
   background-color: #555;
 }
 
-.del-button {
+.delButton {
   background-color: #df2929;
   color: #fff;
   padding: 10px 20px;
@@ -205,7 +207,7 @@
   margin-top: 10px;
 }
 
-.del-button:hover {
+.delButton:hover {
   background-color: #f08080;
 }
 
@@ -216,29 +218,29 @@
   margin-bottom: 20px;
 }
 
-.file-input-container {
+.fileInputContainer {
   display: flex;
   align-items: center;
 }
 
-.file-input-container input[type="file"] {
+.fileInputContainer input[type="file"] {
   display: none;
 }
 
-.file-input-label {
+.fileInputLabel {
   background-color: #333;
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px;;
+  margin-right: 10px;
 }
 
-.file-input-label:hover {
+.fileInputLabel:hover {
   background-color: #555;
 }
 
-.file-name {
+.fileName {
   font-size: 14px;
   color: #333;
 }
