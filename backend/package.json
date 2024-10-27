@@ -19,6 +19,7 @@
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "mysql2": "^3.11.3",
+    "react-router-dom": "^6.27.0",
     "sequelize": "^6.37.4"
   },
   "devDependencies": {
