@@ -1,0 +1,110 @@
+.order-confirmation {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+  
+.header {
+    display: flex;
+    margin-bottom: 10px;
+}
+  
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+  
+.customer-info, .summary {
+    margin-bottom: 20px;
+}
+
+.title-info {
+    display: flex;
+    align-items: center;
+}
+
+.title-info p {
+    margin-right: 10px; 
+}
+
+.edit-info-btn {
+    background-color: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.edit-info-btn img {
+    width: 20px;
+    height: 20px;
+}
+  
+.order-items {
+    display: flex;
+    flex-direction: column;
+}
+  
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+  
+.pizza-img {
+    width: 40px;
+    height: 40px;
+}
+  
+.view-all-btn {
+    background-color: #f8d7da;
+    border: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+  
+.summary p {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+}
+  
+.payment-method {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+  
+.payment-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px;
+    flex: 1;
+    margin: 0 5px;
+    cursor: pointer;
+}
+  
+.payment-btn.active {
+    background-color: #ff6b6b;
+    color: white;
+}
+  
+.send-order-btn {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    cursor: pointer;
+}
+  

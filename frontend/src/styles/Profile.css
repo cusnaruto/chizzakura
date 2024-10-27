@@ -1,0 +1,109 @@
+.profile-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    background-color: #ffe0e0;
+}
+
+.profile-container .log-out-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: aquamarine;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.profile-pic {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.select-avt .edit-image {
+    display: flex;
+    align-items: center;
+}
+
+.edit-image .upload-input {
+    color: #ee4242;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-right: 5px; 
+}
+
+.upload-input:hover {
+    color: #f70909;
+}
+
+.choose-btn button {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.choose-btn .update-btn {
+    background-color: #cf0b0b;
+    margin-right: 10px;
+}
+
+.choose-btn .cancel-btn {
+    background-color: #615e5e;
+}
+
+.profile-container hr {
+    border: none;             /* Loại bỏ bất kỳ viền mặc định nào */
+    border-top: 1px solid #181717; /* Đặt đường kẻ ngang */
+    margin: 10px 0;            /* Khoảng cách trên dưới */
+    width: 100%;               /* Độ rộng 100% */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    /* margin-top: 20px; */
+}
+
+.user-info h2 {
+    margin-bottom: 10px;
+    color: rgb(21, 18, 242);
+}
+
+.user-info-form label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.user-info-form input {
+    width: 94vw;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #d3d3d3;
+}
+
+.save-btn {
+    position: absolute;
+    transform: translate(-50%);
+    left: 50%;
+    bottom: 40px;
+    width: 80%;
+    padding: 5px 10px;
+    background-color: #343232;
+    color: rgb(251, 245, 245);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
