@@ -6,38 +6,17 @@ import "../styles/LoginRegister.css";
 
 import logoImg from "../assets/Image_C/logo.jpg";
 
-const UM_C_Register = () => {
+const UM_C_Login = () => {
 
     const navigate = useNavigate();
 
     return (
-        <div className="register-page">
-            <div className="register-container">
+        <div className="login-page">
+            <div className="login-container">
                 <img src={logoImg} alt="logo-page" />
                 <h1>Chizza</h1>
 
-                <form className="register-form">
-
-                    <div className="user-name form-group">
-                        <label htmlFor="Name">Name:</label>
-                        <input
-                            type="text"
-                            name="Name"
-                            id="Name"
-                            placeholder="Enter your name" 
-                        />
-                    </div>
-
-                    <div className="phone form-group">
-                        <label htmlFor="Phone">Phone:</label>
-                        <input
-                            type="number"
-                            name="Phone"
-                            id="Phone"
-                            placeholder="Enter your phone number" 
-                        />
-                    </div>
-
+                <form className="login-form">
                     <div className="user-login-name form-group">
                         <label htmlFor="Login_Name">Login Name:</label>
                         <input
@@ -58,11 +37,11 @@ const UM_C_Register = () => {
                         />
                     </div>
                                         
-                    <button type="submit" className="register-btn" onClick={() => navigate('/profile')}>Register</button>
+                    <button type="submit" className="login-btn" onClick={() => navigate('/profile')}>Login</button>
 
-                    <div className="had-account">
-                        <p>Have an account yet?</p>
-                        <a href="/login">Login</a>
+                    <div className="no-have-account">
+                        <p>Don't have an account yet?</p>
+                        <a href="/register">Register</a>
                     </div>
                 </form>
             </div>
@@ -72,4 +51,4 @@ const UM_C_Register = () => {
 
 }
 
-export default UM_C_Register;
+export default UM_C_Login;
