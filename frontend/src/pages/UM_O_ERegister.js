@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/register.css';
+import '../styles/auth.css';
 import logo from '../assets/Emu_02_st.ayaka.one.webp';
 
 const Register = () => {
@@ -28,11 +28,11 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="auth-container">
       <div className="logo">
         <img src={logo} alt="Chizza Logo Here" />
       </div>
-      <h1>CHIZZA</h1>
+      <h1>Bỏ</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Username:</label>
@@ -79,6 +79,9 @@ const Register = () => {
           />
         </div>
         <button type="submit">Sign Up</button>
+        <div className="signup-link">
+          <a href="/um_oe_login">Already have an account? Sign In</a>
+        </div>
       </form>
     </div>
   );
