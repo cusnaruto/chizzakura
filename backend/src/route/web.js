@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   createUser,
   findUserByUsername,
-} = require("../controllers/userController");
+} = require("../controller/userController");
 
 router.post("/create-customer", createUser);
 
