@@ -1,0 +1,151 @@
+.product-page-container {
+    width: 100vw;
+    height: 120vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffe0e0;
+}
+  
+  /* Tabs cho lựa chọn */
+.tabs-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 10px 0;
+}
+  
+.tab {
+    padding: 10px;
+    background-color: #d3d3d3;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+  /* Grid sản phẩm */
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* text-align: center; */
+}
+  
+.product-card {
+    background-color: #fca5a5;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+  
+.product-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+  
+.product-price {
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+}
+  
+.product-name {
+    font-size: 16px;
+    margin: 10px 0;
+}
+  
+.product-rating {
+    color: gold;
+}
+  
+.add-to-cart-btn {
+    background-color: #ff5a5f;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+  /* Phân trang */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+  
+.page-btn {
+    margin: 0 5px;
+    background-color: #fca5a5;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.view-cart-btn {
+    width: 100px;
+    height: 100px;
+    background-color: #ff5a5f;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+/* css for cart */
+
+.product-sold {
+    margin-top: 5px;
+    position: relative;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff5a5f;
+    color: rgb(22, 20, 20);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.quantity-controls {
+    display: flex;
+    width: 100px;
+    margin-left: 30px;
+    background-color: #ff5a5f;
+    justify-content: center; 
+}
+  
+.quantity-controls button {
+    background-color: transparent;
+    font-size: 20px;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+}
+
+/* css for rateFood */
+.product-rate {
+    margin-top: 10px;
+}
+
+.footer-page {
+    margin-top: 5px;
+    background-color: #f76d72;
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+}
+
+  
