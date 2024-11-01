@@ -2,22 +2,22 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import "../styles/LoginRegister.css";
+import styles from "../../styles/customer/CLoginRegister.module.css";
 
-import logoImg from "../assets/Image_C/logo.jpg";
+import logoImg from "../../assets/Image_C/logo.jpg";
 
 const UM_C_Login = () => {
 
     const navigate = useNavigate();
 
     return (
-        <div className="login-page">
-            <div className="login-container">
+        <div className={styles['login-page']}>
+            <div className={styles['login-container']}>
                 <img src={logoImg} alt="logo-page" />
                 <h1>Chizza</h1>
 
-                <form className="login-form">
-                    <div className="user-login-name form-group">
+                <form className={styles['login-form']}>
+                    <div className={`${styles['user-login-name']} ${styles['form-group']}`}>
                         <label htmlFor="Login_Name">Login Name:</label>
                         <input
                             type="text"
@@ -27,7 +27,7 @@ const UM_C_Login = () => {
                         />
                     </div>
 
-                    <div className="user-password form-group">
+                    <div className={`${styles['user-password']} ${styles['form-group']}`}>
                         <label htmlFor="password">Password:</label>
                         <input
                             type="password"
@@ -37,9 +37,9 @@ const UM_C_Login = () => {
                         />
                     </div>
                                         
-                    <button type="submit" className="login-btn" onClick={() => navigate('/profile')}>Login</button>
+                    <button type="submit" className={styles['login-btn']} onClick={() => navigate('/profile')}>Login</button>
 
-                    <div className="no-have-account">
+                    <div className={styles['no-have-account']}>
                         <p>Don't have an account yet?</p>
                         <a href="/register">Register</a>
                     </div>
