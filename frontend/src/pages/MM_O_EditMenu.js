@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import Header from '../components/O_Header';
 import { FaEdit } from 'react-icons/fa';
-import '../styles/menu.css';
-
+import styles from '../styles/menu.module.css'; // Import the CSS module
 
 // troll image
 import mariIdolru from '../assets/mari_idolru.jpg';
 import cute from '../assets/hail.png';
-
 
 const MmOEditMenu = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -147,18 +145,18 @@ const MmOEditMenu = () => {
   return (
     <div>
       <Header />
-      <div className="container">
-        <div className="top-bar">
-          <div className="search-container">
+      <div className={styles.container}>
+        <div className={styles.topBar}>
+          <div className={styles.searchContainer}>
             <input
               type="text"
-              className="search-input"
+              className={styles.searchInput}
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearchChange}
             />
           </div>
-          <div className="sort-container">
+          <div className={styles.sortContainer}>
             <select value={sortOption} onChange={handleSortChange}>
               <option value="">Sort by</option>
               <option value="price-asc">Price: Low to High</option>
@@ -168,21 +166,21 @@ const MmOEditMenu = () => {
             </select>
           </div>
         </div>
-        <div className="grid">
+        <div className={styles.grid}>
           {currentItems.map((item, index) => (
-            <div key={index} className="card">
-              <img src={item.img} alt="Mari Idolru" className="image-placeholder" />
-              <p className="item-text">{item.text}</p>
-              <p className="item-price">{item.price}</p>
-              <button className="edit-button" onClick={() => handleEdit(index)}>
+            <div key={index} className={styles.card}>
+              <img src={item.img} alt="Mari Idolru" className={styles.imagePlaceholder} />
+              <p className={styles.itemText}>{item.text}</p>
+              <p className={styles.itemPrice}>{item.price}</p>
+              <button className={styles.editButton} onClick={() => handleEdit(index)}>
                 <FaEdit /> Edit
               </button>
             </div>
           ))}
         </div>
-        <div className="pagination">
+        <div className={styles.pagination}>
           <button
-            className={`page-button ${currentPage === 1 ? 'disabled' : ''}`}
+            className={`${styles.pageButton} ${currentPage === 1 ? styles.disabled : ''}`}
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -191,14 +189,14 @@ const MmOEditMenu = () => {
           {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((page) => (
             <button
               key={page}
-              className={`page-button ${currentPage === page ? 'active' : ''}`}
+              className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
               onClick={() => handlePageChange(page)}
             >
               {page}
             </button>
           ))}
           <button
-            className={`page-button ${currentPage === totalPages ? 'disabled' : ''}`}
+            className={`${styles.pageButton} ${currentPage === totalPages ? styles.disabled : ''}`}
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
@@ -209,12 +207,12 @@ const MmOEditMenu = () => {
 
       {/* Modal for editing item details */}
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-          <img src={currentItem.img} alt={currentItem.text} />
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <img src={currentItem.img} alt={currentItem.text} />
             <h2>Edit Item</h2>
             <form onSubmit={handleFormSubmit}>
-              <div className="form-group">
+              <div className={styles.formGroupMenuRow}>
                 <label htmlFor="text">Name</label>
                 <input
                   type="text"
@@ -225,7 +223,7 @@ const MmOEditMenu = () => {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroupMenuRow}>
                 <label htmlFor="price">Price</label>
                 <input
                   type="text"
@@ -236,7 +234,7 @@ const MmOEditMenu = () => {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className={styles.formGroupMenuRow}>
                 <label htmlFor="category">Category</label>
                 <select
                   id="category"
@@ -251,27 +249,26 @@ const MmOEditMenu = () => {
                   <option value="Desserts">Desserts</option>
                 </select>
               </div>
-              <div className="form-group">
+              <div className={styles.formGroupMenuRow}>
                 <label htmlFor="img">Image</label>
-                <div className="file-input-container">
-                  <label htmlFor="img" className="file-input-label">Choose File</label>
+                <div className={styles.fileInputContainer}>
+                  <label htmlFor="img" className={styles.fileInputLabel}>Choose File</label>
                   <input
                     type="file"
                     id="img"
                     name="img"
                     onChange={handleFileChange}
                   />
-                  <span className="file-name">{fileName}</span>
+                  <span className={styles.fileName}>{fileName}</span>
                 </div>
               </div>
-              <button type="submit" className="save-button">Save</button>
-              <button type="button" className="del-button" onClick={handleDelete}>Delete</button>
-              <button type="button" className="cancel-button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+              <button type="submit" className={styles.saveButton}>Save</button>
+              <button type="button" className={styles.delButton} onClick={handleDelete}>Delete</button>
+              <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>
             </form>
           </div>
         </div>
       )}
-
     </div>
   );
 };

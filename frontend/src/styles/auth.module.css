@@ -1,4 +1,4 @@
-.auth-container {
+.authContainer {
     background-color: #f8b3c8;
     width: 100vw; /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
@@ -34,7 +34,7 @@
     align-items: center;
   }
   
-  .form-group {
+  .formGroup {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
@@ -73,16 +73,16 @@
     background-color: #555;
   }
   
-  .signup-link {
+  .signupLink {
     margin-top: 15px;
     font-size: 16px;
   }
   
-  .signup-link a {
+  .signupLink a {
     color: #e53935;
     text-decoration: none;
   }
   
-  .signup-link a:hover {
+  .signupLink a:hover {
     text-decoration: underline;
   }
