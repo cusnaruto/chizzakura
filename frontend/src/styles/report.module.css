@@ -1,0 +1,89 @@
+.reportPage {
+    background-color: #f7d9db;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tabButtons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+.tabButtons button {
+    background-color: #ff5a5a;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tabButtons button:hover, .activeTab {
+    background-color: #d94d4d;
+}
+.tabButtons button img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+.reportSection {
+    background-color: #ffccd2;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.reportTable {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.reportTable th, .reportTable td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.itemImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.printButton {
+    background-color: #ff5a5a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 90%;
+    max-width: 800px;
+    align-self: center;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.printButton:hover {
+    background-color: #d94d4d;
+}
