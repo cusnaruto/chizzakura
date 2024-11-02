@@ -7,14 +7,36 @@
   border-bottom: 1px solid #eee;
 }
 
-.logo-container {
+.logoutButton {
+    background-color: #333333;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    justify-content: center;
+    margin: 10px;
+}
+
+.logoutButton:hover {
+    background-color: #1a1a1a;
+}
+
+.logoutIcon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.logoContainer {
   display: flex;
   align-items: center;
 }
 
 .logo {
   height: 50px;
-  width: 50px;
+  width: auto;
+  justify-content: center;
+  margin: 5px;
 }
 
 .nav {
@@ -30,7 +52,7 @@
   border-radius: 5px; /* Add border-radius for rounded corners */
 }
 
-.nav a.active-link {
+.nav a.activeLink {
   color: #333;
   background-color: #fff; 
   border: 2px solid #fff;
@@ -69,7 +91,7 @@
   margin-right: 10px;
 }
 
-.user-icon.active-link {
+.user-icon.activeLink {
   color: #333;
   background-color: #fff; 
   border: 2px solid #fff;

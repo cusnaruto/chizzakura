@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/auth.css';
+import '../styles/auth.module.css';
 import logo from '../assets/Emu_02_st.ayaka.one.webp';
 
 const Register = () => {
