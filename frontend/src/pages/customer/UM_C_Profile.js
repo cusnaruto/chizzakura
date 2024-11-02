@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Profile.css';
+import styles from '../../styles/customer/CProfile.module.css';
 
-import defaultAvtPic from '../assets/Image_C/default_avt.jpg';
+import defaultAvtPic from '../../assets/Image_C/default_avt.jpg';
 
-import C_Footer from '../components/C_Footer';
-import C_Header from '../components/C_Header';
+import C_Footer from '../../components/customer/C_Footer';
+import C_Header from '../../components/customer/C_Header';
 
 const UM_C_Profile = () => {
 
@@ -54,40 +54,46 @@ const UM_C_Profile = () => {
     };
 
     return (
-        <div className="profile-page">
+        <div className={styles['profile-page']}>
             {/* Header */}
             <C_Header />
 
-            <div className="profile-container">
-                <button className="log-out-btn" onClick={() => navigate('/login')}>Log out</button>
-                <div className="profile-pic">
+            <div className={styles['profile-container']}>
+                <div className={styles['profile-pic']}>
+                    <button className={styles['log-out-btn']} onClick={() => navigate('/login')}>Log out</button>
                     <img src={userInfo.profilePic || defaultAvtPic} alt="profile" />
-                    <div className="select-avt">
-                        <div className="edit-image">
-                            <p>Tải lên từ </p>
-                            <label htmlFor="upload-input" className='upload-input'>máy</label>
-                            <p>của bạn</p>
-                            {/* <label htmlFor="upload-input" className="upload-button"></label> */}
+                    <div className={styles['select-avt']}>
+                        {/* <p>Tải lên từ máy của bạn</p> */}
+                        <label 
+                        htmlFor="upload-input" 
+                        className={`${styles['upload-input']} ${styles['edit-image']}`}>
+                            Tải lên từ máy của bạn
                             <input 
-                                type="file" 
-                                id="upload-input" 
-                                onChange={handleImageUpload}
-                                style = {{display: 'none'}}
+                            type="file" 
+                            id="upload-input" 
+                            onChange={handleImageUpload}
+                            style = {{display: 'none'}}
                             />
-                        </div>
-                        <div className="choose-btn">
-                            <button className="update-btn" onClick={hanldeSave}>Accept</button>
-                            <button className="cancel-btn">Cancel</button>
+                        </label>
+                        {/* <p>của bạn</p> */}
+                        {/* <label htmlFor="upload-input" className={styles['upload-button"></label> */}
+                        
+                        {/* <div className={styles[]}>
+                            
+                        </div> */}
+                        <div className={styles['choose-btn']}>
+                            <button className={styles['update-btn']} onClick={hanldeSave}>Accept</button>
+                            <button className={styles['cancel-btn']}>Cancel</button>
                         </div>
                     </div>
                 </div>
 
                 <hr />
 
-                <div className="user-info">
-                    <h2 className='title-user-info'>User Information</h2>
+                <div className={styles['user-info']}>
+                    <h2 className={styles['title-user-info']}>User Information</h2>
 
-                    <form className="user-info-form">
+                    <form className={styles['user-info-form']}>
 
                         <label>Name</label>
                         <input
@@ -124,7 +130,7 @@ const UM_C_Profile = () => {
 
                 </div>
 
-                <button className="save-btn" onClick={hanldeSave}>Save</button>
+                <button className={styles['save-btn']} onClick={hanldeSave}>Save</button>
 
             </div>
             

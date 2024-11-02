@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Checkout.css';
+import styles from '../../styles/customer/CCheckout.module.css';
 
-import pizzaImg from '../assets/Image_C/product_2.1.jpg';
-import editImg from '../assets/Image_C/edit.png';
+import pizzaImg from '../../assets/Image_C/product_2.1.jpg';
+import editImg from '../../assets/Image_C/edit.png';
 
 const OM_C_Checkout = () => {
     const navigate = useNavigate();
@@ -26,19 +26,20 @@ const OM_C_Checkout = () => {
     const discountedAmount = totalAmount * (1 - orderData.discount / 100);
 
     return (
-        <div className="order-confirmation">
-            <div className="header">
-                <button className="back-btn" onClick={() => navigate('/cart')}>←</button>
-                <h2>Xác nhận đơn hàng</h2>
+        <div className={styles['order-confirmation']}>
+            <div class="header">
+                <div class="arrow" onClick={() => navigate('/cart')}>←</div>
+                <div>Xác nhận đơn hàng</div>
             </div>
-            <div className="customer-info">
-                <div className="title-info">
+
+            <hr />
+
+            <div className={styles['customer-info']}>
+                <div className={styles['title-info']}>
                     <p>
-                        <strong>Thông tin người nhận:</strong>
+                        Thông tin khách hàng
                     </p>
-                    <button className="edit-info-btn">
-                        <img src={editImg} alt="editInfo" />
-                    </button>
+                    <img src={editImg} alt="Edit" />
                 </div>
                 <p>{orderData.customerName} | {orderData.phoneNumber}</p>
                 <p><strong>Vị trí bàn:</strong> {orderData.tableNumber}</p>
@@ -46,38 +47,38 @@ const OM_C_Checkout = () => {
 
             <hr />
 
-            <div className="order-items">
+            <div className={styles['order-items']}>
                 {orderData.items.map((item, index) => (
-                <div key={index} className="order-item">
-                    <img src={pizzaImg} alt="Pizza" className="pizza-img" />
+                <div key={index} className={styles['order-item']}>
+                    <img src={pizzaImg} alt="Pizza" className={styles['pizza-img']} />
                     <span>1x {item.name}</span>
                     <span>${item.price}</span>
                 </div>
                 ))}
             </div>
 
-            <button className="view-all-btn">Xem tất cả</button>
+            <button className={styles['view-all-btn']}>Xem tất cả</button>
 
-            <div className="summary">
+            <div className={styles['summary']}>
                 <p>Tổng cộng: <span>${totalAmount}</span></p>
                 <p>Giảm giá: <span>{orderData.discount}%</span></p>
                 <p>Còn lại: <span>${discountedAmount}</span></p>
             </div>
 
-            <div className="payment-method">
+            <div className={styles['payment-method']}>
                 <button 
-                className={`payment-btn ${paymentMethod === 'cash' ? 'active' : ''}`} 
+                className={`${styles['payment-btn']} ${paymentMethod === 'cash' ? 'active' : ''}`} 
                 onClick={() => setPaymentMethod('cash')}>
                 Tiền mặt
                 </button>
                 <button 
-                className={`payment-btn ${paymentMethod === 'qr' ? 'active' : ''}`} 
+                className={`${styles['payment-btn']} ${paymentMethod === 'qr' ? 'active' : ''}`} 
                 onClick={() => setPaymentMethod('qr')}>
                 QR Code
                 </button>
             </div>
 
-            <button className="send-order-btn">Send order</button>
+            <button className={styles['send-order-btn']}>Send order</button>
         </div>
     );
 };
