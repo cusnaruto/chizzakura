@@ -2,23 +2,23 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import "../styles/LoginRegister.css";
+import styles from "../../styles/customer/CLoginRegister.module.css";
 
-import logoImg from "../assets/Image_C/logo.jpg";
+import logoImg from "../../assets/Image_C/logo.jpg";
 
 const UM_C_Register = () => {
 
     const navigate = useNavigate();
 
     return (
-        <div className="register-page">
-            <div className="register-container">
+        <div className={styles['register-page']}>
+            <div className={styles['register-container']}>
                 <img src={logoImg} alt="logo-page" />
                 <h1>Chizza</h1>
 
-                <form className="register-form">
+                <form className={styles['register-form']}>
 
-                    <div className="user-name form-group">
+                    <div className={`${styles['user-name']} ${styles['form-group']}`}>
                         <label htmlFor="Name">Name:</label>
                         <input
                             type="text"
@@ -28,7 +28,7 @@ const UM_C_Register = () => {
                         />
                     </div>
 
-                    <div className="phone form-group">
+                    <div className={`${styles['phone']} ${styles['form-group']}`}>
                         <label htmlFor="Phone">Phone:</label>
                         <input
                             type="number"
@@ -38,7 +38,7 @@ const UM_C_Register = () => {
                         />
                     </div>
 
-                    <div className="user-login-name form-group">
+                    <div className={`${styles['user-login-name']} ${styles['form-group']}`}>
                         <label htmlFor="Login_Name">Login Name:</label>
                         <input
                             type="text"
@@ -48,7 +48,7 @@ const UM_C_Register = () => {
                         />
                     </div>
 
-                    <div className="user-password form-group">
+                    <div className={`${styles['user-password']} ${styles['form-group']}`}>
                         <label htmlFor="password">Password:</label>
                         <input
                             type="password"
@@ -58,9 +58,9 @@ const UM_C_Register = () => {
                         />
                     </div>
                                         
-                    <button type="submit" className="register-btn" onClick={() => navigate('/profile')}>Register</button>
+                    <button type="submit" className={styles['register-btn']} onClick={() => navigate('/profile')}>Register</button>
 
-                    <div className="had-account">
+                    <div className={styles['had-account']}>
                         <p>Have an account yet?</p>
                         <a href="/login">Login</a>
                     </div>
