@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import Header from '../components/O_Header';
-import styles from '../styles/report.module.css';
+import React, { useState, useEffect } from 'react';
+import Header from '../../components/O_Header';
+import styles from '../../styles/owner/report.module.css';
 import { FaDollarSign, FaBox, FaConciergeBell } from "react-icons/fa"; // Import the icons
 
 const ReportPage = () => {
     const [activeTab, setActiveTab] = useState('items');
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     // Sample data for item reports
     const itemReports = [
-        { id: 1, name: 'Burger', category: 'Main Course', price: '5$', sales: 150, rating: 4.2, reviews: 45, total: '750$', img: '/path/to/image' },
-        { id: 2, name: 'Fries', category: 'Side', price: '2$', sales: 200, rating: 4.5, reviews: 60, total: '400$', img: '/path/to/image' },
+        { id: 1, name: 'Burger', category: 'Main Course', price: '5$', sales: 150, rating: 4.2, reviews: 45, total: '750$' },
+        { id: 2, name: 'Fries', category: 'Side', price: '2$', sales: 200, rating: 4.5, reviews: 60, total: '400$' },
         // Add more items as needed
     ];
 
@@ -29,8 +38,6 @@ const ReportPage = () => {
 
     // Function to render the Items Report table
     const renderItemsReport = () => (
-        // add report time stamp
-        // add report by category, items,... (optional)
         <div className={styles.reportSection}>
             <h2>Items Report</h2>
             <table className={styles.reportTable}>
@@ -44,7 +51,6 @@ const ReportPage = () => {
                         <th>Rating</th>
                         <th>Reviews</th>
                         <th>Total</th>
-                        <th>Image</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,7 +64,6 @@ const ReportPage = () => {
                             <td>{item.rating}</td>
                             <td>{item.reviews}</td>
                             <td>{item.total}</td>
-                            <td><img src={item.img} alt={item.name} className={styles.itemImage} /></td>
                         </tr>
                     ))}
                 </tbody>
@@ -104,6 +109,9 @@ const ReportPage = () => {
                 </div>
 
                 <main className={styles.mainContent}>
+                    <div className={styles.reportSummary}>
+                        <p>Report generated on: {currentTime.toLocaleString()}</p>
+                    </div>
                     {activeTab === 'items' && renderItemsReport()}
                     {activeTab === 'revenue' && renderRevenueReport()}
                     {activeTab === 'service' && renderServiceReport()}
