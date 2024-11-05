@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaAccessibleIcon } from "react-icons/fa";
 import { NavLink } from 'react-router-dom';
-import styles from '../styles/header.module.css'; // Import the CSS file
+import styles from '../styles/owner/header.module.css';
 import logo from '../assets/Emu_02_st.ayaka.one.webp';
 
 const Header = () => {

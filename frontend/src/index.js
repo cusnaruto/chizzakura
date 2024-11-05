@@ -13,16 +13,24 @@ import UM_C_Profile from "./pages/customer/UM_C_Profile";
 import UM_C_Home from './pages/customer/UM_C_Home';
 import UM_C_Login from "./pages/customer/UM_C_Login";
 import UM_C_Register from "./pages/customer/UM_C_Register";
-import UmOERegister from "./pages/UM_O_ERegister";
+
+import UmOERegister from "./pages/owner/UM_O_ERegister";
 import UmOELogin from "./pages/UM_OE_Login";
-import MmOEditMenu from "./pages/MM_O_EditMenu";
-import UmOProfile from "./pages/UM_O_Profile";
-import TmOTable from "./pages/TM_O_Table";
-import TmOTableEdit from "./pages/TM_O_TableEdit";
-import UmOEditEInfo from "./pages/UM_O_EditEInfo";
-import DmODiscount from "./pages/DM_O_Discount";
-import BrOReport from "./pages/BR_O_Report";
+import MmOEditMenu from "./pages/owner/MM_O_EditMenu";
+import UmOProfile from "./pages/owner/UM_O_Profile";
+import TmOTable from "./pages/owner/TM_O_Table";
+import TmOTableEdit from "./pages/owner/TM_O_TableEdit";
+import UmOEditEInfo from "./pages/owner/UM_O_EditEInfo";
+import DmODiscount from "./pages/owner/DM_O_Discount";
+import BrOReport from "./pages/owner/BR_O_Report";
 import reportWebVitals from "./reportWebVitals";
+
+import TmETable from "./pages/employee/TM_E_Table";
+import MmEEditMenu from "./pages/employee/MM_E_EditMenu";
+import OmEConfirmOrder from "./pages/employee/OM_E_ConfirmOrder";
+import OmEListOrder from "./pages/employee/OM_E_ListOrder";
+import CiEChat from "./pages/employee/CI_E_Chat";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -38,7 +46,9 @@ root.render(
         <Route path="/rateFood" element={<CI_C_RateItem />} />
         <Route path="/checkout" element={<OM_C_Checkout />} />
         <Route path="/chat" element={<CI_C_Chat />} />
+
         <Route path="/" element={<Navigate to="/" />} />
+
         <Route path="/admin/um_o_eregister" element={<UmOERegister />} />
         <Route path="/admin/um_oe_login" element={<UmOELogin />} />
         <Route path="/admin/mm_o_editmenu" element={<MmOEditMenu />} />
@@ -48,6 +58,13 @@ root.render(
         <Route path="/admin/um_o_editeinfo" element={<UmOEditEInfo />} />
         <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
         <Route path="/admin/br_o_report" element={<BrOReport />} />
+
+        <Route path="/employee/tm_e_table" element={<TmETable />} />
+        <Route path="/employee/mm_e_editmenu" element={<MmEEditMenu />} />
+        <Route path="/employee/om_e_confirmorder" element={<OmEConfirmOrder />} />
+        <Route path="/employee/om_e_listorder" element={<OmEListOrder />} />
+        <Route path="/employee/ci_e_chat" element={<CiEChat />} />
+
         <Route path="/app" element={<App />} />
       </Routes>
     </Router>

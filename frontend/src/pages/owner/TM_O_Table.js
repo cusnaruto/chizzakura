@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
-import Header from '../components/O_Header';
-import styles from '../styles/table.module.css';
-import tableImage from '../assets/table_topview.png';
+import Header from '../../components/O_Header';
+import styles from '../../styles/owner/table.module.css';
+import tableImage from '../../assets/table_topview.png';
 
 const TM_O_Table = () => {
 
