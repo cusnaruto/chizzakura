@@ -41,6 +41,11 @@
     width: 100%;
     height: 100%;
 }
+.reportSummary {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
 .reportSection {
     background-color: #ffccd2;
     padding: 20px;

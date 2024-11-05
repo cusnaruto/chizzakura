@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/O_Header';
+import Header from '../../components/O_Header';
 import { FaUserEdit, FaUserTimes, FaSave, FaPlusCircle } from 'react-icons/fa';
-import styles from '../styles/list.module.css';
+import styles from '../../styles/owner/list.module.css';
 
 const UM_O_EditEInfo = () => {
     const [employees, setEmployees] = useState([]);
