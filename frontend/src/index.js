@@ -16,6 +16,10 @@ import UM_C_Register from "./pages/customer/UM_C_Register";
 
 import UmOERegister from "./pages/owner/UM_O_ERegister";
 import UmOELogin from "./pages/UM_OE_Login";
+
+import MM_E_EditMenu from "./pages/employee/MM_E_EditMenu";
+import CI_E_Chat from "./pages/employee/CI_E_Chat";
+
 import MmOEditMenu from "./pages/owner/MM_O_EditMenu";
 import UmOProfile from "./pages/owner/UM_O_Profile";
 import TmOTable from "./pages/owner/TM_O_Table";
@@ -23,6 +27,7 @@ import TmOTableEdit from "./pages/owner/TM_O_TableEdit";
 import UmOEditEInfo from "./pages/owner/UM_O_EditEInfo";
 import DmODiscount from "./pages/owner/DM_O_Discount";
 import BrOReport from "./pages/owner/BR_O_Report";
+
 import reportWebVitals from "./reportWebVitals";
 
 import TmETable from "./pages/employee/TM_E_Table";
@@ -59,11 +64,11 @@ root.render(
         <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
         <Route path="/admin/br_o_report" element={<BrOReport />} />
 
+        <Route path="/employee/menu" element={<MM_E_EditMenu />} />
+        <Route path="/employee/chat" element={<CI_E_Chat />} />
         <Route path="/employee/tm_e_table" element={<TmETable />} />
-        <Route path="/employee/mm_e_editmenu" element={<MmEEditMenu />} />
         <Route path="/employee/om_e_confirmorder" element={<OmEConfirmOrder />} />
         <Route path="/employee/om_e_listorder" element={<OmEListOrder />} />
-        <Route path="/employee/ci_e_chat" element={<CiEChat />} />
 
         <Route path="/app" element={<App />} />
       </Routes>

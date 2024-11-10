@@ -13,10 +13,18 @@
     width: 100%;
     margin: 10px 0;
 }
+
+.tabs-container .active {
+    background-color: #8b5e3c;
+    color: #fff;
+}
   
 .tab {
     padding: 10px;
+    width: auto;
     background-color: #d3d3d3;
+    color: #1b1a1a;
+    margin: 0;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -24,6 +32,7 @@
   /* Grid sản phẩm */
 .product-grid {
     display: grid;
+    flex: 1;
     grid-template-columns: 1fr 1fr;
     position: relative;
     gap: 10px;
@@ -83,9 +92,18 @@
     justify-content: center;
     margin-top: 20px;
 }
+
+.pagination .active {
+    background-color: #ff5a5f;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
   
 .page-btn {
     margin: 0 5px;
+    width: auto;
     background-color: #fca5a5;
     padding: 5px 10px;
     border-radius: 5px;
@@ -122,6 +140,7 @@
     height: 20px;
     cursor: pointer;
 }
+
 
 .quantity-controls {
     display: flex;
