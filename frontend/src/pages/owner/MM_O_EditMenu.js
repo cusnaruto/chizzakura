@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Header from '../components/O_Header';
+import Header from '../../components/O_Header';
 import { FaEdit } from 'react-icons/fa';
-import styles from '../styles/menu.module.css'; // Import the CSS module
+import styles from '../../styles/owner/menu.module.css';
 
 // troll image
-import mariIdolru from '../assets/mari_idolru.jpg';
-import cute from '../assets/hail.png';
+import mariIdolru from '../../assets/mari_idolru.jpg';
+import cute from '../../assets/hail.png';
 
 const MmOEditMenu = () => {
   const [searchTerm, setSearchTerm] = useState('');

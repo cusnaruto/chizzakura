@@ -1,10 +1,5 @@
-// đây ko có trong feature sheet
-// ko biết có quan trọng ko
-// vì admin chỉ có 1 mà ngoài admin ra ko ai xem đc thì có cần trang admin k?
-
-
 import React from 'react';
-import Header from '../components/O_Header';
+import Header from '../../components/E_Header';
 
 const UM_O_Profile = () => {
     return (
