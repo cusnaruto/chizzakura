@@ -22,6 +22,8 @@ import TmOTableEdit from "./pages/TM_O_TableEdit";
 import UmOEditEInfo from "./pages/UM_O_EditEInfo";
 import DmODiscount from "./pages/DM_O_Discount";
 import BrOReport from "./pages/BR_O_Report";
+import MM_E_EditMenu from "./pages/employee/MM_E_EditMenu";
+import CI_E_Chat from "./pages/employee/CI_E_Chat";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -48,6 +50,8 @@ root.render(
         <Route path="/admin/um_o_editeinfo" element={<UmOEditEInfo />} />
         <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
         <Route path="/admin/br_o_report" element={<BrOReport />} />
+        <Route path="/employee/menu" element={<MM_E_EditMenu />} />
+        <Route path="/employee/chat" element={<CI_E_Chat />} />
         <Route path="/app" element={<App />} />
       </Routes>
     </Router>
