@@ -4,6 +4,7 @@ import styles from '../../styles/customer/CChat.module.css';
 
 import defaultAvtPic from '../../assets/Image_C/default_avt.jpg';
 import employeeAvtPic from '../../assets/Image_C/avtE.png';
+import homeImg from '../../assets/Image_C/home.png';
 
 const CI_C_Chat = () => {
 
@@ -21,6 +22,10 @@ const CI_C_Chat = () => {
             <div className={styles['chat-header']}>
                 <img src={employeeAvtPic} alt="Avatar" className={styles['chat-employee-avt']} />
                 <h2 className={styles['chat-employee-name']}>Nhan vien quan</h2>
+                <div className={styles['home-back']} onClick={() => navigate('/home')}>
+                    <img src={homeImg} alt="Home" className={styles['nav-icon']} />
+                    <span>Home</span>
+                </div>
             </div>
 
             <div className={styles['chat-box']}>
