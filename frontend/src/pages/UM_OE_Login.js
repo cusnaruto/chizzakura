@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../styles/auth.module.css';
+import styles from '../styles/owner/auth.module.css';
 import logo from '../assets/Emu_02_st.ayaka.one.webp';
 
 const Login = () => {

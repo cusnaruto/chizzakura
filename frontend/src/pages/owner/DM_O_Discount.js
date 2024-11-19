@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/O_Header';
+import Header from '../../components/O_Header';
 import { FaEdit, FaTrash, FaSave, FaPlusCircle } from 'react-icons/fa';
-import styles from '../styles/list.module.css';
+import styles from '../../styles/owner/list.module.css';
 
 const DM_O_Discount = () => {
     const [discounts, setDiscounts] = useState([]);

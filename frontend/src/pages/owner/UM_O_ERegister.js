@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import '../styles/auth.module.css';
-import logo from '../assets/Emu_02_st.ayaka.one.webp';
+import '../../styles/owner/auth.module.css';
+import logo from '../../assets/Emu_02_st.ayaka.one.webp';
 
 const Register = () => {
   const [formData, setFormData] = useState({
