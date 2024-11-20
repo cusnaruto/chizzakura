@@ -1,4 +1,4 @@
-const Discount = require("../models/Discount");
+const Discount = require("../model/Discount");
 
 // Create a new Discount
 const createDiscount = async (req, res) => {
@@ -41,7 +41,7 @@ const getDiscountById = async (req, res) => {
 const updateDiscount = async (req, res) => {
   try {
     const [updated] = await Discount.update(req.body, {
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (updated) {
       const updatedDiscount = await Discount.findByPk(req.params.id);
@@ -59,7 +59,7 @@ const updateDiscount = async (req, res) => {
 const deleteDiscount = async (req, res) => {
   try {
     const deleted = await Discount.destroy({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (deleted) {
       res.status(204).json();
