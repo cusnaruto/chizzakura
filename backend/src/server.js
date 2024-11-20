@@ -3,6 +3,7 @@ const cors = require("cors");
 const express = require("express");
 const path = require("path");
 const app = express();
+const http = require('http').Server(app);
 const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME;
 const configViewEngine = require("./config/viewengine");
@@ -12,6 +13,21 @@ const tableRoutes = require("./routes/tableRoutes");
 const itemRoutes = require("./routes/itemRoutes");
 const discountRoutes = require("./routes/discountRoutes");
 //config template engine
+
+const socketIO = require('socket.io')(http, {
+  cors: {
+      origin: "http://localhost:3000"
+  }
+});
+
+//Add this before the app.get() block
+socketIO.on('connection', (socket) => {
+  console.log(`⚡: ${socket.id} user just connected!`);
+  socket.on('disconnect', () => {
+    console.log('🔥: A user disconnected');
+  });
+});
+
 configViewEngine(app);
 
 app.use(cors());
@@ -24,6 +40,6 @@ app.use("/TM/", tableRoutes);
 app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
 
-app.listen(port, hostname, () => {
+http.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}!`);
 });
