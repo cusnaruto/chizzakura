@@ -1,9 +1,9 @@
 require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
-const path = require("path");
+// const path = require("path");
 const app = express();
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 8080;
 const hostname = process.env.HOST_NAME;
 const configViewEngine = require("./config/viewengine");
 //import routes

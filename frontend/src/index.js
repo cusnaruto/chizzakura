@@ -1,16 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import "./styles/index.css";
 import App from "./App";
 
-import MM_C_Menu from './pages/customer/MM_C_Menu';
-import OM_C_Cart from './pages/customer/OM_C_Cart';
-import CI_C_RateItem from './pages/customer/CI_C_RateItem';
-import CI_C_Chat from './pages/customer/CI_C_Chat';
-import OM_C_Checkout from './pages/customer/OM_C_Checkout';
+import MM_C_Menu from "./pages/customer/MM_C_Menu";
+import OM_C_Cart from "./pages/customer/OM_C_Cart";
+import CI_C_RateItem from "./pages/customer/CI_C_RateItem";
+import CI_C_Chat from "./pages/customer/CI_C_Chat";
+import OM_C_Checkout from "./pages/customer/OM_C_Checkout";
 import UM_C_Profile from "./pages/customer/UM_C_Profile";
-import UM_C_Home from './pages/customer/UM_C_Home';
+import UM_C_Home from "./pages/customer/UM_C_Home";
 import UM_C_Login from "./pages/customer/UM_C_Login";
 import UM_C_Register from "./pages/customer/UM_C_Register";
 
@@ -35,7 +40,6 @@ import MmEEditMenu from "./pages/employee/MM_E_EditMenu";
 import OmEConfirmOrder from "./pages/employee/OM_E_ConfirmOrder";
 import OmEListOrder from "./pages/employee/OM_E_ListOrder";
 import CiEChat from "./pages/employee/CI_E_Chat";
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -66,6 +70,12 @@ root.render(
 
         <Route path="/employee/menu" element={<MM_E_EditMenu />} />
         <Route path="/employee/chat" element={<CI_E_Chat />} />
+        <Route path="/employee/tm_e_table" element={<TmETable />} />
+        <Route
+          path="/employee/om_e_confirmorder"
+          element={<OmEConfirmOrder />}
+        />
+        <Route path="/employee/om_e_listorder" element={<OmEListOrder />} />
         <Route path="/employee/table" element={<TmETable />} />
         <Route path="/employee/confirmorder" element={<OmEConfirmOrder />} />
         <Route path="/employee/listorder" element={<OmEListOrder />} />
