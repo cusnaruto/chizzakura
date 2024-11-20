@@ -1,0 +1,246 @@
+.container {
+  padding: 20px;
+  background-color: #ffccd2;
+  align-items: flex-start; /* Change from center to flex-start for natural flow */
+  min-height: 90vh; /* Default full-screen height */
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.sortContainer select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 200px;
+  background-color: #f9f9f9;
+}
+
+.editButton {
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 90px;
+  justify-content: center;
+}
+
+.editButton:hover {
+  background-color: #555;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card p {
+  margin: 10px 0;
+}
+
+.card .itemText {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.card .itemPrice {
+  font-size: 1.2em;
+  color: #555;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 150px;
+  border-radius: 5px;
+  background-color: #eee;
+  margin-bottom: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 5px;
+}
+
+.pagination span {
+  padding: 5px 10px;
+}
+
+.pageButton {
+  background-color: #333;
+  width: 55px;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.pageButton:hover {
+  background-color: #555;
+}
+
+.pageButton.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pageButton.active {
+  background-color: #f0e9e9;
+  color: #000000;
+}
+
+/* css for box open to edit the item */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background-color: pink;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formGroupMenuRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.formGroupMenuRow label {
+  margin-bottom: 5px;
+}
+
+.formGroupMenuRow input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.formGroupMenuRow select {
+  width: 66%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.saveButton,
+.deleteButton,
+.cancelButton {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-top: 10px;
+}
+
+.saveButton:hover,
+.deleteButton:hover,
+.cancelButton:hover {
+  background-color: #555;
+}
+
+.delButton {
+  background-color: #df2929;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-top: 10px;
+}
+
+.delButton:hover {
+  background-color: #f08080;
+}
+
+.modal img {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.fileInputContainer {
+  display: flex;
+  align-items: center;
+}
+
+.fileInputContainer input[type="file"] {
+  display: none;
+}
+
+.fileInputLabel {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.fileInputLabel:hover {
+  background-color: #555;
+}
+
+.fileName {
+  font-size: 14px;
+  color: #333;
+}

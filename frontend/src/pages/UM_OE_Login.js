@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/auth.css';
+import styles from '../styles/owner/auth.module.css';
 import logo from '../assets/Emu_02_st.ayaka.one.webp';
 
 const Login = () => {
@@ -22,13 +22,13 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="logo">
+    <div className={styles.authContainer}>
+      <div className={styles.logo}>
         <img src={logo} alt="Chizza Logo" />
       </div>
       <h1>ChizzaKura</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Username:</label>
           <input
             type="text"
@@ -39,7 +39,7 @@ const Login = () => {
             required
           />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Password:</label>
           <input
             type="password"
@@ -50,9 +50,9 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="login-button">Login</button>
+        <button type="submit" className={styles.loginButton}>Login</button>
       </form>
-      {/* <div className="signup-link">
+      {/* <div className={styles.signupLink}>
         <a href="/um_o_eregister">Sign up</a>
       </div> */}
     </div>

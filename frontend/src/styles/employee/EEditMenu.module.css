@@ -1,0 +1,58 @@
+.editMenu {
+    background-color: #ffebeb;
+    padding: 20px;
+}
+  
+.categorySelector button {
+    background-color: #ffc0cb;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+  
+.categorySelector .active {
+    background-color: #8b5e3c;
+    color: #fff;
+}
+  
+.menuItems {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+  
+.menuItem {
+    background-color: #ffc0cb;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+}
+  
+.menuItem img {
+    width: 100px;
+    height: auto;
+    border-radius: 50%;
+}
+  
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+  
+.pagination span {
+    margin: 0 10px;
+}
+
+.unavailable {
+    opacity: 0.5;
+    background-color: #ccc;
+}
+
+.saveMenu {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
