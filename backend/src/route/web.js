@@ -3,7 +3,10 @@ const router = express.Router();
 
 const {
   createUser,
-  findUserByUsername,
+  getAllUsers,
+  updateUser,
+  loginUser,
+  getUserById,
 } = require("../controllers/userController");
 
 const {
@@ -21,13 +24,16 @@ const {
   updateItem,
   deleteItem,
 } = require("../controllers/itemsController");
-router.post("/create-customer", createUser);
-
-router.get("/sample", findUserByUsername);
 
 router.get("/hello", (req, res) => {
   res.json({ message: "Hello from the backend!" });
 });
+
+router.post("/create-user", createUser);
+router.post("/login", loginUser);
+router.get("/@", getAllUsers);
+router.get("get-customer/:id", getUserById);
+router.put("update-customer/:id", updateUser);
 
 router.post("/create-table", createTable);
 router.get("/get-tables", getTables);

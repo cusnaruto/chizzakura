@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //User Management routes
-app.use("/UM/", webRoutes.router);
+app.use("/", webRoutes.router);
 
 connection.authenticate();
 

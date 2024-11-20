@@ -1,4 +1,4 @@
-const Item = require("../models/Items");
+const Item = require("../model/Items");
 // Create a new Item
 const createItem = async (req, res) => {
   try {
@@ -40,7 +40,7 @@ const getItemById = async (req, res) => {
 const updateItem = async (req, res) => {
   try {
     const [updated] = await Item.update(req.body, {
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (updated) {
       const updatedItem = await Item.findByPk(req.params.id);
@@ -58,7 +58,7 @@ const updateItem = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const deleted = await Item.destroy({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (deleted) {
       res.status(204).json();

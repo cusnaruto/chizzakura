@@ -1,4 +1,3 @@
-const { Sequelize } = require("sequelize");
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 
@@ -10,6 +9,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "mysql",
+    timezone: "+07:00",
   }
 );
 
