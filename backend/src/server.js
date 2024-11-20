@@ -12,25 +12,29 @@ const userRoutes = require("./route/userRoutes");
 const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
+const { Server } = require("http");
 //config template engine
+app.use(cors());
 
-const socketIO = require('socket.io')(http, {
+const server = http.createServer(app);
+const io = new Server(server, {
   cors: {
-      origin: "http://localhost:3000"
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
   }
 });
 
-//Add this before the app.get() block
-socketIO.on('connection', (socket) => {
+io.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
   socket.on('disconnect', () => {
-    console.log('🔥: A user disconnected');
+    console.log(`👋: ${socket.id} user just disconnected!`);
   });
 });
 
+
 configViewEngine(app);
 
-app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
