@@ -7,10 +7,10 @@ const port = process.env.PORT || 8080;
 const hostname = process.env.HOST_NAME;
 const configViewEngine = require("./config/viewengine");
 //import routes
-const userRoutes = require("./routes/userRoutes");
-const tableRoutes = require("./routes/tableRoutes");
-const itemRoutes = require("./routes/itemRoutes");
-const discountRoutes = require("./routes/discountRoutes");
+const userRoutes = require("./route/userRoutes");
+const tableRoutes = require("./route/tableRoutes");
+const itemRoutes = require("./route/itemRoutes");
+const discountRoutes = require("./route/discountRoutes");
 //config template engine
 configViewEngine(app);
 
