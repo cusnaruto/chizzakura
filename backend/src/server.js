@@ -6,8 +6,11 @@ const app = express();
 const port = process.env.PORT || 8080;
 const hostname = process.env.HOST_NAME;
 const configViewEngine = require("./config/viewengine");
-const webRoutes = require("./route/web");
-const connection = require("./config/databaseConnection");
+//import routes
+const userRoutes = require("./routes/userRoutes");
+const tableRoutes = require("./routes/tableRoutes");
+const itemRoutes = require("./routes/itemRoutes");
+const discountRoutes = require("./routes/discountRoutes");
 //config template engine
 configViewEngine(app);
 
@@ -16,9 +19,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //User Management routes
-app.use("/", webRoutes.router);
-
-connection.authenticate();
+app.use("/UM/", userRoutes);
+app.use("/TM/", tableRoutes);
+app.use("/IM/", itemRoutes);
+app.use("/DM/", discountRoutes);
 
 app.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}!`);
