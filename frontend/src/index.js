@@ -66,9 +66,9 @@ root.render(
 
         <Route path="/employee/menu" element={<MM_E_EditMenu />} />
         <Route path="/employee/chat" element={<CI_E_Chat />} />
-        <Route path="/employee/tm_e_table" element={<TmETable />} />
-        <Route path="/employee/om_e_confirmorder" element={<OmEConfirmOrder />} />
-        <Route path="/employee/om_e_listorder" element={<OmEListOrder />} />
+        <Route path="/employee/table" element={<TmETable />} />
+        <Route path="/employee/confirmorder" element={<OmEConfirmOrder />} />
+        <Route path="/employee/listorder" element={<OmEListOrder />} />
 
         <Route path="/app" element={<App />} />
       </Routes>
