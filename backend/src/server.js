@@ -3,16 +3,16 @@ const cors = require("cors");
 const express = require("express");
 // const path = require("path");
 const app = express();
-const http = require('http').Server(app);
-const port = process.env.PORT || 8080;
+const http = require('http');
+const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME;
+const { Server } = require("socket.io");
 const configViewEngine = require("./config/viewengine");
 //import routes
 const userRoutes = require("./route/userRoutes");
 const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
-const { Server } = require("http");
 //config template engine
 app.use(cors());
 
@@ -24,10 +24,22 @@ const io = new Server(server, {
   }
 });
 
-io.on('connection', (socket) => {
-  console.log(`⚡: ${socket.id} user just connected!`);
-  socket.on('disconnect', () => {
-    console.log(`👋: ${socket.id} user just disconnected!`);
+// Handle socket connections
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.on("join_room", (data) => {
+    socket.join(data.room);
+    console.log(`${data.username} joined room: ${data.room}`);
+  });
+
+  socket.on("send_message", (data) => {
+    io.to(data.room).emit("receive_message", data);
+    console.log(`Message sent to room: ${data.room}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
   });
 });
 
@@ -44,6 +56,6 @@ app.use("/TM/", tableRoutes);
 app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
 
-http.listen(port, hostname, () => {
+server.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}!`);
 });

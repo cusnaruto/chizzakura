@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const { createUser, findUserByUsername } = require("../controllers/userController");
+const {
+  createUser,
+  getAllUsers,
+  updateUser,
+  loginUser,
+  getUserById,
+} = require("../controllers/userController");
 
-router.post("/create-customer", createUser);
-router.get("/sample", findUserByUsername);
-router.get("/hello", (req, res) => {
-  res.json({ message: "Hello from the backend!" });
-});
+router.post("/create-user", createUser);
+router.post("/login", loginUser);
+router.get("/@", getAllUsers);
+router.get("get-customer/:id", getUserById);
+router.put("update-customer/:id", updateUser);
 
 module.exports = router;
