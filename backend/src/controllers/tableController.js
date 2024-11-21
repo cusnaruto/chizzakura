@@ -1,4 +1,4 @@
-const Table = require("../models/Table");
+const Table = require("../model/Table");
 
 // Create a new table
 const createTable = async (req, res) => {
@@ -41,7 +41,7 @@ const getTableById = async (req, res) => {
 const updateTable = async (req, res) => {
   try {
     const [updated] = await Table.update(req.body, {
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (updated) {
       const updatedTable = await Table.findByPk(req.params.id);
@@ -59,7 +59,7 @@ const updateTable = async (req, res) => {
 const deleteTable = async (req, res) => {
   try {
     const deleted = await Table.destroy({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (deleted) {
       res.status(204).json();
