@@ -1,0 +1,124 @@
+.pageContainer {
+    background-color: white;
+    min-height: 100vh;
+}
+
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.separator {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.searchContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.searchInput {
+    padding: 10px;
+    font-size: 1em;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 5px solid #ffffff;
+}
+
+.table th:last-child, .table td:last-child {
+    text-align: center;
+}
+
+.row {
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: pink;
+    color: black;
+}
+
+.row:hover {
+    background-color: #f1f1f1;
+}
+
+.row td:first-child {
+    border-top-left-radius: 10px; /* Apply border-radius to the first cell */
+    border-bottom-left-radius: 10px; /* Apply border-radius to the first cell */
+}
+
+.row td:last-child {
+    border-top-right-radius: 10px; /* Apply border-radius to the last cell */
+    border-bottom-right-radius: 10px; /* Apply border-radius to the last cell */
+}
+
+.status {
+    text-transform: capitalize;
+}
+
+.status.confirm {
+    color: green;
+}
+
+.status.cooking {
+    color: orange;
+}
+
+.status.done {
+    color: red;
+}
+
+.tableSeparator {
+    border: none;
+    border-top: 1px solid #000000;
+    margin-top: 1px;
+}
+
+/* Pagination css */
+.pagination {
+    display: flex;
+    justify-content: center; /* Center the pagination controls */
+    align-items: center;
+    gap: 5px; /* Reduce the gap between buttons */
+    margin-top: 20px;
+}
+
+.pageButton {
+    padding: 5px 8px; /* Reduce padding */
+    background-color: pink;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: black;
+    transition: all 0.3s ease;
+    min-width: 30px;
+}
+
+.pageButton:hover {
+    background-color: #ff69b4;
+}
+
+.pageButton.active {
+    background-color: #ff69b4;
+    color: white;
+}

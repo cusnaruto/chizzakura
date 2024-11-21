@@ -48,6 +48,8 @@
   text-decoration: none;
   color: #333;
   font-weight: bold;
+  width: 100px; /* Set width to 100px */
+  text-align: center; /* Center text */
   padding: 5px 15px; /* Add padding to make space for the border */
   border-radius: 5px; /* Add border-radius for rounded corners */
 }
