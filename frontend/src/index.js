@@ -37,7 +37,7 @@ import reportWebVitals from "./reportWebVitals";
 
 import TmETable from "./pages/employee/TM_E_Table";
 import MmEEditMenu from "./pages/employee/MM_E_EditMenu";
-import OmEConfirmOrder from "./pages/employee/OM_E_ConfirmOrder";
+import UmEConfirmOrder from "./pages/employee/UM_E_ConfirmOrder";
 import OmEListOrder from "./pages/employee/OM_E_ListOrder";
 import CiEChat from "./pages/employee/CI_E_Chat";
 import C_ProtectedRoute from "./components/customer/C_ProtectedRoute";
@@ -71,12 +71,9 @@ root.render(
 
         <Route path="/employee/menu" element={<MM_E_EditMenu />} />
         <Route path="/employee/chat" element={<CI_E_Chat />} />
-        <Route path="/employee/tm_e_table" element={<TmETable />} />
-        <Route
-          path="/employee/om_e_confirmorder"
-          element={<OmEConfirmOrder />}
-        />
-        <Route path="/employee/om_e_listorder" element={<OmEListOrder />} />
+        <Route path="/employee/table" element={<TmETable />} />
+        <Route path="/employee/confirmorder/:orderId" element={<UmEConfirmOrder />} />
+        <Route path="/employee/listorder" element={<OmEListOrder />} />
 
         <Route path="/app" element={<App />} />
       </Routes>
