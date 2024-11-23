@@ -7,7 +7,6 @@
   
 .chatSidebar {
     background-color: #f08b8b;
-    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,6 +15,8 @@
 .searchInput {
     width: 90%;
     padding: 10px;
+    margin-left: 0px;
+    margin-top: 5px;
     margin-bottom: 20px;
     border-radius: 10px;
     border: none;
@@ -23,12 +24,16 @@
   
 .chatList {
     width: 100%;
+    margin: 0;
+    padding: 0;
 }
   
 .chatItem {
     display: flex;
     align-items: center;
     padding: 10px;
+    height: 50px;
+    width: auto;
     margin-bottom: 10px;
     border-radius: 10px;
     background-color: #f8c1c1;
@@ -58,12 +63,39 @@
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    padding: 20px;
+}
+
+.infoCustomer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin: 0;
+}
+
+.infoCustomer img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.infoCustomer p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chatContent hr {
+    margin: 10px 0;
+    border: 1px solid #ddd;
 }
   
 .chatMessages {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
     overflow-y: auto;
+    max-height: 700px;
 }
   
 .message {

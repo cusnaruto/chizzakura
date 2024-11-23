@@ -28,8 +28,8 @@ const Header = () => {
             <nav className={styles.nav}>
                 <NavLink to="/employee/om_e_listorder" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Order</NavLink>
                 <NavLink to="/employee/tm_e_table" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Table</NavLink>
-                <NavLink to="/employee/mm_e_editmenu" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Item</NavLink>
-                <NavLink to="/employee/ci_e_chat" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Chat</NavLink>
+                <NavLink to="/employee/menu" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Item</NavLink>
+                <NavLink to="/employee/chat" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Chat</NavLink>
             </nav>
             <div className={styles.actions}>
                 <div className={styles.search}>
