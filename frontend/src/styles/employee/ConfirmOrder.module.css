@@ -1,0 +1,134 @@
+.pageContainer {
+    background-color: white;
+    min-height: 100vh;
+}
+
+.container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.orderInfo {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+}
+
+.itemsContainer {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.itemsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.itemsTable th {
+    background-color: #f4f4f4;
+    padding: 12px;
+    text-align: left;
+}
+
+.itemsTable td {
+    background-color: #FFB6C1; /* Light pink to match theme */
+    padding: 12px;
+}
+
+.itemsTable tr {
+    margin-bottom: 8px;
+}
+
+.totalSection {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+}
+
+.statusSection {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.statusButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.statusButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.3s;
+}
+
+.statusButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.statusButton.confirm {
+    background-color: #32CD32; /* Green */
+}
+
+.statusButton.cooking {
+    background-color: #FFA500; /* Orange */
+}
+
+.statusButton.done {
+    background-color: #FF69B4; /* Pink to match theme */
+}
+
+.statusButton.confirm:hover {
+    background-color: #FF6347; /* Red */
+}
+
+.statusButton.cooking:hover {
+    background-color: #FF8C00; /* Darker orange */
+}
+
+.statusButton.done:hover {
+    background-color: #FF1493; /* Darker pink */
+}
