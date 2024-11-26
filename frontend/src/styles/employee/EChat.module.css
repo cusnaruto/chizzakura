@@ -35,8 +35,13 @@
     height: 50px;
     width: auto;
     margin-bottom: 10px;
+    margin-right: 5px;
     border-radius: 10px;
     background-color: #f8c1c1;
+}
+
+.seen {
+    background-color: #8bfa03;
 }
   
 .avatar {
@@ -49,14 +54,23 @@
 .chatInfo {
     flex-grow: 1;
 }
+
+.infoCus {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
   
 .chatName {
     font-weight: bold;
+    margin-right: 10px;
+    margin: 0;
 }
   
 .chatPreview {
     color: #555;
     font-size: 0.9em;
+    margin: 0;
 }
   
 .chatContent {
