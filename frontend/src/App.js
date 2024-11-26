@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import socketIO from 'socket.io-client';
-const socket = socketIO.connect('http://localhost:8888');
+const socket = socketIO.connect('http://localhost:8080');
 
 function App() {
   const [message, setMessage] = useState("");

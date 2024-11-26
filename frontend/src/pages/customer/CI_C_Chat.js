@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import styles from '../../styles/customer/CChat.module.css';
@@ -7,7 +7,7 @@ import defaultAvtPic from '../../assets/Image_C/default_avt.jpg';
 import employeeAvtPic from '../../assets/Image_C/avtE.png';
 import homeImg from '../../assets/Image_C/home.png';
 
-const socket = io.connect("http://localhost:8888");
+const socket = io.connect("http://localhost:8080");
 
 const CI_C_Chat = () => {
     const [username, setUsername] = useState("");
@@ -37,7 +37,7 @@ const CI_C_Chat = () => {
         }
     };
 
-    useEffect(() => {
+    useMemo(() => {
         const handleReceiveMessage = (data) => {
             setMessageList((list) => [...list, data]);
         };
