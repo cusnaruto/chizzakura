@@ -34,15 +34,36 @@ const CI_E_Chat = () => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const chatData = [
-        { id: 'dk0z', name: 'dk0z', messages: messages1, setMessages: setMessages1 },
-        { id: 'Tuan', name: 'Tuan', messages: messages2, setMessages: setMessages2 },
-        { id: 'Duong', name: 'Duong', messages: messages3, setMessages: setMessages3 },
-    ];
+    const [chatData, setChatData] = useState([
+        { id: 'dk0z', name: 'dk0z', table: 1, seen: false, messages: messages1, setMessages: setMessages1 },
+        { id: 'Tuan', name: 'Tuan', table: 2, seen: false, messages: messages2, setMessages: setMessages2 },
+        { id: 'Duong', name: 'Duong', table: 3, seen: false, messages: messages3, setMessages: setMessages3 },
+    ]);
+    
 
     const filteredChats = chatData.filter((chat) =>
         chat.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleSelectChat = (chatId) => {
+        setSelectedChat(chatId);
+    
+        // Tìm đoạn chat được chọn
+        const chatIndex = chatData.findIndex((chat) => chat.id === chatId);
+    
+        if (chatIndex !== -1 && !chatData[chatIndex].seen) {
+            const updatedChats = chatData.map((chat) =>
+                chat.id === chatId ? { ...chat, seen: true } : chat
+            );
+    
+            // Cập nhật trạng thái cho từng nhóm tin nhắn
+            setMessages1([...messages1]);
+            setMessages2([...messages2]);
+            setMessages3([...messages3]);
+
+            setChatData(updatedChats);
+        }
+    };
 
     const handleSendMessage = (e) => {
         e.preventDefault();
@@ -74,12 +95,15 @@ const CI_E_Chat = () => {
                         {filteredChats.map((chat) => (
                             <li
                                 key={chat.id}
-                                className={`${styles.chatItem} ${selectedChat === chat.id ? styles.active : ''}`}
-                                onClick={() => setSelectedChat(chat.id)}
+                                onClick={() => handleSelectChat(chat.id)}
+                                className={`${styles.chatItem} ${selectedChat === chat.id ? styles.active : ''} ${chat.seen ? styles.seen : ''}`}
                             >
                                 <img src={imgC} alt="avatar" className={styles.avatar} />
                                 <div className={styles.chatInfo}>
-                                    <p className={styles.chatName}>{chat.name}</p>
+                                    <div className={styles.infoCus}>
+                                        <p className={styles.chatName}>{chat.name} - </p>
+                                        <span className={styles.table}>Table {chat.table}</span>
+                                    </div>
                                     <p className={styles.chatPreview}>
                                         {chat.messages[chat.messages.length - 1]?.content}
                                     </p>
