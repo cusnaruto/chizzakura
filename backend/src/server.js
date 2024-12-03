@@ -11,6 +11,7 @@ const userRoutes = require("./route/userRoutes");
 const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
+const webRoutes = require("./route/web");
 //config template engine
 configViewEngine(app);
 
@@ -23,6 +24,7 @@ app.use("/UM/", userRoutes);
 app.use("/TM/", tableRoutes);
 app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
+app.use("/", webRoutes);
 
 app.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}!`);
