@@ -8,7 +8,7 @@ const socket = socketIO.connect('http://localhost:8080');
 
 function App() {
   const [message, setMessage] = useState("");
-
+  
   useEffect(() => {
     // Gọi API từ backend
     fetch("http://localhost:8080/UM/hello")

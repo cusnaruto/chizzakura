@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import { jwtDecode } from "jwt-decode";
 import styles from '../../styles/customer/CChat.module.css';
-
 import defaultAvtPic from '../../assets/Image_C/default_avt.jpg';
 import employeeAvtPic from '../../assets/Image_C/avtE.png';
 import homeImg from '../../assets/Image_C/home.png';
@@ -16,6 +16,14 @@ const CI_C_Chat = () => {
     const [messageList, setMessageList] = useState([]);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            const decoded = jwtDecode(token); 
+            setUsername(decoded.username);
+        }
+    }, []);
+
     const joinRoom = () => {
         if (username !== "" && room !== "") {
             socket.emit("join_room", { username, room });
@@ -25,13 +33,13 @@ const CI_C_Chat = () => {
 
     const sendMessage = async () => {
         if (message !== "") {
+            const token = localStorage.getItem('authToken');
             const messageData = {
                 room: room,
-                username: username,
                 message: message,
+                token: token,
                 time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
             };
-
             await socket.emit("send_message", messageData);
             setMessage("");
         }
@@ -65,7 +73,7 @@ const CI_C_Chat = () => {
                 {messageList.map((messageContent, index) => (
                     <div key={index} className={`${styles['chat-message']} ${messageContent.username === username ? styles['customer'] : styles['employee']}`}>
                         <img src={messageContent.username === username ? defaultAvtPic : employeeAvtPic} alt="Avatar" className={styles['chat-customer-avt']} />
-                        <p className={styles['chat-customer-message']}>{messageContent.message}</p>
+                        <p className={styles['chat-customer-message']}>{messageContent.content}</p>
                     </div>
                 ))}
             </div>
@@ -82,12 +90,7 @@ const CI_C_Chat = () => {
             </div>
 
             <div className={styles['chat-input']}>
-                <input
-                    type="text"
-                    placeholder="Username..."
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
+                <span>Username: {username}</span>
                 <input
                     type="text"
                     placeholder="Room..."
