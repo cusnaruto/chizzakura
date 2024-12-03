@@ -10,6 +10,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  padding: 0 20px;
 }
 
 .searchContainer {
@@ -50,6 +51,27 @@
 
 .editButton:hover {
   background-color: #555;
+}
+
+/* add item button */
+.addItemButton {
+  background-color: #ff7675;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  margin: 0 10px;
+}
+
+.addItemButton:hover {
+  background-color: #e17055;
 }
 
 .grid {

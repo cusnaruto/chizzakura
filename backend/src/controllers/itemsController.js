@@ -2,10 +2,15 @@ const Item = require("../model/Items");
 // Create a new Item
 const createItem = async (req, res) => {
   try {
-    const Item = await Item.create(req.body);
-    res.status(201).json(Item);
+    const newItem = {
+      ...req.body,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    const item = await Item.create(newItem);
+    res.status(201).json(item);
   } catch (error) {
-    console.error("Error creating Item:", error);
+    console.error('Error creating Item:', error);
     res.status(500).json({ error: error.message });
   }
 };

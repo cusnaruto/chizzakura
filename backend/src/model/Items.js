@@ -16,17 +16,32 @@ const Items = sequelize.define("Items", {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: true,
+  categoryid: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
+  // description: {
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  // },
   is_available: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: false,
   },
   image: {
     type: DataTypes.STRING,
     allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
   },
 }, {
   freezeTableName: true, // Prevent Sequelize from pluralizing the table name
