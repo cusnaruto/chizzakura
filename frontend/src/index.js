@@ -39,7 +39,6 @@ import TmETable from "./pages/employee/TM_E_Table";
 import MmEEditMenu from "./pages/employee/MM_E_EditMenu";
 import UmEConfirmOrder from "./pages/employee/UM_E_ConfirmOrder";
 import OmEListOrder from "./pages/employee/OM_E_ListOrder";
-import CiEChat from "./pages/employee/CI_E_Chat";
 import C_ProtectedRoute from "./components/customer/C_ProtectedRoute";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

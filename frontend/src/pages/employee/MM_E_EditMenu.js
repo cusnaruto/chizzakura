@@ -9,7 +9,7 @@ import pizzaImg2 from '../../assets/Image_C/product_2.3.jpg';
 import pizzaImg3 from '../../assets/Image_C/product_3.1.jpg';
 import pizzaImg4 from '../../assets/Image_C/product_3.2.jpg';
 
-import Header from '../../components/O_Header';
+import Header from '../../components/E_Header';
 
 const MM_E_EditMenu = () => {
 
@@ -57,11 +57,17 @@ const MM_E_EditMenu = () => {
         <div className={styles.editMenu}>
             <Header />
 
-            <div className={styles.categorySelector}>
-                <button onClick={() => handleCategoryChange('Pizza')} className={category === 'Pizza' ? styles.active : ''}>Pizza</button>
-                <button onClick={() => handleCategoryChange('Chicken')} className={category === 'Chicken' ? styles.active : ''}>Chicken</button>
-                <button onClick={() => handleCategoryChange('Food')} className={category === 'Food' ? styles.active : ''}>Food</button>
-            </div>
+            <div className={styles.selectOptions}>
+                <div className={styles.categorySelector}>
+                    <button onClick={() => handleCategoryChange('Pizza')} className={category === 'Pizza' ? styles.active : ''}>Pizza</button>
+                    <button onClick={() => handleCategoryChange('Chicken')} className={category === 'Chicken' ? styles.active : ''}>Chicken</button>
+                    <button onClick={() => handleCategoryChange('Food')} className={category === 'Food' ? styles.active : ''}>Food</button>
+                </div>
+
+                <div className={styles.saveMenu}>
+                    <button onClick={() => navigate('/employee/menu')}>Save</button>
+                </div>
+            </div>            
             
             <h1>{category}</h1>
 
@@ -74,9 +80,10 @@ const MM_E_EditMenu = () => {
                         <img src={item.img} alt={item.name} />
                         <p>{item.name}</p>
                         <p style={{ color: 'red' }}>${item.price}</p>
-                        <label>
+                        <label id="wrapper">
                             <input
                                 type="checkbox"
+                                className={styles['switch-toggle']}
                                 checked={item.available}
                                 onChange={() => toggleAvailability(item.id)}
                             />
@@ -85,9 +92,6 @@ const MM_E_EditMenu = () => {
                 ))}
             </div>
 
-            <div className={styles.saveMenu}>
-                <button onClick={() => navigate('/employee/menu')}>Save</button>
-            </div>
         </div>
     );
 };

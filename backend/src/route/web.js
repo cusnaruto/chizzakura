@@ -1,5 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+const { uploadImage } = require("../controllers/uploadController");
 
 const {
   createUser,
@@ -25,6 +29,7 @@ const {
   deleteItem,
 } = require("../controllers/itemsController");
 
+
 router.get("/hello", (req, res) => {
   res.json({ message: "Hello from the backend!" });
 });
@@ -47,6 +52,6 @@ router.get("/get-item-by-id/:id", getItemById);
 router.put("/update-item/:id", updateItem);
 router.delete("/delete-item/:id", deleteItem);
 
-module.exports = {
-  router,
-};
+router.post("/upload", upload.single('file'), uploadImage);
+
+module.exports = router;
