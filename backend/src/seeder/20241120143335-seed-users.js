@@ -29,5 +29,8 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     // Xoá tất cả người dùng trong bảng Users khi rollback
     await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.sequelize.query(
+      "ALTER TABLE Users AUTO_INCREMENT = 1"
+    );
   },
 };

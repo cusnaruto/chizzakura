@@ -28,15 +28,42 @@ const UM_C_Login = () => {
         password: formData.password,
       });
 
-      if (response.data.token) {
-        message.success("Login successful!");
-        localStorage.setItem("authToken", response.data.token);
-        navigate("/home"); // Chuyển hướng sau khi đăng nhập thành công
-      } else {
-        message.error("Login failed");
+      // Xử lý các trạng thái phản hồi từ backend
+      switch (response.status) {
+        case 200:
+          if (response.data.token) {
+            message.success("Login successful!");
+            localStorage.setItem("authToken", response.data.token);
+            navigate("/home"); // Chuyển hướng sau khi đăng nhập thành công
+          } else {
+            message.error("Unexpected response format.");
+          }
+          break;
+        case 400:
+          message.error("Username and password are required.");
+          break;
+        case 401:
+          message.error(
+            "Invalid credentials. Please check your username and password."
+          );
+          break;
+        case 404:
+          message.error("User not found. Please check your username.");
+          break;
+        default:
+          message.error("Unexpected error. Please try again.");
       }
     } catch (error) {
-      message.error("An error occurred. Please try again.");
+      // Kiểm tra lỗi mạng hoặc lỗi từ server
+      if (error.response) {
+        // Phản hồi từ server với lỗi cụ thể
+        message.error(
+          `Error: ${error.response.data.error || "An error occurred."}`
+        );
+      } else {
+        // Lỗi không kết nối được với server
+        message.error("Cannot connect to the server. Please try again later.");
+      }
       console.error("Login failed:", error);
     } finally {
       setLoading(false); // Kết thúc trạng thái loading

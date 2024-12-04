@@ -1,15 +1,26 @@
-// models/category.js
-module.exports = (sequelize, DataTypes) => {
-  const Category = sequelize.define("Category", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  });
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/databaseConnection");
 
-  Category.associate = (models) => {
-    // Định nghĩa quan hệ nếu có (nếu cần thiết)
-  };
+const Category = sequelize.define("Category", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+});
 
-  return Category;
-};
+module.exports = Category;
