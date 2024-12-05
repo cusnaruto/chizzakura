@@ -90,7 +90,6 @@ const markAsRead = async (req, res) => {
         },
       }
     );
-
     res.status(200).json({ message: "Messages marked as read" });
   } catch (error) {
     console.error("Error marking messages as read:", error.message);

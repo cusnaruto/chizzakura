@@ -2,10 +2,8 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const http = require("http"); // Thay thế cho app.listen
-const { Server } = require("socket.io");
 
 const app = express();
-const http = require('http');
 const jwt = require("jsonwebtoken"); // Import jwt
 const port = process.env.PORT || 8080;
 const hostname = process.env.HOST_NAME;
