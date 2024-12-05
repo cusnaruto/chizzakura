@@ -6,7 +6,7 @@ import Header from '../../components/E_Header';
 import imgC from '../../assets/Image_C/avt.png';
 import imgE from '../../assets/Image_C/avtE.png';
 import { socket, userId } from '../../services/socket'; // Import the WebSocket connection and userId
-import { fetchMessages, markMessagesAsRead } from '../../services/messageServices'; // Import API services
+import { markMessagesAsRead } from '../../services/messageServices'; // Import API services
 
 const CI_E_Chat = () => {
     const navigate = useNavigate();
