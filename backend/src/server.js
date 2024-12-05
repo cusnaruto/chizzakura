@@ -26,9 +26,15 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
+    origin: "*",
+    methods: ["GET", "POST", "PUT"]
   }
+});
+
+// Middleware để gắn io vào request object
+app.use((req, res, next) => {
+  req.io = io;
+  next();
 });
 
 const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; // Define SECRET_KEY
@@ -70,7 +76,6 @@ io.on("connection", (socket) => {
 
 
 configViewEngine(app);
-=======
 const orderRoutes = require("./route/orderRoutes");
 
 
@@ -83,29 +88,7 @@ app.use("/TM/", tableRoutes);
 app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
 app.use("/OM/", orderRoutes);
-
-// Create HTTP server and Socket.IO server
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*", // Cho phép tất cả frontend kết nối
-  },
-});
-
-// Middleware để gắn io vào request object
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
-
-// Xử lý kết nối của Socket.IO
-io.on("connection", (socket) => {
-  console.log(`Client connected: ${socket.id}`);
-
-  socket.on("disconnect", () => {
-    console.log(`Client disconnected: ${socket.id}`);
-  });
-});
+app.use("/CI/", messageRoutes);
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);
