@@ -7,7 +7,6 @@ const Message = sequelize.define('Message', {
     autoIncrement: true,
     primaryKey: true,
     allowNull: false,
-    defaultValue: 1,
   },
   sender_id: {
     type: DataTypes.INTEGER,
@@ -22,12 +21,13 @@ const Message = sequelize.define('Message', {
     allowNull: false,
   },
   timestamp: {
-    type: DataTypes.STRING,
-    allowNull: false,
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.NOW,
   },
   status: {
-    type: DataTypes.STRING,
-    allowNull: false,
+      type: DataTypes.ENUM("sent", "read"),
+      defaultValue: "sent",
   }
 }, {
     tableName: 'messages',

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import styles from '../../styles/customer/CChat.module.css';
 import defaultAvtPic from '../../assets/Image_C/default_avt.jpg';
 import employeeAvtPic from '../../assets/Image_C/avtE.png';
 import homeImg from '../../assets/Image_C/home.png';
 
-const socket = io.connect("http://localhost:8080");
+import { socket, userId } from '../../services/socket'; // Import the WebSocket connection and userId
+import { fetchMessages, markMessagesAsRead } from '../../services/messageServices'; // Import API services
 
 const CI_C_Chat = () => {
     const [username, setUsername] = useState("");
@@ -19,40 +21,50 @@ const CI_C_Chat = () => {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (token) {
-            const decoded = jwtDecode(token); 
+            const decoded = jwtDecode(token);
             setUsername(decoded.username);
         }
-    }, []);
 
-    const joinRoom = () => {
-        if (username !== "" && room !== "") {
-            socket.emit("join_room", { username, room });
-            console.log(`${username} joined room: ${room}`);
-        }
-    };
+        // Join the selected room
+        setRoom(userId);
+        socket.emit("join_room", { roomId: userId });
+
+        // Fetch messages for the selected room
+        const fetchMessages = async (roomId) => {
+            try {
+                const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+                setMessageList(response.data);
+            } catch (error) {
+                console.error("Failed to fetch messages:", error);
+            }
+        };
+
+        fetchMessages(userId);
+    }, []);
 
     const sendMessage = async () => {
         if (message !== "") {
             const token = localStorage.getItem('authToken');
             const messageData = {
-                room: room,
-                message: message,
-                token: token,
+                token: localStorage.getItem("authToken"), // Include user's token
+                room: userId, // Room ID = selected chat ID
+                message: message, // Ensure the message content is correctly set
+                sender_id: userId, // Include the sender_id in the message data
                 time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
             };
             await socket.emit("send_message", messageData);
+            setMessageList((prev) => [...prev, { ...messageData, content: message }]); // Update the state directly with the correct content
             setMessage("");
         }
     };
 
     useMemo(() => {
         const handleReceiveMessage = (data) => {
-            setMessageList((list) => [...list, data]);
+            setMessageList((list) => [...list, data]); // Update the state directly
         };
 
         socket.on("receive_message", handleReceiveMessage);
 
-        // Clean up the effect to avoid multiple connections
         return () => {
             socket.off("receive_message", handleReceiveMessage);
         };
@@ -71,9 +83,9 @@ const CI_C_Chat = () => {
 
             <div className={styles['chat-box']}>
                 {messageList.map((messageContent, index) => (
-                    <div key={index} className={`${styles['chat-message']} ${messageContent.username === username ? styles['customer'] : styles['employee']}`}>
-                        <img src={messageContent.username === username ? defaultAvtPic : employeeAvtPic} alt="Avatar" className={styles['chat-customer-avt']} />
-                        <p className={styles['chat-customer-message']}>{messageContent.content}</p>
+                    <div key={index} className={`${styles['chat-message']} ${messageContent.sender_id === userId ? styles['customer'] : styles['employee']}`}>
+                        <img src={messageContent.sender_id === userId ? defaultAvtPic : employeeAvtPic} alt="Avatar" className={styles['chat-customer-avt']} />
+                        <p className={styles['chat-customer-message']}>{messageContent.content}</p> {/* Ensure the message content is correctly accessed */}
                     </div>
                 ))}
             </div>
@@ -91,13 +103,6 @@ const CI_C_Chat = () => {
 
             <div className={styles['chat-input']}>
                 <span>Username: {username}</span>
-                <input
-                    type="text"
-                    placeholder="Room..."
-                    value={room}
-                    onChange={(e) => setRoom(e.target.value)}
-                />
-                <button onClick={joinRoom}>Join Room</button>
             </div>
         </div>
     );

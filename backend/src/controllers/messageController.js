@@ -1,61 +1,106 @@
+const { Op } = require("sequelize");
 const Message = require("../model/message");
-// Create a new Message
-const createMessage = async (req, res) => {
-  try {
-    const Message = await Message.create(req.body);
-    res.status(201).json(Message);
-  } catch (error) {
-    console.error("Error creating Message:", error);
-    res.status(500).json({ error: error.message });
-  }
-};
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key";
+const sequelize = require('../config/databaseConnection');
 
-// Get all Messages
-const getMessages = async (req, res) => {
+// Fetch all chat rooms with messages
+const getChatRooms = async (req, res) => {
   try {
-    const Messages = await Message.findAll();
-    res.status(200).json(Messages);
-  } catch (error) {
-    console.error("Error fetching Messages:", error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Get a single Message by ID
-const getMessageById = async (req, res) => {
-  try {
-    const Message = await Message.findByPk(req.params.id);
-    if (Message) {
-      res.status(200).json(Message);
-    } else {
-      res.status(404).json({ error: "Message not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching Message by ID:", error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Delete a Message by ID
-const deleteMessage = async (req, res) => {
-  try {
-    const deleted = await Message.destroy({
-      where: { id: req.params.id },
+    const chatRooms = await Message.findAll({
+      attributes: [
+        [sequelize.fn('DISTINCT', sequelize.col('receiver_id')), 'room_id'],
+        [sequelize.fn('MAX', sequelize.col('timestamp')), 'latest_message_timestamp'],
+      ],
+      group: ['receiver_id'],
+      order: [[sequelize.fn('MAX', sequelize.col('timestamp')), 'DESC']],
     });
-    if (deleted) {
-      res.status(204).json();
-    } else {
-      res.status(404).json({ error: "Message not found" });
-    }
+
+    res.status(200).json(chatRooms);
   } catch (error) {
-    console.error("Error deleting Message:", error);
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching chat rooms:", error.message);
+    res.status(500).json({ error: "Failed to fetch chat rooms" });
+  }
+};
+
+const sendMessage = async (data, io) => {
+  const { token, room, message } = data;
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const now = new Date();
+    const timestamp = now.toISOString().replace('T', ' ').replace('Z', ''); // Format to YYYY-MM-DD HH:MM:SS.SSSSSS
+    const messageData = {
+      sender_id: decoded.id,
+      receiver_id: parseInt(room, 10), // Ensure receiver_id is an integer
+      content: message,
+      timestamp: timestamp,
+      status: "sent",
+    };
+
+    console.log("Message data being saved:", messageData); // Log the message data
+
+    // Save the message to the database
+    await Message.create(messageData);
+
+    // Emit the message to the room
+    if (io) {
+      io.to(room).emit("receive_message", messageData);
+    }
+    console.log(`Message sent to room: ${room}`);
+  } catch (error) {
+    console.error("Error sending message:", error.message);
+  }
+};
+
+// Fetch all messages for a user
+const getMessages = async (req, res) => {
+  const { roomId } = req.params;
+
+  try {
+    const messages = await Message.findAll({
+      where: {
+        [Op.or]: [
+          { sender_id: roomId  }, // Sent messages
+          { receiver_id: roomId }, // Received messages
+        ],
+      },
+      order: [["timestamp", "ASC"]],
+    });
+
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error("Error fetching messages:", error.message);
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+};
+
+// Mark messages as read
+const markAsRead = async (req, res) => {
+  const { senderId, receiverId } = req.body;
+
+  try {
+    await Message.update(
+      { status: "read" },
+      {
+        where: {
+          sender_id: senderId,
+          receiver_id: receiverId,
+          status: { [Op.ne]: "read" },
+        },
+      }
+    );
+
+    res.status(200).json({ message: "Messages marked as read" });
+  } catch (error) {
+    console.error("Error marking messages as read:", error.message);
+    res.status(500).json({ error: "Failed to mark messages as read" });
   }
 };
 
 module.exports = {
-  createMessage,
   getMessages,
-  getMessageById,
-  deleteMessage,
+  sendMessage,
+  markAsRead,
+  getChatRooms
 };

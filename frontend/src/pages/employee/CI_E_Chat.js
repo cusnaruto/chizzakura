@@ -1,82 +1,130 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styles from '../../styles/employee/EChat.module.css';
-
 import Header from '../../components/E_Header';
 import imgC from '../../assets/Image_C/avt.png';
 import imgE from '../../assets/Image_C/avtE.png';
+import { socket, userId } from '../../services/socket'; // Import the WebSocket connection and userId
+import { fetchMessages, markMessagesAsRead } from '../../services/messageServices'; // Import API services
 
 const CI_E_Chat = () => {
     const navigate = useNavigate();
-
-    const [messages1, setMessages1] = useState([
-        { id: 1, sender: 'dk0z', urlImg: imgE, content: 'Hi', time: 'Sun 1:30 PM' },
-        { id: 2, sender: 'dk0z', urlImg: imgE, content: 'I have been trying to reach you about your car extended warranty', time: 'Sun 1:30 PM' },
-        { id: 3, sender: 'You', urlImg: imgC, content: 'Hello', time: 'Sun 1:31 PM' },
-        { id: 4, sender: 'dk0z', urlImg: imgE, content: 'Hi', time: 'Sun 1:30 PM' },
-        { id: 5, sender: 'dk0z', urlImg: imgE, content: 'I have been trying', time: 'Sun 1:30 PM' },
-        { id: 6, sender: 'You', urlImg: imgC, content: 'umm', time: 'Sun 1:31 PM' },
-        { id: 7, sender: 'dk0z', urlImg: imgE, content: 'Hi', time: 'Sun 1:30 PM' },
-        { id: 8, sender: 'dk0z', urlImg: imgE, content: 'extended warranty', time: 'Sun 1:30 PM' },
-        { id: 9, sender: 'You', urlImg: imgC, content: 'Ok', time: 'Sun 1:31 PM' },
-    ]);
-
-    const [messages2, setMessages2] = useState([
-        { id: 1, sender: 'Tuan', urlImg: imgE, content: 'Hello', time: 'Sun 1:32 PM' },
-        { id: 2, sender: 'You', urlImg: imgC, content: 'Good morning!', time: 'Sun 1:33 PM' },
-    ]);
-
-    const [messages3, setMessages3] = useState([
-        { id: 1, sender: 'Duong', urlImg: imgE, content: 'How are you?', time: 'Sun 1:34 PM' },
-        { id: 2, sender: 'You', urlImg: imgC, content: 'I am fine, thank you!', time: 'Sun 1:35 PM' },
-    ]);
-
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
     const [selectedChat, setSelectedChat] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-
-    const [chatData, setChatData] = useState([
-        { id: 'dk0z', name: 'dk0z', table: 1, seen: false, messages: messages1, setMessages: setMessages1 },
-        { id: 'Tuan', name: 'Tuan', table: 2, seen: false, messages: messages2, setMessages: setMessages2 },
-        { id: 'Duong', name: 'Duong', table: 3, seen: false, messages: messages3, setMessages: setMessages3 },
-    ]);
-    
-
-    const filteredChats = chatData.filter((chat) =>
-        chat.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const handleSelectChat = (chatId) => {
-        setSelectedChat(chatId);
-    
-        // Tìm đoạn chat được chọn
-        const chatIndex = chatData.findIndex((chat) => chat.id === chatId);
-    
-        if (chatIndex !== -1 && !chatData[chatIndex].seen) {
-            const updatedChats = chatData.map((chat) =>
-                chat.id === chatId ? { ...chat, seen: true } : chat
-            );
-    
-            // Cập nhật trạng thái cho từng nhóm tin nhắn
-            setMessages1([...messages1]);
-            setMessages2([...messages2]);
-            setMessages3([...messages3]);
-
-            setChatData(updatedChats);
+    const [chatData, setChatData] = useState([]); // Define chatData
+    const getChatRooms = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/CI/rooms");
+            const chatRooms = response.data.map(room => ({
+                id: room.room_id,
+                name: `User ${room.room_id}`, // Replace with actual user name if available
+                table: `Table ${room.room_id}`, // Replace with actual table number if available
+                messages: [],
+            }));
+            setChatData(chatRooms);
+        } catch (error) {
+            console.error("Failed to load chat rooms", error);
         }
+    };
+    useEffect(() => {
+        // Fetch chat rooms on component mount
+        getChatRooms();
+    }, []);
+
+    useEffect(() => {
+        if (selectedChat) {
+            // Join the selected room
+            socket.emit("join_room", { roomId: selectedChat });
+
+            // Fetch messages for the selected room
+            const fetchMessages = async (roomId) => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+                    setMessages(response.data);
+                } catch (error) {
+                    console.error("Failed to fetch messages:", error);
+                }
+            };
+
+            fetchMessages(selectedChat);
+        }
+    }, [selectedChat]);
+
+    useMemo(() => {
+        const handleReceiveMessage = (message) => {
+            setMessages((prev) => [...prev, message]);
+            updateChatData(message);
+        };
+
+        socket.on("receive_message", handleReceiveMessage);
+
+        // Clean up listener on component unmount
+        return () => {
+            socket.off("receive_message", handleReceiveMessage);
+        };
+    }, []);
+
+    const updateChatData = (message) => {
+        setChatData((prevChatData) => {
+            const updatedChatData = prevChatData.map((chat) => {
+                if (chat.id === message.receiver_id || chat.id === message.sender_id) {
+                    return {
+                        ...chat,
+                        messages: [...chat.messages, message],
+                    };
+                }
+                return chat;
+            });
+
+            // Sort chat rooms by the timestamp of the newest message
+            updatedChatData.sort((a, b) => {
+                const aLastMessage = a.messages[a.messages.length - 1];
+                const bLastMessage = b.messages[b.messages.length - 1];
+                return new Date(bLastMessage?.timestamp) - new Date(aLastMessage?.timestamp);
+            });
+
+            return updatedChatData;
+        });
     };
 
     const handleSendMessage = (e) => {
         e.preventDefault();
-        const input = e.target.elements.message;
-        if (input.value.trim() && selectedChat) {
-            const chat = chatData.find((chat) => chat.id === selectedChat);
-            chat.setMessages([
-                ...chat.messages,
-                { id: chat.messages.length + 1, sender: 'You', content: input.value, time: 'Now' },
-            ]);
-            input.value = '';
+        if (newMessage.trim()) {
+            const messageData = {
+                token: localStorage.getItem("authToken"), 
+                room: selectedChat, 
+                message: newMessage,
+                sender_id: userId, 
+                time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+            };
+            socket.emit("send_message", messageData);
+            setMessages((prev) => [...prev, { ...messageData, content: newMessage }]); // Update the state directly with the correct content
+            setNewMessage(""); // Clear input field
+            getChatRooms()
         }
     };
+
+    const handleMarkAsRead = async () => {
+        try {
+            await markMessagesAsRead(selectedChat, selectedChat);
+            console.log("Messages marked as read");
+        } catch (error) {
+            console.error("Failed to mark messages as read");
+        }
+    };
+
+    const handleSelectChat = (chatId) => {
+        setSelectedChat(chatId);
+        socket.emit("join_room", { roomId: chatId });
+        handleMarkAsRead();
+    };
+
+    const filteredChats = chatData.filter((chat) =>
+        chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div>
@@ -88,8 +136,8 @@ const CI_E_Chat = () => {
                         type="text"
                         placeholder="Search"
                         className={styles.searchInput}
-                        value={searchTerm} // Bind giá trị của input với state searchTerm
-                        onChange={(e) => setSearchTerm(e.target.value)} // Cập nhật state khi nhập
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <ul className={styles.chatList}>
                         {filteredChats.map((chat) => (
@@ -128,25 +176,25 @@ const CI_E_Chat = () => {
                             </div>
                             <hr className={styles.divider} />
                             <div className={styles.chatMessages}>
-                                {chatData
-                                    .find((chat) => chat.id === selectedChat)
-                                    .messages.map((message) => (
-                                        <div
-                                            key={message.id}
-                                            className={`${styles.message} ${
-                                                message.sender === 'You' ? styles.sent : styles.received
-                                            }`}
-                                        >
-                                            <p className={styles.messageText}>{message.content}</p>
-                                            <span className={styles.messageTime}>{message.time}</span>
-                                        </div>
-                                    ))}
+                                {messages.map((message) => (
+                                    <div
+                                        key={message.id}
+                                        className={`${styles.message} ${
+                                            message.sender_id === userId ? styles.sent : styles.received
+                                        }`}
+                                    >
+                                        <p className={styles.messageText}>{message.content}</p>
+                                        <span className={styles.messageTime}>{message.timestamp}</span>
+                                    </div>
+                                ))}
                             </div>
                             <form onSubmit={handleSendMessage} className={styles.messageInputContainer}>
                                 <input
                                     name="message"
                                     placeholder="Type a message..."
                                     className={styles.messageInput}
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
                                 />
                                 <button type="submit" className={styles.sendButton}>
                                     Send
@@ -163,5 +211,3 @@ const CI_E_Chat = () => {
 };
 
 export default CI_E_Chat;
-
-
