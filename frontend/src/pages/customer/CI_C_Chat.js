@@ -16,7 +16,16 @@ const CI_C_Chat = () => {
     const [room, setRoom] = useState("");
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
+
+    const fetchMessages = async (roomId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+            setMessageList(response.data);
+        } catch (error) {
+            console.error("Failed to fetch messages:", error);
+        }
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
@@ -24,22 +33,11 @@ const CI_C_Chat = () => {
             const decoded = jwtDecode(token);
             setUsername(decoded.username);
         }
-
         // Join the selected room
         setRoom(userId);
         socket.emit("join_room", { roomId: userId });
-
-        // Fetch messages for the selected room
-        const fetchMessages = async (roomId) => {
-            try {
-                const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
-                setMessageList(response.data);
-            } catch (error) {
-                console.error("Failed to fetch messages:", error);
-            }
-        };
-
         fetchMessages(userId);
+        handleMarkAsRead();
     }, []);
 
     const sendMessage = async () => {
@@ -53,18 +51,33 @@ const CI_C_Chat = () => {
                 time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
             };
             await socket.emit("send_message", messageData);
-            setMessageList((prev) => [...prev, { ...messageData, content: message }]); // Update the state directly with the correct content
+            //setMessageList((prev) => [...prev, { ...messageData, content: message }]); // Update the state directly with the correct content
             setMessage("");
         }
     };
 
-    useMemo(() => {
+    const handleMarkAsRead = async () => {
+        try {
+            await markMessagesAsRead(2, userId);
+            console.log("Messages marked as read");
+        } catch (error) {
+            console.error("Failed to mark messages as read");
+        }
+    };
+
+    useEffect(() => {
         const handleReceiveMessage = (data) => {
-            setMessageList((list) => [...list, data]); // Update the state directly
+            if (data.receiver_id === userId) {
+                console.log("I got the fucking message! data:", data);
+                setMessageList((list) => [...list, data]);
+            }
+            
         };
 
         socket.on("receive_message", handleReceiveMessage);
+        // socket.on("receive_message", handleReceiveMessage);
 
+        // Clean up the effect to avoid multiple connections
         return () => {
             socket.off("receive_message", handleReceiveMessage);
         };

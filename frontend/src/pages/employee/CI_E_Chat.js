@@ -34,33 +34,32 @@ const CI_E_Chat = () => {
         getChatRooms();
     }, []);
 
+    const fetchMessages = async (roomId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+            setMessages(response.data);
+        } catch (error) {
+            console.error("Failed to fetch messages:", error);
+        }
+    };
+
     useEffect(() => {
         if (selectedChat) {
             // Join the selected room
             socket.emit("join_room", { roomId: selectedChat });
-
-            // Fetch messages for the selected room
-            const fetchMessages = async (roomId) => {
-                try {
-                    const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
-                    setMessages(response.data);
-                } catch (error) {
-                    console.error("Failed to fetch messages:", error);
-                }
-            };
-
             fetchMessages(selectedChat);
         }
     }, [selectedChat]);
 
     useMemo(() => {
         const handleReceiveMessage = (message) => {
-            setMessages((prev) => [...prev, message]);
+            console.log("Received message:", message);
+            //setMessages((prev) => [...prev, message]);
             updateChatData(message);
+            getChatRooms();
         };
 
         socket.on("receive_message", handleReceiveMessage);
-
         // Clean up listener on component unmount
         return () => {
             socket.off("receive_message", handleReceiveMessage);
@@ -101,9 +100,9 @@ const CI_E_Chat = () => {
                 time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
             };
             socket.emit("send_message", messageData);
-            setMessages((prev) => [...prev, { ...messageData, content: newMessage }]); // Update the state directly with the correct content
+            //setMessages((prev) => [...prev, { ...messageData, content: newMessage }]); // Update the state directly with the correct content
             setNewMessage(""); // Clear input field
-            getChatRooms()
+            getChatRooms();
         }
     };
 

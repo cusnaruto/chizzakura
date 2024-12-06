@@ -45,9 +45,11 @@ const sendMessage = async (data, io) => {
 
     // Emit the message to the room
     if (io) {
-      io.to(room).emit("receive_message", messageData);
+      io.emit("receive_message", messageData);
     }
-    console.log(`Message sent to room: ${room}`);
+    else {
+      console.log("io? what io?");
+    }
   } catch (error) {
     console.error("Error sending message:", error.message);
   }
