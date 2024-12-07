@@ -3,7 +3,7 @@ import Header from '../../components/O_Header';
 import { FaEdit, FaTrash, FaSave, FaPlusCircle } from 'react-icons/fa';
 import styles from '../../styles/owner/list.module.css';
 import axios from 'axios';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 const DM_O_Discount = () => {
     const [discounts, setDiscounts] = useState([]);

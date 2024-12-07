@@ -51,10 +51,10 @@ const CI_E_Chat = () => {
         }
     }, [selectedChat]);
 
-    useMemo(() => {
+    useEffect(() => {
         const handleReceiveMessage = (message) => {
-            console.log("Received message:", message);
-            //setMessages((prev) => [...prev, message]);
+            console.log("Got da gud shit dawgs:", message);
+            setMessages((prev) => [...prev, message]);
             updateChatData(message);
             getChatRooms();
         };
