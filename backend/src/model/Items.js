@@ -20,10 +20,6 @@ const Items = sequelize.define("Items", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  // description: {
-  //   type: DataTypes.STRING,
-  //   allowNull: true,
-  // },
   is_available: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

@@ -6,6 +6,9 @@ import { FaDollarSign, FaBox, FaConciergeBell } from "react-icons/fa"; // Import
 const ReportPage = () => {
     const [activeTab, setActiveTab] = useState('items');
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [reports, setReports] = useState([]);
+
+    const API_BASE_URL = 'http://localhost:8080/BR';
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -14,6 +17,19 @@ const ReportPage = () => {
 
         return () => clearInterval(timer);
     }, []);
+
+    // useEffect(() => {
+    //     axios
+    //       .get(`${API_BASE_URL}/items-report`)
+    //       .then((response) => {
+    //         if (response.data.success) {
+    //           setReports(response.data.data);
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error fetching reports:", error);
+    //       });
+    //   }, []);
 
     // Sample data for item reports
     const itemReports = [

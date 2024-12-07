@@ -12,6 +12,7 @@ const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
 const webRoutes = require("./route/web");
+const reportRoutes = require("./route/reportRouters");
 //config template engine
 configViewEngine(app);
 
@@ -24,6 +25,7 @@ app.use("/UM/", userRoutes);
 app.use("/TM/", tableRoutes);
 app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
+app.use("/BR/", reportRoutes);
 app.use("/", webRoutes);
 
 app.listen(port, hostname, () => {
