@@ -1,6 +1,15 @@
-// models/order.js
-module.exports = (sequelize, DataTypes) => {
-  const Order = sequelize.define("Order", {
+// src/models/Order.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/databaseConnection");
+
+const Order = sequelize.define(
+  "Order",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     tableId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -15,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     updatedAt: {
       type: DataTypes.DATE,
-      allowNull
+      allowNull: true,
     },
     customerId: {
       type: DataTypes.INTEGER,
@@ -30,13 +39,16 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "pending",
       allowNull: false,
     },
-  });
+  },
+  {
+    timestamps: true, // Enable automatic creation of createdAt and updatedAt fields
+  }
+);
 
-  Order.associate = (models) => {
-    Order.belongsTo(models.Table, { foreignKey: "tableId" });
-    Order.belongsTo(models.User, { foreignKey: "customerId" });
-    Order.belongsTo(models.User, { foreignKey: "employeeId" });
-  };
-
-  return Order;
+Order.associate = (models) => {
+  Order.belongsTo(models.Table, { foreignKey: "tableId" });
+  Order.belongsTo(models.User, { foreignKey: "customerId" });
+  Order.belongsTo(models.User, { foreignKey: "employeeId" });
 };
+
+module.exports = Order;

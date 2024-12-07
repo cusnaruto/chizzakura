@@ -2,16 +2,85 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/customer/CCheckout.module.css";
 import { useCart } from "../../contexts/CartContext";
-
+import axios from "axios";
 import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
+import { use } from "react";
+import { useEffect } from "react";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
   const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
 
-  const discount = 10; // Giảm giá 10%
+  const [discount, setDiscount] = useState(0);
+
+  useEffect(() => {
+    // Lấy discount từ API
+    const fetchDiscount = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/DM/get-discounts"
+        );
+        // console.log("Discount API response:", response.data);
+        if (response.data) {
+          setDiscount(response.data.discount);
+        } else {
+          console.error("Error fetching discount bruh:", response.error);
+        }
+      } catch (error) {
+        console.error(
+          "Error fetching discount:",
+          error.response || error.message
+        );
+      }
+    };
+    fetchDiscount();
+  }, []);
+
+  //handle send order
+  const handleSendOrder = async () => {
+    try {
+      // Chuẩn bị dữ liệu để gửi tới API
+      const orderDetails = state.items.map((item) => ({
+        itemId: item.id,
+        quantity: item.quantity,
+        unit_price: item.price,
+        total_price: item.price * item.quantity,
+      }));
+
+      const orderData = {
+        tableId: "3",
+        total_price: totalPrice,
+        orderDetails,
+      };
+
+      console.log("Order data:", orderData);
+
+      // Gửi request tới API
+      const response = await axios.post("http://localhost:8080/OM/", orderData);
+
+      if (response.data.success) {
+        // Xử lý thành công
+        console.log("Order created successfully:", response.data);
+        dispatch({ type: "CLEAR_CART" }); // Xóa giỏ hàng
+        navigate("/home"); // Chuyển hướng về trang chủ
+      } else {
+        console.error("Error creating order:", response.data.message);
+      }
+    } catch (error) {
+      // Xử lý lỗi
+      if (error.response) {
+        console.error(
+          "API Error:",
+          error.response.data.message || error.response.data
+        );
+      } else {
+        console.error("Request Error:", error.message);
+      }
+    }
+  };
+
   const totalPrice = state.items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
@@ -92,7 +161,9 @@ const OM_C_Checkout = () => {
         </button>
       </div>
 
-      <button className={styles["send-order-btn"]}>Send order</button>
+      <button className={styles["send-order-btn"]} onClick={handleSendOrder}>
+        Send order
+      </button>
     </div>
   );
 };
