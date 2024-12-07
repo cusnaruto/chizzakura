@@ -3,10 +3,36 @@ const Discount = require("../model/Discount");
 // Create a new Discount
 const createDiscount = async (req, res) => {
   try {
-    const Discount = await Discount.create(req.body);
-    res.status(201).json(Discount);
+    const { discount_code, value, description, valid_from, valid_until } = req.body;
+
+    if (value < 0 || value > 1) {
+      return res.status(400).json({ error: "Value must be between 0 and 1"});
+    }
+
+    if (!discount_code || !value || !description || !valid_from || !valid_until) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const validFromDate = new Date(valid_from);
+    const validUntilDate = new Date(valid_until);
+
+    const newDiscount = await Discount.create({
+      discount_code,
+      value,
+      description,
+      valid_from: validFromDate,
+      valid_until: validUntilDate
+    });
+
+    const formattedDiscount = {
+      ...newDiscount.toJSON(),
+      valid_from: validFromDate.toISOString().split('T')[0],  // 'yyyy-MM-dd'
+      valid_until: validUntilDate.toISOString().split('T')[0] // 'yyyy-MM-dd'
+    };
+
+    res.status(201).json(formattedDiscount);
   } catch (error) {
-    console.error("Error creating Discount:", error);
+    // console.error("Error creating Discount:", error.stack);
     res.status(500).json({ error: error.message });
   }
 };

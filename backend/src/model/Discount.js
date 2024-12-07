@@ -17,8 +17,12 @@ const Discount = sequelize.define("Discounts", {
     allowNull: false,
   },
   value: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.DECIMAL(3, 2),
     allowNull: false,
+    validate: {
+      min: 0,
+      max: 1
+    }
   },
   valid_from: {
     type: DataTypes.DATE,

@@ -2,36 +2,41 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../components/O_Header';
 import { FaEdit, FaTrash, FaSave, FaPlusCircle } from 'react-icons/fa';
 import styles from '../../styles/owner/list.module.css';
+import axios from 'axios';
+import { format } from 'date-fns';
 
 const DM_O_Discount = () => {
     const [discounts, setDiscounts] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDiscount, setCurrentDiscount] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
+    const [error, setError] = useState('');
 
-    // test, see in web console
-    useEffect(() => {
-        //  Test calling the API to fetch data
-        fetch("http://localhost:8080/UM/hello")
-          .then((response) => {
-              if (response.ok) {
-                  console.log("Data fetched successfully");
-              } else {
-                  console.log("Failed to fetch data");
-              }
-          })
-          .catch((error) => console.error("Error fetching data:", error));
-      }, []);
+    const API_BASE_URL = 'http://localhost:8080/DM';
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return format(date, 'yyyy-MM-dd');
+    }
 
-    // fake data
-    useEffect(() => {
-        // test data, replace with actual data from backend API
-        const fakeDiscounts = [
-            { id: 1, discount_code: 'DISC10', value: '10%', description: '10% off', valid_from: '2023-01-01', valid_until: '2023-12-31' },
-            { id: 2, discount_code: 'DISC20', value: '20%', description: '20% off', valid_from: '2023-01-01', valid_until: '2023-12-31' },
-        ];
-        setDiscounts(fakeDiscounts);
+    useEffect(() => {   
+        const fetchDiscounts = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/get-discounts`);
+                const today = new Date();
+                const discountsFormatted = response.data.map((discount) => ({
+                    ...discount,
+                    valid_from: formatDate(discount.valid_from),
+                    valid_until: formatDate(discount.valid_until),
+                    isValidDiscount: new Date(discount.valid_until) < today,
+                }));
+                setDiscounts(discountsFormatted);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        };
+        fetchDiscounts();
+        
     }, []);
 
     // Handle edit discount
@@ -50,17 +55,54 @@ const DM_O_Discount = () => {
 
     // Delete discount
     const handleDeleteClick = (discount) => {
-        setDiscounts(discounts.filter((disc) => disc.id !== discount.id));
+        axios.delete(`${API_BASE_URL}/delete-discount/${discount.id}`)
+            .then(() => {
+                setDiscounts(discounts.filter((disc) => disc.id !== discount.id));
+            })
+            .catch((error) => {
+                console.error('Error deleting discount: ', error);
+            });
     };
 
-    const handleSave = () => {
-        if (isAdding) {
-            setDiscounts([...discounts, currentDiscount]);
+    const handleValueChange = (e) => {
+
+        const value = parseFloat(e.target.value);
+        if ( value < 0 || value > 1) {
+            setError('Value must be between 0 and 1');
         } else {
-            setDiscounts(discounts.map((disc) => (disc.id === currentDiscount.id ? currentDiscount : disc)));
+            setError('');
+            setCurrentDiscount({ ...currentDiscount, value: e.target.value });
         }
-        setIsModalOpen(false); 
     };
+
+    const handleSave = async () => {
+        // Chuyển đổi valid_from và valid_until về định dạng chuẩn khi lưu
+        const formattedDiscount = {
+            ...currentDiscount,
+            valid_from: new Date(currentDiscount.valid_from).toISOString().split('T')[0], 
+            valid_until: new Date(currentDiscount.valid_until).toISOString().split('T')[0],
+        };
+    
+        try {
+
+            let updatedDiscount;
+
+            if (isAdding) {
+                // Gửi yêu cầu tạo mới
+                const response = await axios.post('http://localhost:8080/DM/create-discount', formattedDiscount);
+                updatedDiscount = response.data;
+                setDiscounts([...discounts, updatedDiscount]);
+            } else {
+                // Gửi yêu cầu cập nhật
+                const response = await axios.put(`http://localhost:8080/DM/update-discount/${currentDiscount.id}`, formattedDiscount);
+                updatedDiscount = response.data;  // Lấy discount cập nhật từ response
+                setDiscounts(discounts.map(disc => disc.id === updatedDiscount.id ? updatedDiscount : disc));
+            }
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error('Error saving discount:', error);
+        }
+    };   
 
     const handleCancel = () => {
         setIsModalOpen(false); // Close the modal without saving
@@ -89,7 +131,10 @@ const DM_O_Discount = () => {
                         </thead>
                         <tbody>
                             {discounts.map((discount) => (
-                                <tr key={discount.id}>
+                                <tr 
+                                    key={discount.id}
+                                    className={discount.isValidDiscount ? styles.invalidDiscount: ''}
+                                >
                                     <td>{discount.id}</td>
                                     <td>{discount.discount_code}</td>
                                     <td>{discount.value}</td>
@@ -124,11 +169,16 @@ const DM_O_Discount = () => {
                             <div className={styles.formGroup}>
                                 <label>Value:</label>
                                 <input
-                                    type="text"
+                                    type="number"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
                                     value={currentDiscount.value}
-                                    onChange={(e) => setCurrentDiscount({ ...currentDiscount, value: e.target.value })}
+                                    onChange={handleValueChange}
+                                    // onChange={(e) => setCurrentDiscount({ ...currentDiscount, value: e.target.value })}
                                 />
-                            </div>
+                                {error && <p className={styles.errorText}>{error}</p>}                   
+                            </div>                         
                             <div className={styles.formGroup}>
                                 <label>Description:</label>
                                 <input

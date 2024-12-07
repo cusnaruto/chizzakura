@@ -23,7 +23,16 @@ const OrderDetail = sequelize.define("OrderDetail", {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
 });
+
 
 // Define the association directly
 OrderDetail.belongsTo(Items, { foreignKey: 'itemId' });
