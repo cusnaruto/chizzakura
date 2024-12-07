@@ -41,42 +41,99 @@ import UmEConfirmOrder from "./pages/employee/UM_E_ConfirmOrder";
 import OmEListOrder from "./pages/employee/OM_E_ListOrder";
 import C_ProtectedRoute from "./components/customer/C_ProtectedRoute";
 
+import { CartProvider } from "./contexts/CartContext";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/login" element={<UM_C_Login />} />
-        <Route path="/register" element={<UM_C_Register />} />
-        <Route path="/home" element={<UM_C_Home />} />
-        <Route path="/menu" element={<MM_C_Menu />} />
-        <Route path="/cart" element={<OM_C_Cart />} />
-        <Route path="/profile" element={<UM_C_Profile />} />
-        <Route path="/rateFood" element={<CI_C_RateItem />} />
-        <Route path="/checkout" element={<OM_C_Checkout />} />
-        <Route path="/chat" element={<CI_C_Chat />} />
+    <CartProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<UM_C_Login />} />
+          <Route path="/register" element={<UM_C_Register />} />
 
-        <Route path="/" element={<Navigate to="/" />} />
+          <Route
+            path="/home"
+            element={
+              <C_ProtectedRoute>
+                <UM_C_Home />
+              </C_ProtectedRoute>
+            }
+          />
+          <Route
+            path="/menu"
+            element={
+              <C_ProtectedRoute>
+                <MM_C_Menu />
+              </C_ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <C_ProtectedRoute>
+                <OM_C_Cart />
+              </C_ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <C_ProtectedRoute>
+                <UM_C_Profile />
+              </C_ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rateFood"
+            element={
+              <C_ProtectedRoute>
+                <CI_C_RateItem />
+              </C_ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <C_ProtectedRoute>
+                <OM_C_Checkout />
+              </C_ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <C_ProtectedRoute>
+                <CI_C_Chat />
+              </C_ProtectedRoute>
+            }
+          />
 
-        <Route path="/admin/um_o_eregister" element={<UmOERegister />} />
-        <Route path="/admin/um_oe_login" element={<UmOELogin />} />
-        <Route path="/admin/mm_o_editmenu" element={<MmOEditMenu />} />
-        <Route path="/admin/um_o_profile" element={<UmOProfile />} />
-        <Route path="/admin/tm_o_table" element={<TmOTable />} />
-        <Route path="/admin/tm_o_tableedit" element={<TmOTableEdit />} />
-        <Route path="/admin/um_o_editeinfo" element={<UmOEditEInfo />} />
-        <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
-        <Route path="/admin/br_o_report" element={<BrOReport />} />
+          <Route path="/" element={<Navigate to="/home" />} />
 
-        <Route path="/employee/menu" element={<MM_E_EditMenu />} />
-        <Route path="/employee/chat" element={<CI_E_Chat />} />
-        <Route path="/employee/table" element={<TmETable />} />
-        <Route path="/employee/confirmorder/:orderId" element={<UmEConfirmOrder />} />
-        <Route path="/employee/listorder" element={<OmEListOrder />} />
+          <Route path="/admin/um_o_eregister" element={<UmOERegister />} />
+          <Route path="/admin/um_oe_login" element={<UmOELogin />} />
+          <Route path="/admin/mm_o_editmenu" element={<MmOEditMenu />} />
+          <Route path="/admin/um_o_profile" element={<UmOProfile />} />
+          <Route path="/admin/tm_o_table" element={<TmOTable />} />
+          <Route path="/admin/tm_o_tableedit" element={<TmOTableEdit />} />
+          <Route path="/admin/um_o_editeinfo" element={<UmOEditEInfo />} />
+          <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
+          <Route path="/admin/br_o_report" element={<BrOReport />} />
 
-        <Route path="/app" element={<App />} />
-      </Routes>
-    </Router>
+          <Route path="/employee/menu" element={<MM_E_EditMenu />} />
+          <Route path="/employee/chat" element={<CI_E_Chat />} />
+          <Route path="/employee/table" element={<TmETable />} />
+          <Route
+            path="/employee/confirmorder/:orderId"
+            element={<UmEConfirmOrder />}
+          />
+          <Route path="/employee/listorder" element={<OmEListOrder />} />
+
+          <Route path="/app" element={<App />} />
+        </Routes>
+      </Router>
+    </CartProvider>
   </React.StrictMode>
 );
 

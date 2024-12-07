@@ -1,23 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
+import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 import styles from '../../styles/customer/CChat.module.css';
-
 import defaultAvtPic from '../../assets/Image_C/default_avt.jpg';
 import employeeAvtPic from '../../assets/Image_C/avtE.png';
 import homeImg from '../../assets/Image_C/home.png';
 
+import { socket, userId } from '../../services/socket'; // Import the WebSocket connection and userId
+import { fetchMessages, markMessagesAsRead } from '../../services/messageServices'; // Import API services
+
 const CI_C_Chat = () => {
+    const [username, setUsername] = useState("");
+    const [room, setRoom] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageList, setMessageList] = useState([]);
+    const navigate = useNavigate(); 
 
-    const navigate = useNavigate();
-
-    const userInfo = {
-        Name: 'Minh Tuan',
-        profilePic: null,
+    const fetchMessages = async (roomId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+            setMessageList(response.data);
+        } catch (error) {
+            console.error("Failed to fetch messages:", error);
+        }
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            const decoded = jwtDecode(token);
+            setUsername(decoded.username);
+        }
+        // Join the selected room
+        setRoom(userId);
+        socket.emit("join_room", { roomId: userId });
+        fetchMessages(userId);
+        handleMarkAsRead();
+    }, []);
+
+    const sendMessage = async () => {
+        if (message !== "") {
+            const token = localStorage.getItem('authToken');
+            const messageData = {
+                token: localStorage.getItem("authToken"), // Include user's token
+                room: userId, // Room ID = selected chat ID
+                message: message, // Ensure the message content is correctly set
+                sender_id: userId, // Include the sender_id in the message data
+                time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+            };
+            await socket.emit("send_message", messageData);
+            //setMessageList((prev) => [...prev, { ...messageData, content: message }]); // Update the state directly with the correct content
+            setMessage("");
+        }
+    };
+
+    const handleMarkAsRead = async () => {
+        try {
+            await markMessagesAsRead(2, userId);
+            console.log("Messages marked as read");
+        } catch (error) {
+            console.error("Failed to mark messages as read");
+        }
+    };
+
+    useEffect(() => {
+        const handleReceiveMessage = (data) => {
+            if (data.receiver_id === userId) {
+                console.log("I got the fucking message! data:", data);
+                setMessageList((list) => [...list, data]);
+            }
+            
+        };
+
+        socket.on("receive_message", handleReceiveMessage);
+        // socket.on("receive_message", handleReceiveMessage);
+
+        // Clean up the effect to avoid multiple connections
+        return () => {
+            socket.off("receive_message", handleReceiveMessage);
+        };
+    }, []);
 
     return (
-
         <div className={styles['chat-page']}>
             <div className={styles['chat-header']}>
                 <img src={employeeAvtPic} alt="Avatar" className={styles['chat-employee-avt']} />
@@ -29,34 +95,30 @@ const CI_C_Chat = () => {
             </div>
 
             <div className={styles['chat-box']}>
-                <div className={`${styles['chat-message']} ${styles['customer']}`}>
-                    <img src={defaultAvtPic} alt="Avatar" className={styles['chat-customer-avt']} />
-                    <p className={styles['chat-customer-message']}>こんにちは</p>
-                </div>
-                <div className={`${styles['chat-message']} ${styles['employee']}`}>
-                    <img src={employeeAvtPic} alt="Avatar" className={styles['chat-employee-avt']} />
-                    <p className={styles['chat-employee-message']}>こんにちは、何が必要ですか？</p>
-                </div>
-                <div className={`${styles['chat-message']} ${styles['customer']}`}>
-                    <img src={defaultAvtPic} alt="Avatar" className={styles['chat-customer-avt']} />
-                    <p className={styles['chat-customer-message']}>最高のチッツァをください</p>
-                </div>
-                <div className={`${styles['chat-message']} ${styles['employee']}`}>
-                    <img src={employeeAvtPic} alt="Avatar" className={styles['chat-employee-avt']} />
-                    <p className={styles['chat-employee-message']}>ちょっと、ここにあります</p>
-                </div>
+                {messageList.map((messageContent, index) => (
+                    <div key={index} className={`${styles['chat-message']} ${messageContent.sender_id === userId ? styles['customer'] : styles['employee']}`}>
+                        <img src={messageContent.sender_id === userId ? defaultAvtPic : employeeAvtPic} alt="Avatar" className={styles['chat-customer-avt']} />
+                        <p className={styles['chat-customer-message']}>{messageContent.content}</p> {/* Ensure the message content is correctly accessed */}
+                    </div>
+                ))}
             </div>
 
             <div className={styles['chat-input']}>
-                <img src={defaultAvtPic} alt="Avatar" className={styles['chat-customer-avt']} onClick={() => navigate('/profile')}/>
-                <input type="text" placeholder="Type message..." />
-                <button>Send</button>
+                <img src={defaultAvtPic} alt="Avatar" className={styles['chat-customer-avt']} onClick={() => navigate('/profile')} />
+                <input
+                    type="text"
+                    placeholder="Type message..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                />
+                <button onClick={sendMessage}>Send</button>
             </div>
 
+            <div className={styles['chat-input']}>
+                <span>Username: {username}</span>
+            </div>
         </div>
-        
     );
-        
 };
 
 export default CI_C_Chat;

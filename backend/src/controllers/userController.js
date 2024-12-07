@@ -1,8 +1,10 @@
+require("dotenv").config();
+
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const SECRET_KEY = "your_secret_key"; // Thay bằng key bảo mật của bạn
+const SECRET_KEY = "gj2IBaLDh2nook1g0H6D1aVHtqoq0S1r";
 
 const createUser = async (req, res) => {
   const { first_name, last_name, email, username, password, role } = req.body;
@@ -45,11 +47,17 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { username, password } = req.body;
-
   try {
-    const user = await User.findOne({ where: { username } });
+    // Kiểm tra dữ liệu đầu vào
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
+    }
 
+    // Tìm người dùng theo username
+    const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -60,16 +68,27 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Tạo token
+    // Tạo token nếu đăng nhập thành công
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       SECRET_KEY,
       { expiresIn: "24h" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ error: "Error logging in", details: error.message });
+    console.error("Error during login:", error);
+    return res
+      .status(500)
+      .json({ error: "Internal server error", details: error.message });
   }
 };
 
