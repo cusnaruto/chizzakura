@@ -11,7 +11,7 @@ module.exports = {
           name: 'Margherita Pizza',
           price: 12.99,
           categoryId: 1,
-          is_available: true,
+          is_available: false,
           image: defaultImage,
           createdAt: new Date(),
           updatedAt: new Date()
@@ -51,7 +51,37 @@ module.exports = {
           name: 'Chocolate Cake',
           price: 6.99,
           categoryId: 4,
-          is_available: true,
+          is_available: false,
+          image: defaultImage,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 6,
+          name: 'Big Sides',
+          price: 6.99,
+          categoryId: 3,
+          is_available: false,
+          image: defaultImage,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 7,
+          name: 'Chocolate Pizza',
+          price: 6.99,
+          categoryId: 1,
+          is_available: false,
+          image: defaultImage,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 8,
+          name: '10h kem 7',
+          price: 6.99,
+          categoryId: 2,
+          is_available: false,
           image: defaultImage,
           createdAt: new Date(),
           updatedAt: new Date()
