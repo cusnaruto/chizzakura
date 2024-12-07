@@ -14,6 +14,8 @@ const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
 const messageRoutes = require("./route/messageRoutes");
+const webRoutes = require("./route/web");
+const itemReviewRoutes = require("./route/itemReviewsRoutes");
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
@@ -87,6 +89,8 @@ app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
 app.use("/OM/", orderRoutes);
 app.use("/CI/", messageRoutes);
+app.use("/reviews", itemReviewRoutes);
+app.use("/", webRoutes);
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);

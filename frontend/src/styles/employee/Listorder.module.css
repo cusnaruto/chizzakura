@@ -97,14 +97,14 @@
 /* Pagination css */
 .pagination {
     display: flex;
-    justify-content: center; /* Center the pagination controls */
+    justify-content: center;
     align-items: center;
-    gap: 5px; /* Reduce the gap between buttons */
+    gap: 5px;
     margin-top: 20px;
 }
 
 .pageButton {
-    padding: 5px 8px; /* Reduce padding */
+    padding: 5px 8px;
     background-color: pink;
     border: none;
     border-radius: 5px;

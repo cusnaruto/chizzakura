@@ -1,12 +1,15 @@
-// src/models/Table.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/databaseConnection");
 
-const Table = sequelize.define("Table", {
+const Table = sequelize.define("Tables", {
   id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
+  },
+  table_number: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    unique: true
   },
   qr_code: {
     type: DataTypes.STRING,
@@ -16,9 +19,18 @@ const Table = sequelize.define("Table", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  }
 }, {
-  freezeTableName: true, // Prevent Sequelize from pluralizing the table name
-  timestamps: false, // Disable the automatic creation of createdAt and updatedAt fields
+  freezeTableName: true
 });
 
 module.exports = Table;
