@@ -29,9 +29,9 @@ const getItems = async (req, res) => {
 // Get a single Item by ID
 const getItemById = async (req, res) => {
   try {
-    const Item = await Item.findByPk(req.params.id);
-    if (Item) {
-      res.status(200).json(Item);
+    const item = await Item.findByPk(req.params.id);
+    if (item) {
+      res.status(200).json(item);
     } else {
       res.status(404).json({ error: "Item not found" });
     }
@@ -44,8 +44,11 @@ const getItemById = async (req, res) => {
 // Update a Item by ID
 const updateItem = async (req, res) => {
   try {
-    const [updated] = await Item.update(req.body, {
-      where: { id: req.params.id },
+    const [updated] = await Item.update({
+      ...req.body,
+      updatedAt: new Date()
+    }, {
+      where: { id: req.params.id }
     });
     if (updated) {
       const updatedItem = await Item.findByPk(req.params.id);

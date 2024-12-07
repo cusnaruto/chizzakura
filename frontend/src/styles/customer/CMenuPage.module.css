@@ -228,3 +228,70 @@
 .submit-comment-btn:hover {
   background-color: #45a049;
 }
+
+.rating-stars {
+    color: #ffd700;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.rating-number {
+    color: #666;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.submit-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 30px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+.rating-slider {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.rating-value {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.comment-button {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-button:hover {
+    background-color: #45a049;
+}
+
+.comment-box {
+    width: 100%;
+    min-height: 80px;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}

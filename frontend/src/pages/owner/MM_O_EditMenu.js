@@ -25,6 +25,13 @@ const MmOEditMenu = () => {
   const [data, setData] = useState([]); // State to hold fetched data
   const itemsPerPage = 8;
   const maxPageButtons = 3;
+  // In MM_O_EditMenu.js
+  const [categories] = useState([
+    { id: 1, name: 'Pizza' },
+    { id: 2, name: 'Drinks' },
+    { id: 3, name: 'Sides' },
+    { id: 4, name: 'Desserts' }
+  ]);
 
   // Fetch items from tthe backend server
   useEffect(() => {
@@ -86,11 +93,23 @@ const MmOEditMenu = () => {
   };
 
   // Edit function
-  const handleEdit = (index) => {
-    const itemIndex = (currentPage - 1) * itemsPerPage + index;
-    setCurrentItem({ ...data[itemIndex], index: itemIndex });
-    setFileName('');
-    setIsModalOpen(true);
+  const handleEdit = async (index) => {
+    // get items id when sorted or not
+    const itemIndex = getFilteredAndSortedItems();
+    const itemId = itemIndex[index].id;
+  
+    try {
+      const response = await axios.get(`http://localhost:8080/IM/get-item-by-id/${itemId}`);
+      const item = response.data;
+   
+      // Set the current item to be edited
+      setCurrentItem({ ...item, index: itemIndex });
+      setFileName('');
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching item details:', error);
+      alert('Failed to fetch item details');
+    }
   };
 
   // Form submit handler for editing items
@@ -102,28 +121,45 @@ const MmOEditMenu = () => {
         alert('Please fill in all required fields');
         return;
       }
-
+  
       // Validate price format
       if (isNaN(parseFloat(currentItem.price))) {
         alert('Price must be a valid number');
         return;
       }
-
-      const updatedData = [...data];
-
-      // Set default image if none selected
-      if (!currentItem.image) {
-        currentItem.image = mariIdolru;
+  
+      // Handle image upload if a new image is selected
+      let imageUrl = currentItem.image;
+      if (fileName && typeof currentItem.image !== 'string') {
+        const formData = new FormData();
+        formData.append('file', currentItem.image);
+        formData.append('upload_preset', 'chizza');
+  
+        const uploadResponse = await axios.post('http://localhost:8080/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        imageUrl = uploadResponse.data.url;
       }
-
-      updatedData[currentItem.index] = currentItem;
-
+  
+      // Prepare updated item data
+      const updatedItemData = {
+        name: currentItem.name,
+        price: parseFloat(currentItem.price),
+        categoryid: parseInt(currentItem.categoryid),
+        image: imageUrl,
+      };
+  
+      // Update item in the backend
+      await axios.put(`http://localhost:8080/IM/update-item/${currentItem.id}`, updatedItemData);
+  
       // Update local state
+      const updatedData = [...data];
+      updatedData[currentItem.index] = { ...updatedItemData, id: currentItem.id };
+  
       setData(updatedData);
-      
-      // TODO: Update backend
-      // await axios.put(`/api/items/${currentItem.id}`, currentItem);
-
       setIsModalOpen(false);
       setCurrentItem(null);
     } catch (error) {
@@ -243,14 +279,10 @@ const MmOEditMenu = () => {
     const file = e.target.files[0];
     if (file) {
       setFileName(file.name);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCurrentItem((prevItem) => ({
-          ...prevItem,
-          image: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      setCurrentItem(prevItem => ({
+        ...prevItem,
+        image: file
+      }));
     }
   };
 
@@ -396,9 +428,9 @@ const MmOEditMenu = () => {
                     name="img"
                     onChange={handleFileChange}
                   />
-                  <span className={styles.fileName}>{fileName}</span>
                 </div>
               </div>
+              <span className={styles.fileName}>{fileName}</span>
               <button type="submit" className={styles.saveButton}>Save</button>
               <button type="button" className={styles.delButton} onClick={handleDelete}>Delete</button>
               <button type="button" className={styles.cancelButton} onClick={() => setIsModalOpen(false)}>Cancel</button>

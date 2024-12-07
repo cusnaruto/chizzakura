@@ -1,4 +1,3 @@
-// src/models/Table.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/databaseConnection");
 
@@ -28,20 +27,14 @@ const Items = sequelize.define("Items", {
   image: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
+  }
 }, {
-  freezeTableName: true, // Prevent Sequelize from pluralizing the table name
-  timestamps: false, // Disable the automatic creation of createdAt and updatedAt fields
+  freezeTableName: true
 });
+
+// Add associations
+Items.associate = (models) => {
+  Items.hasMany(models.ItemReview, { foreignKey: 'itemId' });
+};
 
 module.exports = Items;

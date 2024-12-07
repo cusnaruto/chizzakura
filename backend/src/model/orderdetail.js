@@ -1,6 +1,8 @@
-// models/orderdetail.js
-module.exports = (sequelize, DataTypes) => {
-  const OrderDetail = sequelize.define("OrderDetail", {
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/databaseConnection");
+const Items = require("./Items");
+
+const OrderDetail = sequelize.define("OrderDetail", {
     orderId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -29,12 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-  });
+});
 
-  OrderDetail.associate = (models) => {
-    OrderDetail.belongsTo(models.Order, { foreignKey: "orderId" });
-    OrderDetail.belongsTo(models.Item, { foreignKey: "itemId" });
-  };
 
-  return OrderDetail;
-};
+// Define the association directly
+OrderDetail.belongsTo(Items, { foreignKey: 'itemId' });
+
+module.exports = OrderDetail;

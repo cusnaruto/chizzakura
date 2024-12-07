@@ -3,7 +3,15 @@ const Table = require("../model/Table");
 // Create a new table
 const createTable = async (req, res) => {
   try {
-    const table = await Table.create(req.body);
+    const { table_number } = req.body;
+    const table = await Table.create({
+      id: table_number, // Use table_number as id
+      table_number,
+      qr_code: `TABLE_QR_${table_number.toString().padStart(3, '0')}`,
+      is_available: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
     res.status(201).json(table);
   } catch (error) {
     console.error("Error creating table:", error);
@@ -40,8 +48,11 @@ const getTableById = async (req, res) => {
 // Update a table by ID
 const updateTable = async (req, res) => {
   try {
-    const [updated] = await Table.update(req.body, {
-      where: { id: req.params.id },
+    const [updated] = await Table.update({
+      ...req.body,
+      updatedAt: new Date()
+    }, {
+      where: { id: req.params.id }
     });
     if (updated) {
       const updatedTable = await Table.findByPk(req.params.id);

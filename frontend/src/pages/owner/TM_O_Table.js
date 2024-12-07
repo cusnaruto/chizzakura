@@ -1,38 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
 import Header from '../../components/O_Header';
 import styles from '../../styles/owner/table.module.css';
 import tableImage from '../../assets/table_topview.png';
+import axios from 'axios';
 
 const TM_O_Table = () => {
-
-  const [tables, setTables] = useState([
-    { id: 1, status: 'available', img: tableImage },
-    { id: 5, status: 'occupied', img: tableImage },
-    { id: 9, status: 'available', img: tableImage },
-    { id: 2, status: 'available', img: tableImage },
-    { id: 6, status: 'available', img: tableImage },
-    { id: 10, status: 'occupied', img: tableImage },
-    { id: 3, status: 'available', img: tableImage },
-    { id: 7, status: 'available', img: tableImage },
-    { id: 11, status: 'available', img: tableImage },
-    { id: 4, status: 'occupied', img: tableImage },
-    { id: 8, status: 'available', img: tableImage },
-    { id: 12, status: 'available', img: tableImage }
-  ]);
-
+  const [tables, setTables] = useState([]);
   const navigate = useNavigate();
 
-  const toggleTableStatus = (id) => {
-    setTables((prevTables) =>
-      prevTables.map((table) =>
-        table.id === id
-          ? { ...table, status: table.status === 'occupied' ? 'available' : 'occupied' }
-          : table
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/TM/get-tables');
+        const tableData = response.data.map((table) => ({
+          id: table.id,
+          table_number: table.table_number,
+          status: table.is_available ? 'available' : 'occupied',
+          img: tableImage,
+        }));
+        setTables(tableData);
+      } catch (error) {
+        console.error('Error fetching tables:', error);
+      }
+    };
+    fetchTables();
+  }, []);
+
+  const toggleTableStatus = async (id) => {
+    try {
+      const table = tables.find(t => t.id === id);
+      const newStatus = table.status === 'occupied' ? 'available' : 'occupied';
+      
+      // Update backend
+      await axios.put(`http://localhost:8080/TM/update-table/${id}`, {
+        is_available: newStatus === 'available'
+      });
+
+      // Update frontend state
+      setTables(prevTables =>
+        prevTables.map(table =>
+          table.id === id
+            ? { ...table, status: newStatus }
+            : table
         )
       );
-    };
+    } catch (error) {
+      console.error('Error updating table status:', error);
+    }
+  };
 
   return (
   <div>
@@ -45,16 +62,16 @@ const TM_O_Table = () => {
     </div>
     <div className={styles.content}>
       <div className={styles.tableGrid}>
-        {tables.map((table) => (
+      {tables.map((table) => (
         <div
           key={table.id}
           className={`${styles.tableCard} ${table.status === 'occupied' ? styles.tableCardOccupied : styles.available}`}
           onClick={() => toggleTableStatus(table.id)}
         >
-          <img src={table.img} alt={`Table ${table.id}`} className={styles.tableImage} />
-          <div className={styles.tableNumber}>{table.id}</div>
+          <img src={table.img} alt={`Table ${table.table_number}`} className={styles.tableImage} />
+          <div className={styles.tableNumber}>{table.table_number}</div>
         </div>
-        ))}
+      ))}
       </div>
     </div>
     </div>
