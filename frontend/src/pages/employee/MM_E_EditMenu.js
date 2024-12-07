@@ -1,100 +1,110 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import axios from 'axios';
 import styles from '../../styles/employee/EEditMenu.module.css';
-
-import pizzaImg1 from '../../assets/Image_C/product_2.2.jpg';
-import pizzaImg2 from '../../assets/Image_C/product_2.3.jpg';
-import pizzaImg3 from '../../assets/Image_C/product_3.1.jpg';
-import pizzaImg4 from '../../assets/Image_C/product_3.2.jpg';
-
 import Header from '../../components/E_Header';
 
 const MM_E_EditMenu = () => {
-
     const navigate = useNavigate();
-
-    const [category, setCategory] = useState('Pizza');
-    const [items, setItems] = useState([
-        { id: 1, name: 'Vegetable Pizza', price: 10, img: pizzaImg1, available: true, category: 'Pizza' },
-        { id: 2, name: 'Meat Pizza', price: 20, img: pizzaImg2, available: true, category: 'Pizza' },
-        { id: 3, name: 'Cachua Pizza', price: 30, img: pizzaImg3, available: true, category: 'Pizza' },
-        { id: 4, name: 'Cheese Pizza', price: 10, img: pizzaImg4, available: true, category: 'Pizza' },
-        { id: 5, name: 'Vegetable Pizza', price: 10, img: pizzaImg1, available: true, category: 'Pizza' },
-        { id: 6, name: 'Meat Pizza', price: 20, img: pizzaImg2, available: true, category: 'Pizza' },
-        { id: 7, name: 'Cachua Pizza', price: 30, img: pizzaImg3, available: true, category: 'Pizza' },
-        { id: 8, name: 'Cheese Pizza', price: 10, img: pizzaImg4, available: true, category: 'Pizza' },
-        { id: 9, name: 'Chicken Wings', price: 12, img: pizzaImg1, available: true, category: 'Chicken' },
-        { id: 10, name: 'Grilled Chicken', price: 15, img: pizzaImg2, available: true, category: 'Chicken' },
-        { id: 11, name: 'Chicken Wings', price: 12, img: pizzaImg1, available: true, category: 'Chicken' },
-        { id: 12, name: 'Super Chicken', price: 15, img: pizzaImg2, available: true, category: 'Chicken' },
-        { id: 13, name: 'Chicken Wings', price: 12, img: pizzaImg1, available: true, category: 'Chicken' },
-        { id: 14, name: 'American Chicken', price: 15, img: pizzaImg2, available: true, category: 'Chicken' },
-        { id: 15, name: 'Pasta', price: 8, img: pizzaImg3, available: true, category: 'Food' },
-        { id: 16, name: 'Salad', price: 7, img: pizzaImg4, available: true, category: 'Food' },
-    ]);
-
+    const [items, setItems] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [filteredItems, setFilteredItems] = useState([]);
 
+    // Fetch items and categories when component mounts
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch items
+                const itemsResponse = await axios.get('http://localhost:8080/IM/get-items');
+                setItems(itemsResponse.data);
 
-        setFilteredItems(items.filter(item => item.category === category));
+                // Fetch categories
+                const categoriesResponse = await axios.get('http://localhost:8080/IM/get-categories');
+                setCategories(categoriesResponse.data);
+                
+                // Set initial category
+                if (categoriesResponse.data.length > 0) {
+                    setSelectedCategory(categoriesResponse.data[0].id);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-    }, [category, items]);
+        fetchData();
+    }, []);
 
-    const toggleAvailability = (id) => {
-        setItems(items.map(item => 
-          item.id === id ? { ...item, available: !item.available } : item
-        ));
+    // Filter items when category changes
+    useEffect(() => {
+        if (selectedCategory) {
+            const filtered = items.filter(item => item.categoryid === selectedCategory);
+            setFilteredItems(filtered);
+        }
+    }, [selectedCategory, items]);
+
+    const toggleAvailability = async (itemId, currentAvailability) => {
+        try {
+            await axios.put(`http://localhost:8080/IM/update-item/${itemId}`, {
+                is_available: !currentAvailability
+            });
+
+            // Update local state
+            setItems(items.map(item =>
+                item.id === itemId ? { ...item, is_available: !item.is_available } : item
+            ));
+        } catch (error) {
+            console.error('Error updating item availability:', error);
+        }
     };
 
-    const handleCategoryChange = (newCategory) => {
-        setCategory(newCategory);
+    const handleCategoryChange = (categoryId) => {
+        setSelectedCategory(categoryId);
     };
 
     return (
-        <div className={styles.editMenu}>
+        <div>
             <Header />
-
-            <div className={styles.selectOptions}>
-                <div className={styles.categorySelector}>
-                    <button onClick={() => handleCategoryChange('Pizza')} className={category === 'Pizza' ? styles.active : ''}>Pizza</button>
-                    <button onClick={() => handleCategoryChange('Chicken')} className={category === 'Chicken' ? styles.active : ''}>Chicken</button>
-                    <button onClick={() => handleCategoryChange('Food')} className={category === 'Food' ? styles.active : ''}>Food</button>
-                </div>
-
-                <div className={styles.saveMenu}>
-                    <button onClick={() => navigate('/employee/menu')}>Save</button>
-                </div>
-            </div>            
-            
-            <h1>{category}</h1>
-
-            <div className={styles.menuItems}>
-                {filteredItems.map((item) => (
-                    <div 
-                        key={item.id} 
-                        className={`${styles.menuItem} ${!item.available ? styles.unavailable : ''}`}
-                    >
-                        <img src={item.img} alt={item.name} />
-                        <p>{item.name}</p>
-                        <p style={{ color: 'red' }}>${item.price}</p>
-                        <label id="wrapper">
-                            <input
-                                type="checkbox"
-                                className={styles['switch-toggle']}
-                                checked={item.available}
-                                onChange={() => toggleAvailability(item.id)}
-                            />
-                        </label>
+            <div className={styles.editMenu}>
+                <div className={styles.selectOptions}>
+                    <div className={styles.categorySelector}>
+                        {categories.map(cat => (
+                            <button
+                                key={cat.id}
+                                onClick={() => handleCategoryChange(cat.id)}
+                                className={selectedCategory === cat.id ? styles.active : ''}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
 
+                <h1>{categories.find(cat => cat.id === selectedCategory)?.name}</h1>
+
+                <div className={styles.menuItems}>
+                    {filteredItems.map((item) => (
+                        <div
+                            key={item.id}
+                            className={`${styles.menuItem} ${!item.is_available ? styles.unavailable : ''}`}
+                        >
+                            <img src={item.image} alt={item.name} />
+                            <p>{item.name}</p>
+                            <p style={{ color: 'red' }}>${item.price}</p>
+                            <label id="wrapper">
+                                <input
+                                    type="checkbox"
+                                    className={styles['switch-toggle']}
+                                    checked={item.is_available}
+                                    onChange={() => toggleAvailability(item.id, item.is_available)}
+                                />
+                            </label>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
 
 export default MM_E_EditMenu;
-
