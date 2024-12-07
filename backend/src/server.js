@@ -14,7 +14,6 @@ const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
 const messageRoutes = require("./route/messageRoutes");
-const webRoutes = require("./route/web");
 const itemReviewRoutes = require("./route/itemReviewsRoutes");
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
@@ -27,8 +26,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST", "PUT"]
-  }
+    methods: ["GET", "POST", "PUT"],
+  },
 });
 
 // Middleware để gắn io vào request object
@@ -66,7 +65,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-      sendMessage({ ...data, sender_id: socket.user.id }, io);
+    sendMessage({ ...data, sender_id: socket.user.id }, io);
   });
 
   socket.on("disconnect", () => {
@@ -74,10 +73,8 @@ io.on("connection", (socket) => {
   });
 });
 
-
 configViewEngine(app);
 const orderRoutes = require("./route/orderRoutes");
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -90,7 +87,6 @@ app.use("/DM/", discountRoutes);
 app.use("/OM/", orderRoutes);
 app.use("/CI/", messageRoutes);
 app.use("/reviews", itemReviewRoutes);
-app.use("/", webRoutes);
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);
