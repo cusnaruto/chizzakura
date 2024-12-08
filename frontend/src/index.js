@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import "./styles/index.css";
 import App from "./App";
+import { socket, userId } from './services/socket';
 
 import MM_C_Menu from "./pages/customer/MM_C_Menu";
 import OM_C_Cart from "./pages/customer/OM_C_Cart";
@@ -40,11 +41,29 @@ import MmEEditMenu from "./pages/employee/MM_E_EditMenu";
 import UmEConfirmOrder from "./pages/employee/UM_E_ConfirmOrder";
 import OmEListOrder from "./pages/employee/OM_E_ListOrder";
 import C_ProtectedRoute from "./components/customer/C_ProtectedRoute";
-
+import E_ProtectedRoute from "./components/E_ProtectedRoute";
 import { CartProvider } from "./contexts/CartContext";
 import { TableProvider } from "./contexts/TableContext";
 
+import { message } from "antd";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const handleReceiveMessage = (data) => {
+  if (data.receiver_id === userId && data.sender_id === 2) {
+    console.log("Received message! data:", data);
+    if (Notification.permission === "granted") {
+      new Notification("New Message", {
+        body: data.message,
+        icon: '/path/to/icon.png', // Replace with your icon path
+      });
+      message.info(`your phone linging`);
+    }
+  }
+};
+
+socket.on("receive_message", handleReceiveMessage);
+
 root.render(
   <React.StrictMode>
     <TableProvider>
@@ -113,24 +132,119 @@ root.render(
 
             <Route path="/" element={<Navigate to="/home" />} />
 
-            <Route path="/admin/um_o_eregister" element={<UmOERegister />} />
-            <Route path="/admin/um_oe_login" element={<UmOELogin />} />
-            <Route path="/admin/mm_o_editmenu" element={<MmOEditMenu />} />
-            <Route path="/admin/um_o_profile" element={<UmOProfile />} />
-            <Route path="/admin/tm_o_table" element={<TmOTable />} />
-            <Route path="/admin/tm_o_tableedit" element={<TmOTableEdit />} />
-            <Route path="/admin/um_o_editeinfo" element={<UmOEditEInfo />} />
-            <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
-            <Route path="/admin/br_o_report" element={<BrOReport />} />
+            <Route
+              path="/admin/um_o_eregister"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <UmOERegister />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/um_oe_login"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <UmOELogin />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/mm_o_editmenu"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <MmOEditMenu />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/um_o_profile"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <UmOProfile />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/tm_o_table"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <TmOTable />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/tm_o_tableedit"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <TmOTableEdit />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/um_o_editeinfo"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <UmOEditEInfo />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/dm_o_discount"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <DmODiscount />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/br_o_report"
+              element={
+                <E_ProtectedRoute allowedRoles={["owner"]}>
+                  <BrOReport />
+                </E_ProtectedRoute>
+              }
+            />
 
-            <Route path="/employee/menu" element={<MM_E_EditMenu />} />
-            <Route path="/employee/chat" element={<CI_E_Chat />} />
-            <Route path="/employee/table" element={<TmETable />} />
+            <Route
+              path="/employee/menu"
+              element={
+                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
+                  <MM_E_EditMenu />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/employee/chat"
+              element={
+                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
+                  <CI_E_Chat />
+                </E_ProtectedRoute>
+              }
+            />
+            <Route
+              path="/employee/table"
+              element={
+                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
+                  <TmETable />
+                </E_ProtectedRoute>
+              }
+            />
             <Route
               path="/employee/confirmorder/:orderId"
-              element={<UmEConfirmOrder />}
+              element={
+                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
+                  <UmEConfirmOrder />
+                </E_ProtectedRoute>
+              }
             />
-            <Route path="/employee/listorder" element={<OmEListOrder />} />
+            <Route
+              path="/employee/listorder"
+              element={
+                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
+                  <OmEListOrder />
+                </E_ProtectedRoute>
+              }
+            />
 
             <Route path="/app" element={<App />} />
           </Routes>
