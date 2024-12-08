@@ -7,12 +7,13 @@ import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { use } from "react";
 import { useEffect } from "react";
+import { useTable } from "../../contexts/TableContext";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
   const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
-
+  const { tableNumber } = useTable();
   const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const OM_C_Checkout = () => {
       }));
 
       const orderData = {
-        tableId: "3",
+        tableId: tableNumber,
         total_price: totalPrice,
         orderDetails,
       };
@@ -106,7 +107,7 @@ const OM_C_Checkout = () => {
         </div>
         <p>Phạm Hoàng Anh | 0987654321</p>
         <p>
-          <strong>Vị trí bàn:</strong> Bàn số 3
+          <strong>Bàn số:</strong> {tableNumber}
         </p>
       </div>
 

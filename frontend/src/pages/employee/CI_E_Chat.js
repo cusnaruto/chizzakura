@@ -54,7 +54,9 @@ const CI_E_Chat = () => {
     useEffect(() => {
         const handleReceiveMessage = (message) => {
             console.log("Got da gud shit dawgs:", message);
+            if (message.receiver_id === selectedChat || message.sender_id === 2) {
             setMessages((prev) => [...prev, message]);
+            }
             updateChatData(message);
             getChatRooms();
         };
