@@ -44,6 +44,7 @@ import C_ProtectedRoute from "./components/customer/C_ProtectedRoute";
 import E_ProtectedRoute from "./components/E_ProtectedRoute";
 import { CartProvider } from "./contexts/CartContext";
 import { TableProvider } from "./contexts/TableContext";
+import TableCheck from "./TableCheck";
 
 import { message } from "antd";
 
@@ -69,185 +70,92 @@ root.render(
     <TableProvider>
       <CartProvider>
         <Router>
-          <Routes>
-            <Route path="/login" element={<UM_C_Login />} />
-            <Route path="/register" element={<UM_C_Register />} />
+          <TableCheck>
+            <Routes>
+              <Route path="/login" element={<UM_C_Login />} />
+              <Route path="/register" element={<UM_C_Register />} />
 
-            <Route
-              path="/home"
-              element={
-                <C_ProtectedRoute>
-                  <UM_C_Home />
-                </C_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/menu"
-              element={
-                <C_ProtectedRoute>
-                  <MM_C_Menu />
-                </C_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/cart"
-              element={
-                <C_ProtectedRoute>
-                  <OM_C_Cart />
-                </C_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <C_ProtectedRoute>
-                  <UM_C_Profile />
-                </C_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/rateFood"
-              element={
-                <C_ProtectedRoute>
-                  <CI_C_RateItem />
-                </C_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/checkout"
-              element={
-                <C_ProtectedRoute>
-                  <OM_C_Checkout />
-                </C_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/chat"
-              element={
-                <C_ProtectedRoute>
-                  <CI_C_Chat />
-                </C_ProtectedRoute>
-              }
-            />
+              <Route
+                path="/home"
+                element={
+                  <C_ProtectedRoute>
+                    <UM_C_Home />
+                  </C_ProtectedRoute>
+                }
+              />
+              <Route
+                path="/menu"
+                element={
+                  <C_ProtectedRoute>
+                    <MM_C_Menu />
+                  </C_ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <C_ProtectedRoute>
+                    <OM_C_Cart />
+                  </C_ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <C_ProtectedRoute>
+                    <UM_C_Profile />
+                  </C_ProtectedRoute>
+                }
+              />
+              <Route
+                path="/rateFood"
+                element={
+                  <C_ProtectedRoute>
+                    <CI_C_RateItem />
+                  </C_ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <C_ProtectedRoute>
+                    <OM_C_Checkout />
+                  </C_ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chat"
+                element={
+                  <C_ProtectedRoute>
+                    <CI_C_Chat />
+                  </C_ProtectedRoute>
+                }
+              />
 
-            <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="/" element={<Navigate to="/home" />} />
 
-            <Route
-              path="/admin/um_o_eregister"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <UmOERegister />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/um_oe_login"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <UmOELogin />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/mm_o_editmenu"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <MmOEditMenu />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/um_o_profile"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <UmOProfile />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/tm_o_table"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <TmOTable />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/tm_o_tableedit"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <TmOTableEdit />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/um_o_editeinfo"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <UmOEditEInfo />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/dm_o_discount"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <DmODiscount />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/br_o_report"
-              element={
-                <E_ProtectedRoute allowedRoles={["owner"]}>
-                  <BrOReport />
-                </E_ProtectedRoute>
-              }
-            />
+            <Route path="/admin/um_o_eregister" element={<UmOERegister />} />
+            <Route path="/admin/um_oe_login" element={<UmOELogin />} />
+            <Route path="/admin/mm_o_editmenu" element={<MmOEditMenu />} />
+            <Route path="/admin/um_o_profile" element={<UmOProfile />} />
+            <Route path="/admin/tm_o_table" element={<TmOTable />} />
+            <Route path="/admin/tm_o_tableedit" element={<TmOTableEdit />} />
+            <Route path="/admin/um_o_editeinfo" element={<UmOEditEInfo />} />
+            <Route path="/admin/dm_o_discount" element={<DmODiscount />} />
+            <Route path="/admin/br_o_report" element={<BrOReport />} />
 
-            <Route
-              path="/employee/menu"
-              element={
-                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
-                  <MM_E_EditMenu />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/employee/chat"
-              element={
-                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
-                  <CI_E_Chat />
-                </E_ProtectedRoute>
-              }
-            />
-            <Route
-              path="/employee/table"
-              element={
-                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
-                  <TmETable />
-                </E_ProtectedRoute>
-              }
-            />
+            <Route path="/employee/menu" element={<MM_E_EditMenu />} />
+            <Route path="/employee/chat" element={<CI_E_Chat />} />
+            <Route path="/employee/table" element={<TmETable />} />
             <Route
               path="/employee/confirmorder/:orderId"
-              element={
-                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
-                  <UmEConfirmOrder />
-                </E_ProtectedRoute>
-              }
+              element={<UmEConfirmOrder />}
             />
-            <Route
-              path="/employee/listorder"
-              element={
-                <E_ProtectedRoute allowedRoles={["employee", "owner"]}>
-                  <OmEListOrder />
-                </E_ProtectedRoute>
-              }
-            />
+            <Route path="/employee/listorder" element={<OmEListOrder />} />
 
-            <Route path="/app" element={<App />} />
-          </Routes>
+              <Route path="/app" element={<App />} />
+            </Routes>
+          </TableCheck>
         </Router>
       </CartProvider>
     </TableProvider>

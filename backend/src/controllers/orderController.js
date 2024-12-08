@@ -2,6 +2,7 @@
 const Order = require("../model/order.js");
 const OrderDetail = require("../model/orderdetail.js");
 const Table = require("../model/Table.js");
+const Items = require("../model/Items.js");
 
 // Tạo một đơn hàng mới
 const createOrder = async (req, res) => {
@@ -59,18 +60,19 @@ const getAllOrders = async (req, res) => {
       include: [
         {
           model: Table,
-          attributes: ["id", "name"],
+          attributes: ["id", "table_number"],
         },
         {
           model: OrderDetail,
           include: [
             {
-              model: Item,
+              model: Items,
               attributes: ["id", "name", "price"],
             },
           ],
         },
       ],
+      order: [['createdAt', 'DESC']] // Optional: sort by newest first
     });
 
     res.status(200).json({
@@ -95,13 +97,13 @@ const getOrderById = async (req, res) => {
       include: [
         {
           model: Table,
-          attributes: ["id", "name"],
+          attributes: ["id", "table_number"],
         },
         {
           model: OrderDetail,
           include: [
             {
-              model: Item,
+              model: Items,
               attributes: ["id", "name", "price"],
             },
           ],

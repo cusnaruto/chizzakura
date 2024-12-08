@@ -22,23 +22,24 @@ const OM_C_Checkout = () => {
   
 
   useEffect(() => {
-    // Lấy discount từ API
     const fetchDiscount = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/DM/get-discounts"
-        );
-        // console.log("Discount API response:", response.data);
-        if (response.data) {
-          setDiscount(response.data.discount);
-        } else {
-          console.error("Error fetching discount bruh:", response.error);
+        const response = await axios.get("http://localhost:8080/DM/get-discounts");
+        if (response.data && response.data.length > 0) {
+          // Get the active discount
+          const activeDiscount = response.data.find(d => {
+            const now = new Date();
+            const validFrom = new Date(d.valid_from);
+            const validUntil = new Date(d.valid_until);
+            return now >= validFrom && now <= validUntil;
+          });
+          
+          // Convert decimal to percentage (e.g., 0.15 -> 15)
+          setDiscount(activeDiscount ? activeDiscount.value * 100 : 0);
         }
       } catch (error) {
-        console.error(
-          "Error fetching discount:",
-          error.response || error.message
-        );
+        console.error("Error fetching discount bruh:", error);
+        setDiscount(0);
       }
     };
     fetchDiscount();
@@ -56,43 +57,49 @@ const OM_C_Checkout = () => {
   //handle send order
   const handleSendOrder = async () => {
     try {
-      // Chuẩn bị dữ liệu để gửi tới API
+      if (!tableNumber) {
+        alert('No table selected! Please select a table first.');
+        return;
+      }
+  
+      if (state.items.length === 0) {
+        alert('Cart is empty! Please add items before checking out.');
+        return;
+      }
+  
       const orderDetails = state.items.map((item) => ({
         itemId: item.id,
         quantity: item.quantity,
-        unit_price: item.price,
-        total_price: item.price * item.quantity,
+        unit_price: parseFloat(item.price),
+        total_price: parseFloat((item.price * item.quantity).toFixed(2))
       }));
-
+  
       const orderData = {
-        tableId: tableNumber,
-        total_price: totalPrice,
-        orderDetails,
+        tableId: parseInt(tableNumber),
+        total_price: parseFloat(discountedAmount.toFixed(2)),
+        orderDetails: orderDetails,
+        payment_method: paymentMethod
       };
-
-      console.log("Order data:", orderData);
-
-      // Gửi request tới API
+  
+      console.log("Sending order data:", orderData);
+  
       const response = await axios.post("http://localhost:8080/OM/", orderData);
-
+  
       if (response.data.success) {
-        // Xử lý thành công
         console.log("Order created successfully:", response.data);
-        dispatch({ type: "CLEAR_CART" }); // Xóa giỏ hàng
-        navigate("/home"); // Chuyển hướng về trang chủ
+        dispatch({ type: "CLEAR_CART" });
+        
+        // Get orderId from response
+        const orderId = response.data.order.id;
+        navigate(`/rateFood?orderId=${orderId}`);
       } else {
         console.error("Error creating order:", response.data.message);
+        alert("Failed to create order: " + response.data.message);
       }
     } catch (error) {
-      // Xử lý lỗi
-      if (error.response) {
-        console.error(
-          "API Error:",
-          error.response.data.message || error.response.data
-        );
-      } else {
-        console.error("Request Error:", error.message);
-      }
+      console.error("Error creating order:", error);
+      const errorMessage = error.response?.data?.message || "Network error";
+      alert("Failed to create order: " + errorMessage);
     }
   };
 
@@ -101,7 +108,7 @@ const OM_C_Checkout = () => {
     0
   );
   // Tính toán số tiền sau giảm giá
-  const discountedAmount = totalPrice * (1 - discount / 100);
+  const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
 
   return (
     <div className={styles["order-confirmation"]}>
