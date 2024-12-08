@@ -41,7 +41,7 @@ const OM_C_Cart = () => {
           state.items.map((item) => (
             <div key={item.id} className={styles["product-card"]}>
               <img
-                src={item.imageUrl}
+                src={item.image}
                 alt={item.name}
                 className={styles["product-img"]}
               />

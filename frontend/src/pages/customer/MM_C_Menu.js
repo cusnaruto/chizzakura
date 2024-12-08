@@ -126,7 +126,7 @@ const MM_C_Menu = () => {
           {currentItems.map((item) => (
             <div className={styles["product-card"]} key={item.id}>
               <img
-                src={item.imageUrl}
+                src={item.image}
                 alt={item.name}
                 className={styles["product-img"]}
                 onError={(e) => (e.target.src = "fallback-image-url.jpg")}

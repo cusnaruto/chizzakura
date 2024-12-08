@@ -1,10 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "Hoang@004",
+    "password": "dkoz818272389",
     "database": "chizzakura",
     "host": "127.0.0.1",
-    "port": "3307",
+    "port": "3306",
     "dialect": "mysql"
   },
   "test": {
