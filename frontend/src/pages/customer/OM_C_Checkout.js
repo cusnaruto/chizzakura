@@ -8,6 +8,7 @@ import editImg from "../../assets/Image_C/edit.png";
 import { use } from "react";
 import { useEffect } from "react";
 import { useTable } from "../../contexts/TableContext";
+import QRCode from "react-qr-code";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const OM_C_Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
   const { tableNumber } = useTable();
   const [discount, setDiscount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
   const [userInfo, setUserInfo] = useState(null);
   
