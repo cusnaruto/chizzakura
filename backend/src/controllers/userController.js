@@ -100,6 +100,8 @@ const getUserById = async (req, res) => {
       attributes: { exclude: ["password"] }, // Ẩn mật khẩu khỏi kết quả trả về
     });
 
+    console.log("user: ", user);
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -153,10 +155,38 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+
+    console.log("Headers:", req.headers);
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, SECRET_KEY);
+    console.log("Decoded token:", decoded);
+    const user = await User.findByPk(decoded.id, {
+      attributes: ["first_name", "last_name", "email"], 
+    });
+    console.log("User:", user);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    res.status(500).json({ error: "Failed to fetch user info" });
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
+  getUserProfile,
   updateUser,
   loginUser,
 };

@@ -92,6 +92,46 @@
     background-color: #ff6b6b;
     color: white;
 }
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.qr-code-container {
+    text-align: center;
+}
+
+.close-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.close-btn:hover {
+    background-color: #d32f2f;
+}
+  
   
 .send-order-btn {
     background-color: #ff6b6b;
