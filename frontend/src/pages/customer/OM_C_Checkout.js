@@ -7,13 +7,18 @@ import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { use } from "react";
 import { useEffect } from "react";
+import QRCode from "react-qr-code";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
+  const [paymentMethod, setPaymentMethod] = useState(null); 
+  const [showModal, setShowModal] = useState(false);
 
   const [discount, setDiscount] = useState(0);
+
+  const [userInfo, setUserInfo] = useState(null);
+  
 
   useEffect(() => {
     // Lấy discount từ API
@@ -37,6 +42,15 @@ const OM_C_Checkout = () => {
     };
     fetchDiscount();
   }, []);
+
+  const handleSelectPayment = (method) => {
+    setPaymentMethod(method);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
 
   //handle send order
   const handleSendOrder = async () => {
@@ -104,10 +118,19 @@ const OM_C_Checkout = () => {
           <p>Thông tin khách hàng</p>
           <img src={editImg} alt="Edit" />
         </div>
-        <p>Phạm Hoàng Anh | 0987654321</p>
-        <p>
-          <strong>Vị trí bàn:</strong> Bàn số 3
-        </p>
+        <div>
+          {userInfo ? (
+            <>
+              <p>{`${userInfo.first_name} ${userInfo.last_name}`} | {userInfo.email}</p>
+              <p>
+                <strong>Vị trí bàn:</strong> Bàn số 3
+              </p>
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
+
       </div>
 
       <hr />
@@ -144,22 +167,40 @@ const OM_C_Checkout = () => {
 
       <div className={styles["payment-method"]}>
         <button
-          className={`${styles["payment-btn"]} ${
-            paymentMethod === "cash" ? "active" : ""
-          }`}
-          onClick={() => setPaymentMethod("cash")}
+          className={styles["payment-btn"]}
+          onClick={() => handleSelectPayment("cash")}
         >
           Tiền mặt
         </button>
         <button
-          className={`${styles["payment-btn"]} ${
-            paymentMethod === "qr" ? "active" : ""
-          }`}
-          onClick={() => setPaymentMethod("qr")}
+          className={styles["payment-btn"]}
+          onClick={() => handleSelectPayment("qr")}
         >
           QR Code
         </button>
       </div>
+      
+      {showModal && (
+        <div className={styles["modal"]}>
+          <div className={styles["modal-content"]}>
+            <h2>Thanh toán</h2>
+            {paymentMethod === "cash" ? (
+              <p>
+                Quý khách vui lòng đợi nhân viên đến thanh toán. Số tiền cần thanh toán là:{" "}
+                <strong>${discountedAmount.toFixed(2)}</strong>.
+              </p>
+            ) : (
+              <div className={styles["qr-code-container"]}>
+                <p>Quét mã QR để thanh toán số tiền:</p>
+                <QRCode value={`Amount: ${discountedAmount.toFixed(2)}`} />
+              </div>
+            )}
+            <button onClick={closeModal} className={styles["close-btn"]}>
+              Đóng
+            </button>
+          </div>
+        </div>     
+      )}
 
       <button className={styles["send-order-btn"]} onClick={handleSendOrder}>
         Send order
