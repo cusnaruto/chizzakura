@@ -124,7 +124,7 @@ const MM_C_Menu = () => {
       ) : (
         <div className={styles["product-grid"]}>
           {currentItems.map((item) => (
-            <div className={styles["product-card"]} key={item.id}>
+            <div className={`${styles["product-card"]} ${!item.is_available ? styles["disabled"] : ""}`} key={item.id}>
               <img
                 src={item.image}
                 alt={item.name}
@@ -141,8 +141,9 @@ const MM_C_Menu = () => {
                   </span>
                 </div>
                 <button
-                  className={styles["add-to-cart-btn"]}
-                  onClick={() => handleAddToCart(item)}
+                  disabled={!item.is_available}
+                  className={`${styles["add-to-cart-btn"]} ${!item.is_available ? styles["disabled"] : ""}`}
+                  onClick={() => handleAddToCart(item)}                  
                   aria-label={`Add ${item.name} to cart`}
                 >
                   Add to cart

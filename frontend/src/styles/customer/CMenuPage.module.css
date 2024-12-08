@@ -48,6 +48,10 @@
   height: 292px;
 }
 
+.product-card.disabled {
+  background-color: #d3d3d3; 
+}
+
 .product-info {
   display: flex;
   flex-direction: column;
@@ -87,6 +91,16 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.add-to-cart-btn.disabled {
+  background-color: #d3d3d3; 
+  color: #a1a1a1; 
+  cursor: not-allowed; 
+}
+
+.add-to-cart-btn:disabled {
+  cursor: not-allowed; 
 }
 
 /* Phân trang */
