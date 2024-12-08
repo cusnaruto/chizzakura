@@ -7,14 +7,13 @@ import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { use } from "react";
 import { useEffect } from "react";
-import QRCode from "react-qr-code";
+import { useTable } from "../../contexts/TableContext";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState(null); 
-  const [showModal, setShowModal] = useState(false);
-
+  const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
+  const { tableNumber } = useTable();
   const [discount, setDiscount] = useState(0);
 
   const [userInfo, setUserInfo] = useState(null);
@@ -64,7 +63,7 @@ const OM_C_Checkout = () => {
       }));
 
       const orderData = {
-        tableId: "3",
+        tableId: tableNumber,
         total_price: totalPrice,
         orderDetails,
       };
@@ -118,19 +117,10 @@ const OM_C_Checkout = () => {
           <p>Thông tin khách hàng</p>
           <img src={editImg} alt="Edit" />
         </div>
-        <div>
-          {userInfo ? (
-            <>
-              <p>{`${userInfo.first_name} ${userInfo.last_name}`} | {userInfo.email}</p>
-              <p>
-                <strong>Vị trí bàn:</strong> Bàn số 3
-              </p>
-            </>
-          ) : (
-            <p>Loading...</p>
-          )}
-        </div>
-
+        <p>Phạm Hoàng Anh | 0987654321</p>
+        <p>
+          <strong>Bàn số:</strong> {tableNumber}
+        </p>
       </div>
 
       <hr />

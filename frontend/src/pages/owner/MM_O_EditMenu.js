@@ -22,16 +22,12 @@ const MmOEditMenu = () => {
     categoryid: 1,
     image: '',
   });
+  const [categories, setCategories] = useState([]);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategory, setNewCategory] = useState({ name: '' });
   const [data, setData] = useState([]); // State to hold fetched data
   const itemsPerPage = 8;
   const maxPageButtons = 3;
-  // In MM_O_EditMenu.js
-  const [categories] = useState([
-    { id: 1, name: 'Pizza' },
-    { id: 2, name: 'Drinks' },
-    { id: 3, name: 'Sides' },
-    { id: 4, name: 'Desserts' }
-  ]);
 
   // Fetch items from tthe backend server
   useEffect(() => {
@@ -45,6 +41,23 @@ const MmOEditMenu = () => {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/IM/get-categories');
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          console.error("Invalid categories data:", response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   // Search function to filter items
@@ -65,22 +78,28 @@ const MmOEditMenu = () => {
       );
     }
 
-    // Apply sorting
+    // Apply sorting/filtering
     if (sortOption) {
-      filteredItems.sort((a, b) => {
-        switch (sortOption) {
-          case 'price-asc':
-            return parseFloat(a.price) - parseFloat(b.price);
-          case 'price-desc':
-            return parseFloat(b.price) - parseFloat(a.price);
-          case 'name-asc':
-            return a.name.localeCompare(b.name);
-          case 'name-desc':
-            return b.name.localeCompare(a.name);
-          default:
-            return 0;
-        }
-      });
+      switch (sortOption) {
+        case 'price-asc':
+          filteredItems.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+          break;
+        case 'price-desc':
+          filteredItems.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+          break;
+        case 'name-asc':
+          filteredItems.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'name-desc':
+          filteredItems.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        default:
+          // Filter by specific category
+          if (sortOption.startsWith('category-')) {
+            const categoryId = parseInt(sortOption.split('-')[1]);
+            filteredItems = filteredItems.filter(item => item.categoryid === categoryId);
+          }
+      }
     }
 
     return filteredItems;
@@ -109,6 +128,27 @@ const MmOEditMenu = () => {
     } catch (error) {
       console.error('Error fetching item details:', error);
       alert('Failed to fetch item details');
+    }
+  };
+
+  // Add new category handler
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/IM/create-category', {
+        name: newCategory.name
+      });
+  
+      // Update categories state with new category
+      setCategories([...categories, response.data]);
+      
+      // Reset form and close modal
+      setNewCategory({ name: '' });
+      setIsCategoryModalOpen(false);
+      
+    } catch (error) {
+      console.error('Error adding category:', error);
+      alert('Failed to add category');
     }
   };
 
@@ -325,6 +365,12 @@ const MmOEditMenu = () => {
           >
             <FaPlus /> Add Item
           </button>
+          <button 
+            className={styles.addCategoryButton}
+            onClick={() => setIsCategoryModalOpen(true)}
+          >
+            <FaPlus /> Add Category
+          </button>
           <div className={styles.sortContainer}>
             <select value={sortOption} onChange={handleSortChange}>
               <option value="">Sort by</option>
@@ -332,6 +378,9 @@ const MmOEditMenu = () => {
               <option value="price-desc">Price: High to Low</option>
               <option value="name-asc">Name: A to Z</option>
               <option value="name-desc">Name: Z to A</option>
+              {categories.map(category => (
+                <option key={category.id} value={`category-${category.id}`}>{category.name}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -412,10 +461,9 @@ const MmOEditMenu = () => {
                   onChange={handleFormChange}
                   required
                 >
-                  <option value="1">Pizza</option>
-                  <option value="2">Special</option>
-                  <option value="3">Drinks</option>
-                  <option value="4">Desserts</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
                 </select>
               </div>
               <div className={styles.formGroupMenuRow}>
@@ -473,10 +521,9 @@ const MmOEditMenu = () => {
                   onChange={(e) => setNewItem(prev => ({...prev, categoryid: e.target.value}))}
                   required
                 >
-                  <option value="1">Pizza</option>
-                  <option value="2">Special</option>
-                  <option value="3">Drinks</option>
-                  <option value="4">Desserts</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
                 </select>
               </div>
               <div className={styles.formGroupMenuRow}>
@@ -499,6 +546,36 @@ const MmOEditMenu = () => {
                   setIsAddModalOpen(false);
                   setFileName('');
                 }}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+
+      {/* Add Category Modal */}
+      {isCategoryModalOpen && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>Add New Category</h2>
+            <form onSubmit={handleAddCategory}>
+              <div className={styles.formGroupMenuRow}>
+                <label htmlFor="categoryName">Category Name</label>
+                <input
+                  type="text"
+                  id="categoryName"
+                  value={newCategory.name}
+                  onChange={(e) => setNewCategory({ name: e.target.value })}
+                  required
+                />
+              </div>
+              <button type="submit" className={styles.saveButton}>Add Category</button>
+              <button 
+                type="button" 
+                className={styles.cancelButton} 
+                onClick={() => setIsCategoryModalOpen(false)}
               >
                 Cancel
               </button>
