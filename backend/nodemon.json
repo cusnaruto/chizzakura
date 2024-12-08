@@ -4,8 +4,8 @@
     "PORT": "8080",
     "HOST_NAME": "localhost",
     "DB_USER": "root",
-    "DB_PASSWORD": "root",
+    "DB_PASSWORD": "123456788",
     "DB_NAME": "chizzakura",
-    "DB_PORT": "3308"
+    "DB_PORT": "3306"
   }
 }

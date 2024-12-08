@@ -16,6 +16,9 @@ const OM_C_Checkout = () => {
   const { tableNumber } = useTable();
   const [discount, setDiscount] = useState(0);
 
+  const [userInfo, setUserInfo] = useState(null);
+  
+
   useEffect(() => {
     // Lấy discount từ API
     const fetchDiscount = async () => {
@@ -38,6 +41,15 @@ const OM_C_Checkout = () => {
     };
     fetchDiscount();
   }, []);
+
+  const handleSelectPayment = (method) => {
+    setPaymentMethod(method);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
 
   //handle send order
   const handleSendOrder = async () => {
@@ -145,22 +157,40 @@ const OM_C_Checkout = () => {
 
       <div className={styles["payment-method"]}>
         <button
-          className={`${styles["payment-btn"]} ${
-            paymentMethod === "cash" ? "active" : ""
-          }`}
-          onClick={() => setPaymentMethod("cash")}
+          className={styles["payment-btn"]}
+          onClick={() => handleSelectPayment("cash")}
         >
           Tiền mặt
         </button>
         <button
-          className={`${styles["payment-btn"]} ${
-            paymentMethod === "qr" ? "active" : ""
-          }`}
-          onClick={() => setPaymentMethod("qr")}
+          className={styles["payment-btn"]}
+          onClick={() => handleSelectPayment("qr")}
         >
           QR Code
         </button>
       </div>
+      
+      {showModal && (
+        <div className={styles["modal"]}>
+          <div className={styles["modal-content"]}>
+            <h2>Thanh toán</h2>
+            {paymentMethod === "cash" ? (
+              <p>
+                Quý khách vui lòng đợi nhân viên đến thanh toán. Số tiền cần thanh toán là:{" "}
+                <strong>${discountedAmount.toFixed(2)}</strong>.
+              </p>
+            ) : (
+              <div className={styles["qr-code-container"]}>
+                <p>Quét mã QR để thanh toán số tiền:</p>
+                <QRCode value={`Amount: ${discountedAmount.toFixed(2)}`} />
+              </div>
+            )}
+            <button onClick={closeModal} className={styles["close-btn"]}>
+              Đóng
+            </button>
+          </div>
+        </div>     
+      )}
 
       <button className={styles["send-order-btn"]} onClick={handleSendOrder}>
         Send order
