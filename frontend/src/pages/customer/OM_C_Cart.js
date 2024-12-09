@@ -39,7 +39,13 @@ const OM_C_Cart = () => {
           <p>Your cart is empty.</p>
         ) : (
           state.items.map((item) => (
-            <div key={item.id} className={styles["product-card"]}>
+            <div key={item.id} className={`${styles["product-card"]} ${styles["product-sold"]}`}>
+              <button
+                onClick={() => handleRemoveFromCart(item.id)}
+                className={styles["remove-btn"]}
+              >
+                x
+              </button>
               <img
                 src={item.image}
                 alt={item.name}
@@ -48,7 +54,7 @@ const OM_C_Cart = () => {
               <div className={styles["product-info"]}>
                 <h3 className={styles["product-name"]}>{item.name}</h3>
                 <span className={styles["product-price"]}>${item.price}</span>
-                <div className={styles["quantity-controls"]}>
+                <div className={`${styles["quantity-controls"]}`}>
                   <button
                     onClick={() =>
                       handleQuantityChange(item.id, item.quantity - 1)
@@ -66,12 +72,7 @@ const OM_C_Cart = () => {
                     +
                   </button>
                 </div>
-                <button
-                  onClick={() => handleRemoveFromCart(item.id)}
-                  className={styles["remove-btn"]}
-                >
-                  Remove
-                </button>
+                
               </div>
             </div>
           ))
