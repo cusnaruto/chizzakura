@@ -112,11 +112,11 @@ const OM_C_Checkout = () => {
 
   return (
     <div className={styles["order-confirmation"]}>
-      <div className="header">
-        <div className="arrow" onClick={() => navigate("/cart")}>
+      <div className={styles["header"]}>
+        <div className={styles["arrow"]} onClick={() => navigate("/cart")}>
           ←
         </div>
-        <div>Xác nhận đơn hàng</div>
+        <div className={styles["title-checkout"]}>Xác nhận đơn hàng</div>
       </div>
 
       <hr />
