@@ -6,7 +6,7 @@ const Items = require("../model/Items.js");
 
 // Tạo một đơn hàng mới
 const createOrder = async (req, res) => {
-  const { tableId, total_price, orderDetails } = req.body;
+  const { tableId, total_price, orderDetails, customerId } = req.body;
 
   if (!tableId || !total_price || !Array.isArray(orderDetails)) {
     return res.status(400).json({
@@ -17,7 +17,7 @@ const createOrder = async (req, res) => {
   }
 
   try {
-    const order = await Order.create({ tableId, total_price });
+    const order = await Order.create({ tableId, total_price, customerId });
 
     const details = await Promise.all(
       orderDetails.map(async (detail) => {

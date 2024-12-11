@@ -35,7 +35,7 @@ const CI_C_Chat = () => {
         }
         // Join the selected room
         setRoom(userId);
-        socket.emit("join_room", { roomId: userId });
+        socket.emit("join_room", { room: userId });
         fetchMessages(userId);
         handleMarkAsRead();
         

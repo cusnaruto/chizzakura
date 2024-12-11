@@ -8,7 +8,7 @@ const ReportPage = () => {
   const [timeframe, setTimeframe] = useState(30); // Default to the last 30 days
   const [activeTab, setActiveTab] = useState("items");
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [reports, setReports] = useState([]);
+  const [itemReports, setItemReports] = useState([]);
 
   const API_BASE_URL = "http://localhost:8080/BR";
 
@@ -21,25 +21,32 @@ const ReportPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch reports when timeframe changes
-  const fetchReports = async () => {
+  // Fetch item reports when timeframe changes
+  const fetchItemReports = async () => {
     try {
       const response = await axios.get(
         `${API_BASE_URL}/items-report`,
         { params: { days: timeframe } } // Pass the timeframe in days as query parameter
       );
-      setReports(response.data.data);
+      console.log("Item Reports:", response.data.data); // Debugging log
+      setItemReports(response.data.data);
     } catch (error) {
-      console.error("Error fetching reports:", error);
+      console.error("Error fetching item reports:", error);
     }
   };
 
   useEffect(() => {
-    fetchReports();
-  }, [timeframe]);
+    if (activeTab === "items") {
+      fetchItemReports();
+    }
+  }, [timeframe, activeTab]);
 
-  // Render Items Report
-  const renderItemsReport = () => (
+// Render Items Report
+const renderItemsReport = () => {
+  // Calculate total revenue
+  const totalRevenue = itemReports.reduce((acc, item) => acc + (item.total_sales * item.item_price), 0);
+
+  return (
     <div className={styles.reportSection}>
       <h2>Items Report</h2>
       <div>
@@ -72,7 +79,7 @@ const ReportPage = () => {
           </tr>
         </thead>
         <tbody>
-          {reports.map((item) => (
+          {itemReports.map((item) => (
             <tr key={item.item_id}>
               <td>{item.item_id}</td>
               <td>{item.item_name}</td>
@@ -90,24 +97,25 @@ const ReportPage = () => {
           ))}
         </tbody>
       </table>
+      <p>Total Revenue: ${totalRevenue.toFixed(2)}</p>
     </div>
   );
-
+};
   return (
     <div>
       <Header />
       <div className={styles.reportPage}>
         {/* Navigation buttons for each report type */}
         <div className={styles.tabButtons}>
-            <button onClick={() => setActiveTab('items')} className={activeTab === 'items' ? styles.activeTab : ''}>
-                <FaBox />
-            </button>
-            <button onClick={() => setActiveTab('revenue')} className={activeTab === 'revenue' ? styles.activeTab : ''}>
-                <FaDollarSign />
-            </button>
-            <button onClick={() => setActiveTab('service')} className={activeTab === 'service' ? styles.activeTab : ''}>
-                <FaConciergeBell />
-            </button>
+          <button onClick={() => setActiveTab("items")} className={activeTab === "items" ? styles.activeTab : ""}>
+            <FaBox />
+          </button>
+          <button onClick={() => setActiveTab("revenue")} className={activeTab === "revenue" ? styles.activeTab : ""}>
+            <FaDollarSign />
+          </button>
+          <button onClick={() => setActiveTab("service")} className={activeTab === "service" ? styles.activeTab : ""}>
+            <FaConciergeBell />
+          </button>
         </div>
 
         <main className={styles.mainContent}>
