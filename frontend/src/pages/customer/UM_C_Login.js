@@ -56,16 +56,16 @@ const UM_C_Login = () => {
     <div className={styles["login-page"]}>
       <div className={styles["login-container"]}>
         <img src={logoImg} alt="logo-page" />
-        <h1>Chizza</h1>
+        <h1>Chizzakura</h1>
 
         <form className={styles["login-form"]} onSubmit={handleSubmit}>
           <div className={`${styles["user-login-name"]} ${styles["form-group"]}`}>
-            <label htmlFor="customer-login-username">Login Name:</label>
+            <label htmlFor="customer-login-username">Username:</label>
             <input
               type="text"
               name="username"
               id="customer-login-username"
-              placeholder="Enter your login name"
+              placeholder="Enter your user name"
               value={formData.username}
               onChange={handleChange}
               required

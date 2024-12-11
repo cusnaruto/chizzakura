@@ -34,7 +34,7 @@ const UM_C_Register = () => {
       );
 
       if (response.data.success) {
-        message.success("Register successful! Redirecting to profile...");
+        message.success("Register successful!...");
         navigate("/home");
       } else {
         message.error(response.data.message || "Register failed.");
@@ -51,7 +51,7 @@ const UM_C_Register = () => {
     <div className={styles["register-page"]}>
       <div className={styles["register-container"]}>
         <img src={logoImg} alt="logo-page" />
-        <h1>Chizza</h1>
+        <h1>Chizzakura</h1>
 
         <form className={styles["register-form"]} onSubmit={handleSubmit}>
           <div className={`${styles["user-name"]} ${styles["form-group"]}`}>
@@ -96,12 +96,12 @@ const UM_C_Register = () => {
           <div
             className={`${styles["user-login-name"]} ${styles["form-group"]}`}
           >
-            <label htmlFor="username">Login Name:</label>
+            <label htmlFor="username">Username:</label>
             <input
               type="text"
               name="username"
               id="username"
-              placeholder="Enter your login name"
+              placeholder="Enter your user name"
               value={formData.username}
               onChange={handleChange}
               required

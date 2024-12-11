@@ -130,9 +130,26 @@
     text-align: center;
 }
 
-.close-btn {
-    background-color: #f44336;
+.confirm-btn {
+    background-color: #ff6b6b;
     color: white;
+    margin: 0;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.confirm-btn:hover {
+    background-color: #c41f2d;
+}
+
+.close-btn {
+    background-color: #0c0808;
+    color: white;
+    margin: 0;
+    margin-top: 20px;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
@@ -140,7 +157,13 @@
 }
 
 .close-btn:hover {
-    background-color: #d32f2f;
+    background-color: #9f9393;
+}
+
+.disabled-btn {
+    background-color: #3a3737;
+    color: white;
+    cursor: not-allowed;
 }
   
   
