@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 import styles from "../../styles/customer/CProfile.module.css";
 
 import defaultAvtPic from "../../assets/Image_C/default_avt.jpg";
@@ -9,14 +11,33 @@ import C_Header from "../../components/customer/C_Header";
 
 const UM_C_Profile = () => {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(null);
 
-  const [userInfo, setUserInfo] = useState({
-    Name: "Minh Tuan",
-    Phone: "0987654321",
-    Login_Name: "abc123",
-    Password: "abc123",
-    profilePic: null,
-  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); 
+        const response = await axios.get("http://localhost:8080/UM/user-profile", {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+  
+        if (response.data) {
+          setUserInfo(response.data);
+          console.log("User info:", response.data); 
+        } else {
+          console.error("Error fetching user info:", response.error);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error.response || error.message);
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -26,7 +47,7 @@ const UM_C_Profile = () => {
       reader.onload = () => {
         setUserInfo((prevInfo) => ({
           ...prevInfo,
-          profilePic: reader.result,
+          avatar: reader.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -41,15 +62,29 @@ const UM_C_Profile = () => {
     }));
   };
 
-  const hanldeSave = () => {
+  const handleSave = async () => {
     try {
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      alert("Save successfully");
+      const token = localStorage.getItem("authToken");
+
+      if (!userInfo?.id) {
+        alert("User not found");
+        return;
+      }
+      await axios.put(
+        `http://localhost:8080/UM/update-customer/${userInfo.id}`,
+        userInfo,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("User updated successfully");
     } catch (error) {
-      console.error("Save failer", error);
-      alert("Save failed");
+      console.error("Error updating user:", error.response || error.message);
+      alert("Error updating user");
     }
-  };
+  }
 
   return (
     <div className={styles["profile-page"]}>
@@ -67,9 +102,8 @@ const UM_C_Profile = () => {
           >
             Log out
           </button>
-          <img src={userInfo.profilePic || defaultAvtPic} alt="profile" />
+          <img src={userInfo?.avatar || defaultAvtPic} alt="profile" />
           <div className={styles["select-avt"]}>
-            {/* <p>Tải lên từ máy của bạn</p> */}
             <label
               htmlFor="upload-input"
               className={`${styles["upload-input"]} ${styles["edit-image"]}`}
@@ -82,14 +116,9 @@ const UM_C_Profile = () => {
                 style={{ display: "none" }}
               />
             </label>
-            {/* <p>của bạn</p> */}
-            {/* <label htmlFor="upload-input" className={styles['upload-button"></label> */}
-
-            {/* <div className={styles[]}>
-                            
-                        </div> */}
+    
             <div className={styles["choose-btn"]}>
-              <button className={styles["update-btn"]} onClick={hanldeSave}>
+              <button className={styles["update-btn"]} onClick={handleSave}>
                 Accept
               </button>
               <button className={styles["cancel-btn"]}>Cancel</button>
@@ -101,43 +130,38 @@ const UM_C_Profile = () => {
 
         <div className={styles["user-info"]}>
           <h2 className={styles["title-user-info"]}>User Information</h2>
+          
 
           <form className={styles["user-info-form"]}>
-            <label>Name</label>
+            <label>First Name</label>
             <input
               type="text"
-              name="Name"
-              value={userInfo.Name}
+              name="first_name"
+              value={userInfo?.first_name || ""}
               onChange={handleChange}
             />
 
-            <label>Phone</label>
+            <label>Last Name</label>
             <input
               type="text"
-              name="Phone"
-              value={userInfo.Phone}
+              name="last_name"
+              value={userInfo?.last_name || ""}
               onChange={handleChange}
             />
 
-            <label>Login Name</label>
+            <label>Email</label>
             <input
-              type="text"
-              name="Login_Name"
-              value={userInfo.Login_Name}
+              type="email"
+              name="email"
+              value={userInfo?.email || ""}
               onChange={handleChange}
             />
 
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={userInfo.Password}
-              onChange={handleChange}
-            />
           </form>
+  
         </div>
 
-        <button className={styles["save-btn"]} onClick={hanldeSave}>
+        <button className={styles["save-btn"]} onClick={handleSave}>
           Save
         </button>
       </div>

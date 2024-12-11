@@ -13,29 +13,60 @@ import QRCode from "react-qr-code";
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
+  const [paymentMethod, setPaymentMethod] = useState(null); // Tiền mặt mặc định
   const { tableNumber } = useTable();
   const [discount, setDiscount] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [isCashMethod, setIsCashMethod] = useState(false);
+  const [qrTimer, setQrTimer] = useState(25);
+  const [isQrCodeMethod, setIsQrCodeMethod] = useState(false);
 
   const [userInfo, setUserInfo] = useState(null);
   
+  // ttin người dùng
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); 
+        const response = await axios.get("http://localhost:8080/UM/user-profile", {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+  
+        if (response.data) {
+          setUserInfo(response.data); 
+        } else {
+          console.error("Error fetching user info:", response.error);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error.response || error.message);
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+
 
   useEffect(() => {
     const fetchDiscount = async () => {
       try {
         const response = await axios.get("http://localhost:8080/DM/get-discounts");
         if (response.data && response.data.length > 0) {
-          // Get the active discount
-          const activeDiscount = response.data.find(d => {
-            const now = new Date();
+          // Lọc tất cả các discount hợp lệ
+          const now = new Date();
+          const validDiscounts = response.data.filter(d => {
             const validFrom = new Date(d.valid_from);
             const validUntil = new Date(d.valid_until);
             return now >= validFrom && now <= validUntil;
           });
-          
-          // Convert decimal to percentage (e.g., 0.15 -> 15)
-          setDiscount(activeDiscount ? activeDiscount.value * 100 : 0);
+        
+          const combinedDiscount = validDiscounts.reduce((acc, discount) => {
+            return acc + discount.value * 100;
+          }, 0); 
+        
+          setDiscount(combinedDiscount);
         }
       } catch (error) {
         console.error("Error fetching discount bruh:", error);
@@ -45,9 +76,41 @@ const OM_C_Checkout = () => {
     fetchDiscount();
   }, []);
 
+  useEffect(() => {
+    let timer;
+    if (paymentMethod === "qr" && showModal) {
+      timer = setInterval(() => {
+        setQrTimer((prev) => {
+          if (prev <= 1) {
+            closeModal();
+            setIsQrCodeMethod(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timer);
+
+  }, [paymentMethod, showModal]);
+
+  const totalPrice = state.items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  // Tính toán số tiền sau giảm giá
+  const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
+
   const handleSelectPayment = (method) => {
     setPaymentMethod(method);
     setShowModal(true);
+  };
+
+  const handleCashMethod = () => {
+    setIsCashMethod(true);
+    setShowModal(false);
   };
 
   const closeModal = () => {
@@ -75,11 +138,14 @@ const OM_C_Checkout = () => {
       }));
   
       const orderData = {
-        tableId: parseInt(tableNumber),
+        tableId: parseInt(tableNumber) || 3,
         total_price: parseFloat(discountedAmount.toFixed(2)),
         orderDetails: orderDetails,
         payment_method: paymentMethod
+       
       };
+
+      console.log("paymentMethod:", paymentMethod);
   
       console.log("Sending order data:", orderData);
   
@@ -103,13 +169,6 @@ const OM_C_Checkout = () => {
     }
   };
 
-  const totalPrice = state.items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  // Tính toán số tiền sau giảm giá
-  const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
-
   return (
     <div className={styles["order-confirmation"]}>
       <div className={styles["header"]}>
@@ -126,7 +185,19 @@ const OM_C_Checkout = () => {
           <p>Thông tin khách hàng</p>
           <img src={editImg} alt="Edit" />
         </div>
-        <p>Phạm Hoàng Anh | 0987654321</p>
+        {userInfo ? (
+          <div>
+            <p>
+              <strong>Tên:</strong> {userInfo.first_name} {userInfo.last_name}
+            </p>
+            <p>
+              <strong>Email:</strong> {userInfo.email}
+            </p>
+          </div>
+        ) : (
+          <p>Không tìm thấy thông tin khách hàng</p>
+        )}
+        
         <p>
           <strong>Bàn số:</strong> {tableNumber}
         </p>
@@ -150,7 +221,7 @@ const OM_C_Checkout = () => {
         ))}
       </div>
 
-      <button className={styles["view-all-btn"]}>Xem tất cả</button>
+      {/* <button className={styles["view-all-btn"]}>Xem tất cả</button> */}
 
       <div className={styles["summary"]}>
         <p>
@@ -166,14 +237,16 @@ const OM_C_Checkout = () => {
 
       <div className={styles["payment-method"]}>
         <button
-          className={styles["payment-btn"]}
+          className={`${styles["payment-btn"]} ${ isQrCodeMethod ? styles["disabled-btn"] : "" }`}
           onClick={() => handleSelectPayment("cash")}
+          disabled={isQrCodeMethod}
         >
           Tiền mặt
         </button>
         <button
-          className={styles["payment-btn"]}
+          className={`${styles["payment-btn"]} ${ isCashMethod ? styles["disabled-btn"] : "" }`}
           onClick={() => handleSelectPayment("qr")}
+          disabled={isCashMethod}
         >
           QR Code
         </button>
@@ -185,15 +258,24 @@ const OM_C_Checkout = () => {
             <h2>Thanh toán</h2>
             {paymentMethod === "cash" ? (
               <p>
-                Quý khách vui lòng đợi nhân viên đến thanh toán. Số tiền cần thanh toán là:{" "}
+                Với phương thức thanh toán này, nhân viên sẽ tới bàn của bạn để thanh toán. Vui lòng ấn xác nhận bên dưới để đồng ý, số tiền cần thanh toán là:{" "}
                 <strong>${discountedAmount.toFixed(2)}</strong>.
               </p>
             ) : (
               <div className={styles["qr-code-container"]}>
                 <p>Quét mã QR để thanh toán số tiền:</p>
-                <QRCode value={`Amount: ${discountedAmount.toFixed(2)}`} />
+                <QRCode value={`So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`} />
+                <p className={styles["qr-timer"]}>
+                  Mã QR sẽ hết hạn sau: <strong>{qrTimer}</strong> giây.
+                </p>
               </div>
             )}
+            {paymentMethod === "cash" && (
+              <button onClick={handleCashMethod} className={styles["confirm-btn"]}>
+                Xác nhận
+              </button>
+            )}
+            
             <button onClick={closeModal} className={styles["close-btn"]}>
               Đóng
             </button>

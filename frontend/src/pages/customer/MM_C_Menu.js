@@ -146,7 +146,12 @@ const MM_C_Menu = () => {
                   onClick={() => handleAddToCart(item)}                  
                   aria-label={`Add ${item.name} to cart`}
                 >
-                  Add to cart
+                  {item.is_available ? (
+                    <span>add to cart</span>
+                  ) : (
+                    <span>Unavailable</span>
+                  )
+                  }
                 </button>
               </div>
             </div>

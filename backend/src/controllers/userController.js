@@ -27,6 +27,7 @@ const createUser = async (req, res) => {
 
     // Trả về kết quả
     res.status(201).json({
+      success: true,
       message: "User created successfully!",
       user: {
         id: newUser.id,
@@ -158,18 +159,16 @@ const getAllUsers = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
 
-    console.log("Headers:", req.headers);
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "No token provided" });
     }
 
     const decoded = jwt.verify(token, SECRET_KEY);
-    console.log("Decoded token:", decoded);
     const user = await User.findByPk(decoded.id, {
-      attributes: ["first_name", "last_name", "email"], 
+      attributes: ["id", "first_name", "last_name", "email", "username", "password"], 
     });
-    console.log("User:", user);
+    // console.log("User:", user);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

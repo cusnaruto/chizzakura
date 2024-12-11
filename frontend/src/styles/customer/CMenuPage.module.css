@@ -1,6 +1,6 @@
 .product-page-container {
   width: 100vw;
-  height: 120vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   /* background-color: #ffe0e0; */
