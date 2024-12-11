@@ -38,6 +38,10 @@ const CI_C_Chat = () => {
         socket.emit("join_room", { roomId: userId });
         fetchMessages(userId);
         handleMarkAsRead();
+        
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
     }, []);
 
     const sendMessage = async () => {
@@ -70,6 +74,12 @@ const CI_C_Chat = () => {
             if (data.receiver_id === userId) {
                 console.log("I got the fucking message! data:", data);
                 setMessageList((list) => [...list, data]);
+                // if (Notification.permission === "granted") {
+                //     new Notification("New Message", {
+                //         body: data.message,
+                //         icon: employeeAvtPic,
+                //     });
+                // }
             }
             
         };

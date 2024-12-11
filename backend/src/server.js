@@ -15,6 +15,7 @@ const itemRoutes = require("./route/itemRoutes");
 const discountRoutes = require("./route/discountRoutes");
 const messageRoutes = require("./route/messageRoutes");
 const itemReviewRoutes = require("./route/itemReviewsRoutes");
+const reportRoutes = require("./route/reportRoutes");
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
@@ -75,6 +76,7 @@ io.on("connection", (socket) => {
 
 configViewEngine(app);
 const orderRoutes = require("./route/orderRoutes");
+const { report } = require("process");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -86,7 +88,21 @@ app.use("/IM/", itemRoutes);
 app.use("/DM/", discountRoutes);
 app.use("/OM/", orderRoutes);
 app.use("/CI/", messageRoutes);
+app.use("/BR/", reportRoutes);
 app.use("/reviews", itemReviewRoutes);
+
+app.get("/test-notification", (req, res) => {
+  const testMessage = {
+    receiver_id: 5, // Replace with the actual userId
+    sender_id: 2, // Replace with the actual senderId
+    message: "This is a test message",
+    content: "This is a test message",
+    timestamp: new Date().toISOString(),
+  };
+
+  io.to(5).emit("receive_message", testMessage);
+  res.send("Test message sent");
+});
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);

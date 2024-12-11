@@ -3,7 +3,7 @@
   height: 120vh;
   display: flex;
   flex-direction: column;
-  background-color: #ffe0e0;
+  /* background-color: #ffe0e0; */
 }
 
 /* Tabs cho lựa chọn */
@@ -48,6 +48,10 @@
   height: 292px;
 }
 
+.product-card.disabled {
+  background-color: #d3d3d3; 
+}
+
 .product-info {
   display: flex;
   flex-direction: column;
@@ -87,6 +91,16 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.add-to-cart-btn.disabled {
+  background-color: #d3d3d3; 
+  color: #a1a1a1; 
+  cursor: not-allowed; 
+}
+
+.add-to-cart-btn:disabled {
+  cursor: not-allowed; 
 }
 
 /* Phân trang */
@@ -140,6 +154,7 @@
   color: #fff;
   border: none;
   border-radius: 50%;
+  margin: 0;
   width: 24px;
   height: 24px;
   font-size: 16px;
@@ -157,9 +172,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 44px;
+  margin-top: 50px;
   gap: 5px;
-  background-color: #ff5a5f;
+  /* background-color: #ff5a5f; */
 }
 
 .quantity-controls button {
@@ -171,11 +186,9 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  border: none;
-  border-radius: 5px;
   color: #1b1a1a;
   cursor: pointer;
-  background-color: rgb(9, 124, 225);
+  background-color: rgb(143, 240, 163);
 }
 
 .quantity-controls span {

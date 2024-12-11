@@ -5,7 +5,7 @@ import styles from '../../styles/employee/EChat.module.css';
 import Header from '../../components/E_Header';
 import imgC from '../../assets/Image_C/avt.png';
 import imgE from '../../assets/Image_C/avtE.png';
-import { socket, userId } from '../../services/socket'; // Import the WebSocket connection and userId
+import { socket, userId, role } from '../../services/socket'; // Import the WebSocket connection and userId
 import { markMessagesAsRead } from '../../services/messageServices'; // Import API services
 
 const CI_E_Chat = () => {
@@ -30,8 +30,15 @@ const CI_E_Chat = () => {
         }
     };
     useEffect(() => {
-        // Fetch chat rooms on component mount
-        getChatRooms();
+        if (!localStorage.getItem("authToken")) {
+            navigate('/login');
+        }
+        else if (role !== "employee"){
+            navigate('/home');
+        }
+        else {
+            getChatRooms();
+        }
     }, []);
 
     const fetchMessages = async (roomId) => {
@@ -54,7 +61,9 @@ const CI_E_Chat = () => {
     useEffect(() => {
         const handleReceiveMessage = (message) => {
             console.log("Got da gud shit dawgs:", message);
+            if (message.receiver_id === selectedChat || message.sender_id === 2) {
             setMessages((prev) => [...prev, message]);
+            }
             updateChatData(message);
             getChatRooms();
         };
