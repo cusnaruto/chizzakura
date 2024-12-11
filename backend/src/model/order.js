@@ -19,6 +19,11 @@ const Order = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    customerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    
     status: {
       type: DataTypes.ENUM("pending", "completed", "cancelled"),
       defaultValue: "pending",
