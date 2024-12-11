@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
 
 // Tạo Context
 const CartContext = createContext();
@@ -39,16 +39,24 @@ const cartReducer = (state, action) => {
         ...state,
         items: state.items.filter((item) => item.id !== action.payload.id),
       };
-    default:
-      return state;
     case "CLEAR_CART":
       return { ...state, items: [] };
+    default:
+      return state;
   }
 };
 
 // Provider cho Context
 export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  // Tải trạng thái từ localStorage khi ứng dụng khởi động
+  const storedCart = JSON.parse(localStorage.getItem("cart")) || { items: [] };
+
+  const [state, dispatch] = useReducer(cartReducer, storedCart);
+
+  // Lưu trạng thái vào localStorage mỗi khi `state` thay đổi
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(state));
+  }, [state]);
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>

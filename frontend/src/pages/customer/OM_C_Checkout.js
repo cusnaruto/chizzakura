@@ -25,6 +25,9 @@ const OM_C_Checkout = () => {
         // console.log("Discount API response:", response.data);
         if (response.data) {
           setDiscount(response.data.discount);
+          if (response.data.discount === 0) {
+            console.log("No discount available");
+          }
         } else {
           console.error("Error fetching discount bruh:", response.error);
         }
@@ -57,14 +60,49 @@ const OM_C_Checkout = () => {
 
       console.log("Order data:", orderData);
 
-      // Gửi request tới API
+      // Gửi request tới API tạo đơn hàng
       const response = await axios.post("http://localhost:8080/OM/", orderData);
 
       if (response.data.success) {
         // Xử lý thành công
         console.log("Order created successfully:", response.data);
-        dispatch({ type: "CLEAR_CART" }); // Xóa giỏ hàng
-        navigate("/home"); // Chuyển hướng về trang chủ
+
+        // Chuẩn bị dữ liệu tin nhắn
+        const token = localStorage.getItem("authToken");
+        const messageData = {
+          data: {
+            roomId: "", // Thay bằng roomId phù hợp
+            content: `Đơn hàng đã được tạo thành công. Chi tiết đơn hàng:
+              - Bàn: 3
+              - Tổng tiền: $${totalPrice.toFixed(2)}
+              - Giảm giá: ${discount}%
+              - Còn lại: $${discountedAmount.toFixed(2)}
+              - Món: ${state.items
+                .map((item) => `${item.quantity}x ${item.name}`)
+                .join(", ")}
+            `,
+            type: "order-update",
+          },
+        };
+
+        // Gửi tin nhắn tới API chat
+        const messageResponse = await axios.post(
+          "http://localhost:8080/chat/send",
+          messageData,
+          token
+        );
+
+        if (messageResponse.status === 200) {
+          console.log("Message sent successfully:", messageResponse.data);
+        } else {
+          console.error("Failed to send message:", messageResponse.data);
+        }
+
+        // Xóa giỏ hàng
+        dispatch({ type: "CLEAR_CART" });
+
+        // Chuyển hướng
+        navigate("/chat");
       } else {
         console.error("Error creating order:", response.data.message);
       }
