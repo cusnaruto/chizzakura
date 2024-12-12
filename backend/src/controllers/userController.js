@@ -143,6 +143,19 @@ const updateUser = async (req, res) => {
   }
 };
 
+// const updatePassword = async (req, res) => {
+//   const { id } = req.params;
+//   const { oldPassword, newPassword } = req.body;
+//   console.log("oldPassword: ", oldPassword);
+//   console.log("newPassword: ", newPassword);
+//   if (validatedOldPassword(id, oldPassword)) {
+//     updatePassword(id, newPassword);
+//     return res.status(200).json({ message: "Password updated successfully" });
+//   } else {
+//     return res.status(400).json({ message: "Incorrect old password" });
+//   }
+// }
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
@@ -187,5 +200,6 @@ module.exports = {
   getUserById,
   getUserProfile,
   updateUser,
+  // updatePassword,
   loginUser,
 };
