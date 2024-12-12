@@ -1,6 +1,6 @@
 .home-container {
   /* width: 100vw; */
-  height: auto;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #ffe0e0;

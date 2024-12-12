@@ -6,6 +6,7 @@ const {
   createUser,
   getAllUsers,
   updateUser,
+  // updatePassword,
   loginUser,
   getUserById,
   getUserProfile,
@@ -17,5 +18,6 @@ router.get("/@", getAllUsers);
 router.get("/user-profile", getUserProfile);
 router.get("/get-customer/:id", getUserById);
 router.put("/update-customer/:id", updateUser);
+// router.put("/update-password/:id", updatePassword);
 
 module.exports = router;
