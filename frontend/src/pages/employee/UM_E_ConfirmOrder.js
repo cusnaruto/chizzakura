@@ -3,18 +3,21 @@ import { useParams } from 'react-router-dom';
 import Header from '../../components/E_Header';
 import styles from '../../styles/employee/ConfirmOrder.module.css';
 import axios from 'axios';
+import { socket } from '../../services/socket'; // Import the WebSocket connection and userId
 
 const UM_E_ConfirmOrder = () => {
     const { orderId } = useParams();
     const [orderDetails, setOrderDetails] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [customerId, setCustomerId] = useState(null);
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/OM/${orderId}`);
                 if (response.data.success) {
                     const order = response.data.order;
+                    setCustomerId(order.customerId);
+                    console.log("order is", order);
                     setOrderDetails({
                         id: order.id,
                         table: `#${order.tableId}`,
@@ -51,6 +54,14 @@ const UM_E_ConfirmOrder = () => {
                 ...prev,
                 status: newStatus
             }));
+            const messageData = {
+                token: localStorage.getItem("authToken"), 
+                room: customerId, 
+                message: `Your order is now ${newStatus}!`,
+                sender_id: 2,
+                time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+            };
+            socket.emit("send_message", messageData);
         } catch (error) {
             console.error('Error updating order status:', error);
             alert('Failed to update order status');

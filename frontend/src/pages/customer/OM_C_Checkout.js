@@ -7,6 +7,7 @@ import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { useTable } from "../../contexts/TableContext";
 import QRCode from "react-qr-code";
+import { socket, userId, role } from '../../services/socket';
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
@@ -115,7 +116,8 @@ const OM_C_Checkout = () => {
         tableId: parseInt(tableNumber) || 3,
         total_price: parseFloat(discountedAmount.toFixed(2)),
         orderDetails: orderDetails,
-        payment_method: paymentMethod
+        payment_method: paymentMethod,
+        customerId: userId
       };
 
       console.log("paymentMethod:", paymentMethod);

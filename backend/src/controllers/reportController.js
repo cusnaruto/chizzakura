@@ -63,5 +63,32 @@ const getReportView = async (req, res) => {
   }
 };
 
+const getRevenueReports = async (req, res) => {
+  const { days } = req.query; // User selects timeframe in days, e.g., 7, 30, 90
 
-module.exports = { getItemReports, getReportView };
+  try {
+    // Calculate the start date based on the timeframe in days
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - (days || 30)); // Default to last 30 days if no timeframe is provided
+
+    const query = `
+      SELECT 
+      SUM(total_price) AS Revenue
+      FROM orders
+      WHERE orders.createdAt >= :startDate
+    `;
+
+    const itemReports = await sequelize.query(query, {
+      type: sequelize.QueryTypes.SELECT,
+      replacements: { startDate },
+    });
+
+    res.status(200).json({ success: true, data: itemReports });
+  } catch (error) {
+    console.error("Error fetching item reports:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch item reports" });
+  }
+};
+
+
+module.exports = { getItemReports, getReportView, getRevenueReports };

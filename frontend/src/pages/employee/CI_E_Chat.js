@@ -53,7 +53,7 @@ const CI_E_Chat = () => {
     useEffect(() => {
         if (selectedChat) {
             // Join the selected room
-            socket.emit("join_room", { roomId: selectedChat });
+            socket.emit("join_room", { id: userId, room: selectedChat });
             fetchMessages(selectedChat);
         }
     }, [selectedChat]);
@@ -61,8 +61,10 @@ const CI_E_Chat = () => {
     useEffect(() => {
         const handleReceiveMessage = (message) => {
             console.log("Got da gud shit dawgs:", message);
-            if (message.receiver_id === selectedChat || message.sender_id === 2) {
+            console.log("selected chat is:", selectedChat);
+            if (message.receiver_id === selectedChat || message.sender_id === 2 || message.receiver_id === message.sender_id) {
             setMessages((prev) => [...prev, message]);
+            console.log("this message is setted")
             }
             updateChatData(message);
             getChatRooms();
@@ -126,7 +128,7 @@ const CI_E_Chat = () => {
 
     const handleSelectChat = (chatId) => {
         setSelectedChat(chatId);
-        socket.emit("join_room", { roomId: chatId });
+        socket.emit("join_room", { room: chatId });
         handleMarkAsRead();
     };
 
