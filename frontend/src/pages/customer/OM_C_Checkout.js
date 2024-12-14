@@ -7,6 +7,7 @@ import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { useTable } from "../../contexts/TableContext";
 import QRCode from "react-qr-code";
+import QRCodeLib from "qrcode";
 import { socket, userId, role } from '../../services/socket';
 
 const OM_C_Checkout = () => {
@@ -152,7 +153,7 @@ const OM_C_Checkout = () => {
           // Get orderId from response
           const orderId = response.data.order.id;
           navigate(`/rateFood?orderId=${orderId}`);
-        }, 20000);
+        }, 7000);
       } else {
         console.error("Error creating order:", response.data.message);
         alert("Failed to create order: " + response.data.message);
@@ -161,6 +162,20 @@ const OM_C_Checkout = () => {
       console.error("Error creating order:", error);
       alert("Failed to create order: " + (error.response?.data?.message || "Network error"));
     }
+  };
+
+  const handleDownloadQR = () => {
+    const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`;
+    QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
+      if (err) {
+        console.error("Error generating QR code:", err);
+        return;
+      }
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "qr-code.png";
+      link.click();
+    });
   };
 
   return (
@@ -251,8 +266,11 @@ const OM_C_Checkout = () => {
       {isProcessingPayment && paymentMethod === "qr" && (
         <div className={styles["qr-code-container"]}>
           <p>Quét mã QR để thanh toán số tiền:</p>
-          <QRCode value={`So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`} />
+          <QRCode value={`Cam on quy khach da su dung dich vu cua chung toi. So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`} />
           <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
+          <button onClick={handleDownloadQR} className={styles["download-qr-btn"]}>
+            Tải mã QR về máy
+          </button>
         </div>
       )}
 
@@ -262,7 +280,11 @@ const OM_C_Checkout = () => {
         </p>
       )}
 
-      <button className={styles["send-order-btn"]} onClick={handleSendOrder}>
+      <button
+         className={styles["send-order-btn"]}
+         onClick={handleSendOrder}
+         disabled={isOrderSent}
+      >
         Send order
       </button>
     </div>
