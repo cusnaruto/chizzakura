@@ -135,7 +135,22 @@ const OM_C_Checkout = () => {
               clearInterval(timer);
               console.log("Order created successfully:", response.data);
               dispatch({ type: "CLEAR_CART" });
-
+              const messageContent = `
+                Order created successfully!\n\n
+                Your order contains:\n
+                ${state.items.map((item) => `${item.quantity}x ${item.name} - $${item.price}`).join("\n")}\n\n
+                Discount: ${discount}%\n
+                Total: $${totalPrice}\n
+                Payment Method: ${paymentMethod}\n
+              `;
+              // Send the message using socket.emit
+              socket.emit("send_message", {
+                token: localStorage.getItem("authToken"),
+                room: userId,
+                message: messageContent,
+                sender_id: 2,
+                time: new Date().toLocaleTimeString(),
+              });
               // Get orderId from response
               const orderId = response.data.order.id;
               navigate(`/rateFood?orderId=${orderId}`);
@@ -149,7 +164,22 @@ const OM_C_Checkout = () => {
         setTimeout(() => {
           console.log("Order created successfully:", response.data);
           dispatch({ type: "CLEAR_CART" });
-
+          const messageContent = `
+            Order created successfully!\n\n
+            Your order contains:\n
+            ${state.items.map((item) => `${item.quantity}x ${item.name} - $${item.price}`).join("\n")}\n\n
+            Discount: ${discount}%\n
+            Total: $${totalPrice}\n
+            Payment Method: ${paymentMethod}\n
+          `;
+          // Send the message using socket.emit
+          socket.emit("send_message", {
+            token: localStorage.getItem("authToken"),
+            room: userId,
+            message: messageContent,
+            sender_id: 2,
+            time: new Date().toLocaleTimeString(),
+          });
           // Get orderId from response
           const orderId = response.data.order.id;
           navigate(`/rateFood?orderId=${orderId}`);

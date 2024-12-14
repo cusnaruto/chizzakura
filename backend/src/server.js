@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    sendMessage({ ...data, sender_id: socket.user.id }, io);
+    sendMessage({ ...data }, io);
   });
 
   socket.on("disconnect", () => {
