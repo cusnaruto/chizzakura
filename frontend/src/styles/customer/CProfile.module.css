@@ -4,6 +4,7 @@
     display: flex;
     position: relative;
     flex-direction: column;
+    margin-top: 120px;
 }
 
 /* .profile-pic {

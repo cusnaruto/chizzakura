@@ -104,61 +104,21 @@
     color: white;
 }
 
-.modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    border-radius: 8px;
-    width: 300px;
-    text-align: center;
-}
-
-.modal-content h2 {
-    margin-bottom: 20px;
-}
-
-.modal-content p {
-    margin-bottom: 20px;
-}
-
-.qr-code-container {
-    text-align: center;
-}
-
-.confirm-btn {
-    background-color: #ff6b6b;
-    color: white;
-    margin: 0;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
+.download-qr-btn {
     margin-top: 10px;
-}
-
-.confirm-btn:hover {
-    background-color: #c41f2d;
-}
-
-.close-btn {
-    background-color: #0c0808;
+    padding: 8px 12px;
+    background-color: #4CAF50;
     color: white;
-    margin: 0;
-    margin-top: 20px;
     border: none;
-    padding: 10px 20px;
-    cursor: pointer;
     border-radius: 4px;
-}
-
-.close-btn:hover {
-    background-color: #9f9393;
-}
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+ .download-qr-btn:hover {
+    background-color: #45a049;
+ }
+  
 
 .disabled-btn {
     background-color: #3a3737;

@@ -12,6 +12,7 @@
   justify-content: space-around;
   width: 100%;
   margin: 10px 0;
+  margin-top: 120px;
 }
 
 .tabs-container .active {
@@ -30,6 +31,10 @@
 }
 
 /* Grid sản phẩm */
+.page-title {
+  margin-top: 120px;
+}
+
 .product-grid {
   display: grid;
   flex: 1;
