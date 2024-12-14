@@ -1,10 +1,12 @@
 const express =  require("express");
 const app = express();
 const db = require("./models");
+const sequelize = require("./config/databaseConnection");
 
-db.sequelize.sync({ alter: true }).then((req) => {
-    app.listen(3001, () => {
-        console.log("Server is running on port 3001");
-    });
-});
-
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });

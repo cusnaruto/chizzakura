@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import styles from '../../styles/customer/CMenuPage.module.css';
+import styles from '../../styles/customer/CRateItem.module.css';
 import { jwtDecode } from "jwt-decode";
 import C_Header from '../../components/customer/C_Header.js';
 
@@ -110,14 +110,22 @@ const CI_C_RateItem = () => {
                             <h3 className={styles['product-name']}>{item.Item.name}</h3>
                             <p className={styles['product-price']}>${item.Item.price}</p>
                             <div className={styles['rating-input']}>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="5"
-                                    value={reviews[item.Item.id]?.rating || 3}
-                                    onChange={(e) => handleRatingChange(item.Item.id, e.target.value)}
-                                />
-                                <span>{reviews[item.Item.id]?.rating || 3}/5</span>
+                                <div className={styles['star-rating']}>
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            className={`${styles['star-button']} ${
+                                                star <= (reviews[item.Item.id]?.rating || 3) ? styles['active'] : ''
+                                            }`}
+                                            onClick={() => handleRatingChange(item.Item.id, star)}
+                                        >
+                                            ★
+                                        </button>
+                                    ))}
+                                </div>
+                                <span className={styles['rating-display']}>
+                                    {reviews[item.Item.id]?.rating || 3}/5
+                                </span>
                             </div>
                             <button onClick={() => setShowCommentBox(prev => ({...prev, [item.Item.id]: !prev[item.Item.id]}))}>
                                 {showCommentBox[item.Item.id] ? 'Hide Comment' : 'Add Comment'}

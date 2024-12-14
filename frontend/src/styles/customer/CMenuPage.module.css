@@ -7,7 +7,7 @@
 /* Category tabs */
 .tabs-container {
   display: flex;
-  background-color: #ffccd2;
+  background-color: #fca5a5;
   overflow-x: auto;
   padding: 12px 8px;
   position: sticky;
@@ -23,14 +23,14 @@
 
 .tab {
   padding: 10px 20px;
-  background-color: #f5f5f5;
+  background-color: #fff;
   color: #333;
   margin: 0 4px;
   border-radius: 20px;
   white-space: nowrap;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: none;
+  border: 1px solid #ff5a5f;
 }
 
 .product-card:active {
@@ -54,7 +54,7 @@
 
 .product-card {
   position: relative;
-  background-color: #ffffff;
+  background-color: #fca5a5;
   border-radius: 16px;
   padding: 12px;
   display: flex;
@@ -88,7 +88,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 8px 0;
-  color: #333;
+  color: #4a1c1c;
 }
 
 .product-price {
@@ -159,13 +159,12 @@
 .quantity-controls {
   display: flex;
   align-items: center;
-  justify-content: center; /* Changed to center */
-  gap: 15px; /* Added consistent gap between elements */
+  justify-content: space-between; 
   width: 120px;
   margin: 12px auto;
-  padding: 8px 16px;
+  padding: 8px;
   border-radius: 20px;
-  background-color: #fff;
+  background-color: #fca5a5; 
   border: 1px solid #ff5a5f;
 }
 
@@ -177,24 +176,25 @@
   color: #fff;
   font-size: 18px;
   border: none;
-  cursor: pointer;
+  margin: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
-  flex-shrink: 0; /* Prevent buttons from shrinking */
+  align-items: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(255, 90, 95, 0.2);
 }
 
 .quantity-controls span {
   font-size: 16px;
   font-weight: 600;
-  color: #ff5a5f;
-  min-width: 30px;
+  color: #4a1c1c;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 30px; 
 }
+
 
 /* Pagination */
 .pagination {
@@ -209,12 +209,13 @@
   min-width: 36px;
   height: 36px;
   border-radius: 18px;
-  background-color: #f5f5f5;
-  color: #666;
+  background-color: #fff; /* Changed to white */
+  color: #ff5a5f; /* Changed to pink */
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid #fca5a5;
 }
 
 .pagination .active {
@@ -240,7 +241,7 @@
 
 .check-out-btn {
   position: relative;
-  margin: 20px auto; /* Keep checkout button centered */
+  margin: 20px auto;
   display: block;
   width: auto;
   min-width: 120px;
@@ -251,44 +252,4 @@
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
   z-index: 100;
-}
-
-/* Rating and review styles */
-.rating-slider {
-  width: 100%;
-  margin: 12px 0;
-  appearance: none;
-  -webkit-appearance: none;
-  height: 4px;
-  background: #f5f5f5;
-  border-radius: 2px;
-}
-
-.rating-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #ff5a5f;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.comment-box {
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 12px;
-  margin: 8px 0;
-}
-
-.submit-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ff5a5f;
-  padding: 14px 32px;
-  border-radius: 24px;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
 }

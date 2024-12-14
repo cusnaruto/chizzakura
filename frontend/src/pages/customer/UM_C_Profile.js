@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/customer/CProfile.module.css";
 
-import defaultAvtPic from "../../assets/Image_C/default_avt.jpg";
+// import defaultAvtPic from "../../assets/Image_C/default_avt.jpg";
 
 import C_Footer from "../../components/customer/C_Footer";
 import C_Header from "../../components/customer/C_Header";
@@ -12,7 +12,10 @@ import C_Header from "../../components/customer/C_Header";
 const UM_C_Profile = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-
+  // const [passwords, setPasswords] = useState({
+  //   oldPassword: "",
+  //   newPassword: "",
+  // });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -39,20 +42,20 @@ const UM_C_Profile = () => {
   }, []);
 
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
 
-      reader.onload = () => {
-        setUserInfo((prevInfo) => ({
-          ...prevInfo,
-          avatar: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  //     reader.onload = () => {
+  //       setUserInfo((prevInfo) => ({
+  //         ...prevInfo,
+  //         avatar: reader.result,
+  //       }));
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,6 +64,46 @@ const UM_C_Profile = () => {
       [name]: value,
     }));
   };
+
+  // const handlePasswordChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setPasswords((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
+  // const handleChangePassword = async () => {
+  //   try {
+  //     const token = localStorage.getItem("authToken");
+  
+  //     if (!userInfo?.id) {
+  //       alert("User not found");
+  //       return;
+  //     }
+  
+  //     const response = await axios.put(
+  //       `http://localhost:8080/UM/update-password/${userInfo.id}`,
+  //       passwords,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  
+  //     if (response.status === 200) {
+  //       alert("Password updated successfully");
+  //       setPasswords({ oldPassword: "", newPassword: "" });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error changing password:", error.response || error.message);
+  //     alert(
+  //       error.response?.data?.message || "Error changing password. Try again."
+  //     );
+  //   }
+  // };
+   
 
   const handleSave = async () => {
     try {
@@ -92,16 +135,17 @@ const UM_C_Profile = () => {
       <C_Header />
 
       <div className={styles["profile-container"]}>
-        <div className={styles["profile-pic"]}>
-          <button
-            className={styles["log-out-btn"]}
-            onClick={() => {
-              navigate("/login");
-              localStorage.removeItem("authToken");
-            }}
-          >
-            Log out
-          </button>
+        <button
+          className={styles["log-out-btn"]}
+          onClick={() => {
+            navigate("/login");
+            localStorage.removeItem("authToken");
+          }}
+        >
+          Log out
+        </button>
+        {/* <div className={styles["profile-pic"]}>
+          
           <img src={userInfo?.avatar || defaultAvtPic} alt="profile" />
           <div className={styles["select-avt"]}>
             <label
@@ -124,9 +168,7 @@ const UM_C_Profile = () => {
               <button className={styles["cancel-btn"]}>Cancel</button>
             </div>
           </div>
-        </div>
-
-        <hr />
+        </div> */}
 
         <div className={styles["user-info"]}>
           <h2 className={styles["title-user-info"]}>User Information</h2>
@@ -164,6 +206,33 @@ const UM_C_Profile = () => {
         <button className={styles["save-btn"]} onClick={handleSave}>
           Save
         </button>
+
+        {/* <div className={styles["change-password"]}>
+          <h2 className={styles["title-change-password"]}>Change Password</h2>
+
+          <form className={styles["change-password-form"]}>
+            <label>Old Password</label>
+            <input
+              type="password"
+              name="oldPassword"
+              value={passwords.oldPassword || ""}
+              onChange={handlePasswordChange}
+            />
+
+            <label>New Password</label>
+            <input
+              type="password"
+              name="newPassword"
+              value={passwords.newPassword || ""}
+              onChange={handlePasswordChange}
+            />
+          </form>
+
+          <button className={styles["save-btn"]} onClick={handleChangePassword}>
+            Change Password
+          </button>
+        </div> */}
+
       </div>
 
       {/* Footer */}
