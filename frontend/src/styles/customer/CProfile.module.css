@@ -1,10 +1,12 @@
-.profile-container {
-    width: 100vw;
-    height: 100vh;
+.profile-page{
+    min-height: 100vh;
     display: flex;
-    position: relative;
     flex-direction: column;
     background-color: #ffe0e0;
+}
+
+.profile-container {
+    flex: 1;
 }
 
 .profile-pic {
@@ -116,16 +118,15 @@
 }
 
 .save-btn {
-    position: absolute;
-    transform: translate(-50%);
-    left: 50%;
-    bottom: 40px;
+    display: block;
+    margin: 20px auto; 
     width: auto;
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #343232;
     color: rgb(251, 245, 245);
     font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }

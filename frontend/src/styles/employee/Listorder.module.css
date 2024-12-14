@@ -122,3 +122,23 @@
     background-color: #ff69b4;
     color: white;
 }
+
+
+.sortContainer {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sortSelect {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.sortSelect:hover {
+    border-color: #999;
+}
