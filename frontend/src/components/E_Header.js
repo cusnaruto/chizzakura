@@ -31,16 +31,16 @@ const Header = () => {
                 <NavLink to="/employee/menu" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Menu</NavLink>
                 <NavLink to="/employee/chat" className={({ isActive }) => (isActive ? styles.activeLink : '')}>Chat</NavLink>
             </nav>
-            <div className={styles.actions}>
-                {/* <div className={styles.search}>
+            {/* <div className={styles.actions}>
+                <div className={styles.search}>
                     <input type="text" placeholder="Search" className={styles.searchInput} />
                     <FaSearch className={styles.icon} />
                 </div>
                 <div className={styles.currentTime}>
                     {currentTime.toLocaleTimeString()}
-                </div> */}
-            </div>
-            <span className={styles.employeeName}>John Doe</span>
+                </div>
+            </div> */}
+            {/* <span className={styles.employeeName}>John Doe</span> */}
             <button className={styles.logoutButton} onClick={handleLogout}>
                 <FaAccessibleIcon className={styles.logoutIcon} />
             </button>

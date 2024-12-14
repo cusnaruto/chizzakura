@@ -16,6 +16,9 @@ const discountRoutes = require("./route/discountRoutes");
 const messageRoutes = require("./route/messageRoutes");
 const itemReviewRoutes = require("./route/itemReviewsRoutes");
 const reportRoutes = require("./route/reportRoutes");
+const { uploadImage } = require("./controllers/uploadController");
+const multer = require("multer");
+const upload = multer({ dest: 'uploads/' });
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
@@ -90,6 +93,8 @@ app.use("/OM/", orderRoutes);
 app.use("/CI/", messageRoutes);
 app.use("/BR/", reportRoutes);
 app.use("/reviews", itemReviewRoutes);
+
+app.post("/upload", upload.single('file'), uploadImage);
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);

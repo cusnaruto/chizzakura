@@ -9,6 +9,7 @@ const OM_E_ListOrder = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [sortOption, setSortOption] = useState('newest'); // Add sort state
     const ordersPerPage = 10;
     const maxPageButtons = 5;
 
@@ -38,8 +39,30 @@ const OM_E_ListOrder = () => {
 
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
     const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+    const getSortedOrders = () => {
+        const sortedOrders = [...orders];
+        switch (sortOption) {
+            case 'newest':
+                return sortedOrders.sort((a, b) => b.id - a.id);
+            case 'oldest':
+                return sortedOrders.sort((a, b) => a.id - b.id);
+            case 'status-pending':
+                return sortedOrders.sort((a, b) => a.status === 'PENDING' ? -1 : 1);
+            case 'status-completed':
+                return sortedOrders.sort((a, b) => a.status === 'COMPLETED' ? -1 : 1);
+            case 'status-cancelled':
+                return sortedOrders.sort((a, b) => a.status === 'CANCELLED' ? -1 : 1);
+            default:
+                return sortedOrders;
+        }
+    };
+
+    const handleSortChange = (e) => {
+        setSortOption(e.target.value);
+        setCurrentPage(1); // Reset to first page when sorting
+    };
 
     const getPageRange = () => {
         let start = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
@@ -63,12 +86,33 @@ const OM_E_ListOrder = () => {
         }
     };
 
+    const getCurrentOrders = () => {
+        const sortedOrders = getSortedOrders();
+        return sortedOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+    };
+
     return (
         <div className={styles.pageContainer}>
             <Header />
             <div className={styles.container}>
                 <h1 className={styles.title}>ORDERS</h1>
                 <hr className={styles.separator} />
+
+                {/* Add sort dropdown */}
+                <div className={styles.sortContainer}>
+                    <select 
+                        value={sortOption} 
+                        onChange={handleSortChange}
+                        className={styles.sortSelect}
+                    >
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="status-pending">Pending Orders First</option>
+                        <option value="status-completed">Completed Orders First</option>
+                        <option value="status-cancelled">Cancelled Orders First</option>
+                    </select>
+                </div>
+
                 {loading ? (
                     <div>Loading orders...</div>
                 ) : (
@@ -83,7 +127,7 @@ const OM_E_ListOrder = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentOrders.map((order) => (
+                                {getCurrentOrders().map((order) => (
                                     <tr key={order.id} 
                                         className={styles.row} 
                                         onClick={() => handleRowClick(order.id)}
