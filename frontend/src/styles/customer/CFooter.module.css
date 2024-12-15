@@ -3,6 +3,10 @@
   justify-content: space-around;
   background-color: #f4f4f4;
   padding: 10px 0;
+  /* position:absolute;
+  left:0;
+  bottom:0;
+  right:0; */
 }
   
 .nav-item {

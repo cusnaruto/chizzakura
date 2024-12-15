@@ -11,6 +11,7 @@ if (token) {
   const decoded = jwtDecode(token);
   userId = decoded.id;
   role = decoded.role;
+  console.log("from socket.js, this userId is", userId);
 }
 
 const socket = io(SOCKET_URL, {

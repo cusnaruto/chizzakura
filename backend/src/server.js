@@ -1,12 +1,12 @@
 require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
-const http = require("http"); // Thay thế cho app.listen
-
+const http = require("http");
+const path = require("path");
 const app = express();
 const jwt = require("jsonwebtoken"); // Import jwt
 const port = process.env.PORT || 8080;
-const hostname = process.env.HOST_NAME;
+const hostname = process.env.HOST_NAME || "localhost"; // Provide a default value
 const { Server } = require("socket.io");
 const configViewEngine = require("./config/viewengine");
 const userRoutes = require("./route/userRoutes");
@@ -75,11 +75,13 @@ io.on("connection", (socket) => {
 });
 
 configViewEngine(app);
+
 const orderRoutes = require("./route/orderRoutes");
 const { report } = require("process");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../../frontend/build")));
 
 // Setup routes
 app.use("/UM/", userRoutes);
@@ -91,17 +93,8 @@ app.use("/CI/", messageRoutes);
 app.use("/BR/", reportRoutes);
 app.use("/reviews", itemReviewRoutes);
 
-app.get("/test-notification", (req, res) => {
-  const testMessage = {
-    receiver_id: 5, // Replace with the actual userId
-    sender_id: 2, // Replace with the actual senderId
-    message: "This is a test message",
-    content: "This is a test message",
-    timestamp: new Date().toISOString(),
-  };
-
-  io.to(5).emit("receive_message", testMessage);
-  res.send("Test message sent");
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
 });
 
 server.listen(port, hostname, () => {

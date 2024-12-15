@@ -4,30 +4,14 @@
     display: flex;
     position: relative;
     flex-direction: column;
-    background-color: #ffe0e0;
 }
 
-.profile-pic {
+/* .profile-pic {
     display: flex;
     align-items: center;
     position: relative;
     gap: 10px;
-    /* padding-right: 60px; */
-}
-
-.log-out-btn {
-    position: absolute;
-    width: auto;
-    height: auto;
-    top: 5px; 
-    right: 5px; 
-    background-color: #333;
-    margin: 0;
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding-right: 60px;
 }
 
 .profile-pic img {
@@ -87,8 +71,22 @@
 .profile-container hr {
     border: none;             
     border-top: 1px solid #181717;
-    /* margin: 10px 0;           */
     width: 100%;           
+} */
+
+.log-out-btn {
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: 5px; 
+    right: 5px; 
+    background-color: #333;
+    margin: 0;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .user-info {
@@ -119,8 +117,8 @@
     position: absolute;
     transform: translate(-50%);
     left: 50%;
-    bottom: 40px;
-    width: auto;
+    bottom: 50px;
+    width: 100px;
     padding: 5px 10px;
     background-color: #343232;
     color: rgb(251, 245, 245);
@@ -128,4 +126,24 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* change-password */
+
+.change-password {
+    margin-top: 20px;
+}
+
+.change-password-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.change-password-form input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }

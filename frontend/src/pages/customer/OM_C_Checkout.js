@@ -1,25 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/customer/CCheckout.module.css";
 import { useCart } from "../../contexts/CartContext";
 import axios from "axios";
 import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
-import { use } from "react";
-import { useEffect } from "react";
 import { useTable } from "../../contexts/TableContext";
 import QRCode from "react-qr-code";
+import { socket, userId, role } from "../../services/socket";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState("cash"); // Tiền mặt mặc định
+  const [paymentMethod, setPaymentMethod] = useState(null);
   const { tableNumber } = useTable();
   const [discount, setDiscount] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-
+  const [showPaymentInfo, setShowPaymentInfo] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [qrTimer, setQrTimer] = useState(20);
   const [userInfo, setUserInfo] = useState(null);
+  const [isOrderSent, setIsOrderSent] = useState(false);
 
+  // Fetch user info
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get(
+          "http://localhost:8080/UM/user-profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.data) {
+          setUserInfo(response.data);
+        } else {
+          console.error("Error fetching user info:", response.error);
+        }
+      } catch (error) {
+        console.error(
+          "Error fetching user info:",
+          error.response || error.message
+        );
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  // Fetch discount
   useEffect(() => {
     const fetchDiscount = async () => {
       try {
@@ -27,35 +59,40 @@ const OM_C_Checkout = () => {
           "http://localhost:8080/DM/get-discounts"
         );
         if (response.data && response.data.length > 0) {
-          // Get the active discount
-          const activeDiscount = response.data.find((d) => {
-            const now = new Date();
+          const now = new Date();
+          const validDiscounts = response.data.filter((d) => {
             const validFrom = new Date(d.valid_from);
             const validUntil = new Date(d.valid_until);
             return now >= validFrom && now <= validUntil;
           });
 
-          // Convert decimal to percentage (e.g., 0.15 -> 15)
-          setDiscount(activeDiscount ? activeDiscount.value * 100 : 0);
+          const combinedDiscount = validDiscounts.reduce((acc, discount) => {
+            const discountValue = acc + discount.value * 100;
+            return acc + discountValue > 100 ? 100 : discountValue;
+          }, 0);
+
+          setDiscount(combinedDiscount);
         }
       } catch (error) {
-        console.error("Error fetching discount bruh:", error);
+        console.error("Error fetching discount:", error);
         setDiscount(0);
       }
     };
     fetchDiscount();
   }, []);
 
+  const totalPrice = state.items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
+
   const handleSelectPayment = (method) => {
     setPaymentMethod(method);
-    setShowModal(true);
+    setShowPaymentInfo(true);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  //handle send order
   const handleSendOrder = async () => {
     try {
       if (!tableNumber) {
@@ -68,6 +105,14 @@ const OM_C_Checkout = () => {
         return;
       }
 
+      if (!paymentMethod) {
+        alert("Please select a payment method before sending order.");
+        return;
+      }
+
+      setIsProcessingPayment(true);
+      setIsOrderSent(true);
+
       const orderDetails = state.items.map((item) => ({
         itemId: item.id,
         quantity: item.quantity,
@@ -76,78 +121,57 @@ const OM_C_Checkout = () => {
       }));
 
       const orderData = {
-        tableId: parseInt(tableNumber),
+        tableId: parseInt(tableNumber) || 3,
         total_price: parseFloat(discountedAmount.toFixed(2)),
         orderDetails: orderDetails,
         payment_method: paymentMethod,
+        customerId: userId,
       };
 
-      console.log("Order data:", orderData);
+      console.log("paymentMethod:", paymentMethod);
+      console.log("Sending order data:", orderData);
 
-      // Gửi request tới API tạo đơn hàng
       const response = await axios.post("http://localhost:8080/OM/", orderData);
 
-      if (response.data.success) {
-        console.log("Order created successfully:", response.data);
-        dispatch({ type: "CLEAR_CART" });
+      if (paymentMethod === "qr" && response.data.success) {
+        setQrTimer(20);
+        const timer = setInterval(() => {
+          setQrTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              console.log("Order created successfully:", response.data);
+              dispatch({ type: "CLEAR_CART" });
 
-        // Get orderId from response
-        const orderId = response.data.order.id;
-        navigate(`/rateFood?orderId=${orderId}`);
+              // Get orderId from response
+              const orderId = response.data.order.id;
+              navigate(`/rateFood?orderId=${orderId}`);
+              // navigate("/rateFood?orderId=123");
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else if (paymentMethod === "cash" && response.data.success) {
+        setTimeout(() => {
+          console.log("Order created successfully:", response.data);
+          dispatch({ type: "CLEAR_CART" });
 
-        // Chuẩn bị dữ liệu tin nhắn
-        const token = localStorage.getItem("authToken");
-        const messageData = {
-          data: {
-            roomId: "", // Thay bằng roomId phù hợp
-            content: `Đơn hàng đã được tạo thành công. Chi tiết đơn hàng:
-              - Bàn: 3
-              - Tổng tiền: $${totalPrice.toFixed(2)}
-              - Giảm giá: ${discount}%
-              - Còn lại: $${discountedAmount.toFixed(2)}
-              - Món: ${state.items
-                .map((item) => `${item.quantity}x ${item.name}`)
-                .join(", ")}
-            `,
-            type: "order-update",
-          },
-        };
-
-        // Gửi tin nhắn tới API chat
-        const messageResponse = await axios.post(
-          "http://localhost:8080/chat/send",
-          messageData,
-          token
-        );
-
-        if (messageResponse.status === 200) {
-          console.log("Message sent successfully:", messageResponse.data);
-        } else {
-          console.error("Failed to send message:", messageResponse.data);
-        }
-
-        // Xóa giỏ hàng
-        dispatch({ type: "CLEAR_CART" });
-
-        // Chuyển hướng
-        navigate("/chat");
+          // Get orderId from response
+          const orderId = response.data.order.id;
+          navigate(`/rateFood?orderId=${orderId}`);
+        }, 20000);
       } else {
         console.error("Error creating order:", response.data.message);
         alert("Failed to create order: " + response.data.message);
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      const errorMessage = error.response?.data?.message || "Network error";
-      alert("Failed to create order: " + errorMessage);
+      alert(
+        "Failed to create order: " +
+          (error.response?.data?.message || "Network error")
+      );
     }
   };
-
-  const totalPrice = state.items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  // Tính toán số tiền sau giảm giá
-  const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
 
   return (
     <div className={styles["order-confirmation"]}>
@@ -165,7 +189,19 @@ const OM_C_Checkout = () => {
           <p>Thông tin khách hàng</p>
           <img src={editImg} alt="Edit" />
         </div>
-        <p>Phạm Hoàng Anh | 0987654321</p>
+        {userInfo ? (
+          <div>
+            <p>
+              <strong>Tên:</strong> {userInfo.first_name} {userInfo.last_name}
+            </p>
+            <p>
+              <strong>Email:</strong> {userInfo.email}
+            </p>
+          </div>
+        ) : (
+          <p>Không tìm thấy thông tin khách hàng</p>
+        )}
+
         <p>
           <strong>Bàn số:</strong> {tableNumber}
         </p>
@@ -189,8 +225,6 @@ const OM_C_Checkout = () => {
         ))}
       </div>
 
-      <button className={styles["view-all-btn"]}>Xem tất cả</button>
-
       <div className={styles["summary"]}>
         <p>
           Tổng cộng: <span>${totalPrice.toFixed(2)}</span>
@@ -205,39 +239,50 @@ const OM_C_Checkout = () => {
 
       <div className={styles["payment-method"]}>
         <button
-          className={styles["payment-btn"]}
+          className={`${styles["payment-btn"]} ${
+            isOrderSent ? styles["disabled-btn"] : ""
+          }`}
           onClick={() => handleSelectPayment("cash")}
+          disabled={isOrderSent}
         >
           Tiền mặt
         </button>
         <button
-          className={styles["payment-btn"]}
+          className={`${styles["payment-btn"]} ${
+            isOrderSent ? styles["disabled-btn"] : ""
+          }`}
           onClick={() => handleSelectPayment("qr")}
+          disabled={isOrderSent}
         >
           QR Code
         </button>
       </div>
 
-      {showModal && (
-        <div className={styles["modal"]}>
-          <div className={styles["modal-content"]}>
-            <h2>Thanh toán</h2>
-            {paymentMethod === "cash" ? (
-              <p>
-                Quý khách vui lòng đợi nhân viên đến thanh toán. Số tiền cần
-                thanh toán là: <strong>${discountedAmount.toFixed(2)}</strong>.
-              </p>
-            ) : (
-              <div className={styles["qr-code-container"]}>
-                <p>Quét mã QR để thanh toán số tiền:</p>
-                <QRCode value={`Amount: ${discountedAmount.toFixed(2)}`} />
-              </div>
-            )}
-            <button onClick={closeModal} className={styles["close-btn"]}>
-              Đóng
-            </button>
-          </div>
+      {showPaymentInfo && (
+        <p className={styles["selected-method"]}>
+          Bạn đã chọn phương thức thanh toán:{" "}
+          {paymentMethod === "cash" ? "Tiền mặt" : "QR Code"}
+        </p>
+      )}
+
+      {isProcessingPayment && paymentMethod === "qr" && (
+        <div className={styles["qr-code-container"]}>
+          <p>Quét mã QR để thanh toán số tiền:</p>
+          <QRCode
+            value={`So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
+              2
+            )}`}
+          />
+          <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
         </div>
+      )}
+
+      {isProcessingPayment && paymentMethod === "cash" && (
+        <p>
+          Với phương thức thanh toán này, nhân viên sẽ tới bàn của bạn để thanh
+          toán. Số tiền cần thanh toán là:{" "}
+          <strong>${discountedAmount.toFixed(2)}</strong>.
+        </p>
       )}
 
       <button className={styles["send-order-btn"]} onClick={handleSendOrder}>
