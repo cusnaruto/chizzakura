@@ -199,6 +199,21 @@
   border-radius: 5px;
 }
 
+.formGroupMenuRow textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.formGroupMenuRow textarea:focus {
+  outline: none;
+  border-color: #ff7675;
+}
+
 .saveButton,
 .deleteButton,
 .cancelButton {

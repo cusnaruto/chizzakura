@@ -1,13 +1,20 @@
-const Item = require("../model/Items");
+const Items = require("../model/Items");
+
 // Create a new Item
 const createItem = async (req, res) => {
   try {
     const newItem = {
-      ...req.body,
+      name: req.body.name,
+      price: req.body.price,
+      categoryid: req.body.categoryid,
+      is_available: true,
+      image: req.body.image,
+      description: req.body.description,
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    const item = await Item.create(newItem);
+    
+    const item = await Items.create(newItem);
     res.status(201).json(item);
   } catch (error) {
     console.error('Error creating Item:', error);
@@ -18,8 +25,8 @@ const createItem = async (req, res) => {
 // Get all Items
 const getItems = async (req, res) => {
   try {
-    const Items = await Item.findAll();
-    res.status(200).json(Items);
+    const items = await Items.findAll();
+    res.status(200).json(items);
   } catch (error) {
     console.error("Error fetching Items:", error);
     res.status(500).json({ error: error.message });
@@ -29,7 +36,7 @@ const getItems = async (req, res) => {
 // Get a single Item by ID
 const getItemById = async (req, res) => {
   try {
-    const item = await Item.findByPk(req.params.id);
+    const item = await Items.findByPk(req.params.id);
     if (item) {
       res.status(200).json(item);
     } else {
@@ -44,14 +51,14 @@ const getItemById = async (req, res) => {
 // Update a Item by ID
 const updateItem = async (req, res) => {
   try {
-    const [updated] = await Item.update({
+    const [updated] = await Items.update({
       ...req.body,
       updatedAt: new Date()
     }, {
       where: { id: req.params.id }
     });
     if (updated) {
-      const updatedItem = await Item.findByPk(req.params.id);
+      const updatedItem = await Items.findByPk(req.params.id);
       res.status(200).json(updatedItem);
     } else {
       res.status(404).json({ error: "Item not found" });
@@ -65,7 +72,7 @@ const updateItem = async (req, res) => {
 // Delete a Item by ID
 const deleteItem = async (req, res) => {
   try {
-    const deleted = await Item.destroy({
+    const deleted = await Items.destroy({
       where: { id: req.params.id },
     });
     if (deleted) {
