@@ -19,6 +19,7 @@ import UM_C_Profile from "./pages/customer/UM_C_Profile";
 import UM_C_Home from "./pages/customer/UM_C_Home";
 import UM_C_Login from "./pages/customer/UM_C_Login";
 import UM_C_Register from "./pages/customer/UM_C_Register";
+import CI_C_ItemDetail from "./pages/customer/CI_C_ItemDetail";
 
 import UmOERegister from "./pages/owner/UM_O_ERegister";
 import UmOELogin from "./pages/UM_OE_Login";
@@ -256,6 +257,16 @@ root.render(
               <Route path="/employee/listorder" element={<OmEListOrder />} />
 
               <Route path="/app" element={<App />} />
+
+              <Route
+                path="/menu/item/:itemId"
+                element={
+                  <C_ProtectedRoute>
+                    <CI_C_ItemDetail />
+                  </C_ProtectedRoute>
+                }
+              />
+
             </Routes>
           </TableCheck>
         </Router>

@@ -130,16 +130,17 @@ const MM_C_Menu = () => {
                 alt={item.name}
                 className={styles["product-img"]}
                 onError={(e) => (e.target.src = "fallback-image-url.jpg")}
+                onClick={() => navigate(`/menu/item/${item.id}`)}
               />
               <div className={styles["product-info"]}>
                 <span className={styles["product-price"]}>${item.price}</span>
-                <h3 className={styles["product-name"]}>{item.name}</h3>
-                <div className={styles["product-rating"]}>
+                <h3 className={styles["product-name"]} onClick={() => navigate(`/menu/item/${item.id}`)} >{item.name}</h3>
+                {/* <div className={styles["product-rating"]}>
                   <span className={styles["product-rate"]}>{item.rate}/10</span>
                   <span className={styles["product-number-rate"]}>
                     ({item.numberRate} people)
                   </span>
-                </div>
+                </div> */}
                 <button
                   disabled={!item.is_available}
                   className={`${styles["add-to-cart-btn"]} ${!item.is_available ? styles["disabled"] : ""}`}
