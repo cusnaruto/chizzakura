@@ -21,6 +21,7 @@ const MmOEditMenu = () => {
     price: '',
     categoryid: 1,
     image: '',
+    description: ''
   });
   const [categories, setCategories] = useState([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -190,6 +191,7 @@ const MmOEditMenu = () => {
         price: parseFloat(currentItem.price),
         categoryid: parseInt(currentItem.categoryid),
         image: imageUrl,
+        description: currentItem.description
       };
   
       // Update item in the backend
@@ -262,6 +264,7 @@ const MmOEditMenu = () => {
         price: price,
         categoryid: parseInt(newItem.categoryid),
         image: imageUrl,
+        description: newItem.description
       };
   
       const response = await axios.post('http://localhost:8080/IM/create-item', itemData, {
@@ -478,6 +481,16 @@ const MmOEditMenu = () => {
                   />
                 </div>
               </div>
+              <div className={styles.formGroupMenuRow}>
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={currentItem.description || ''}
+                  onChange={handleFormChange}
+                  placeholder="Enter item description"
+                />
+              </div>
               <span className={styles.fileName}>{fileName}</span>
               <button type="submit" className={styles.saveButton}>Save</button>
               <button type="button" className={styles.delButton} onClick={handleDelete}>Delete</button>
@@ -536,6 +549,15 @@ const MmOEditMenu = () => {
                     onChange={handleAddFileChange}
                   />
                 </div>
+              </div>
+              <div className={styles.formGroupMenuRow}>
+                <label htmlFor="newDescription">Description</label>
+                <textarea
+                  id="newDescription"
+                  value={newItem.description}
+                  onChange={(e) => setNewItem(prev => ({...prev, description: e.target.value}))}
+                  placeholder="Enter item description"
+                />
               </div>
               <span className={styles.fileName}>{fileName}</span>
               <button type="submit" className={styles.saveButton}>Add Item</button>

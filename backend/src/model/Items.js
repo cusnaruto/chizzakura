@@ -24,6 +24,10 @@ const Items = sequelize.define("Items", {
     allowNull: false,
     defaultValue: false,
   },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   image: {
     type: DataTypes.STRING,
     allowNull: true,
