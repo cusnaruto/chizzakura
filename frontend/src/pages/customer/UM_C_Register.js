@@ -101,7 +101,7 @@ const UM_C_Register = () => {
               type="text"
               name="username"
               id="username"
-              placeholder="Enter your user name"
+              placeholder="Enter your username"
               value={formData.username}
               onChange={handleChange}
               required

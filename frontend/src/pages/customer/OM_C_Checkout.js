@@ -195,7 +195,7 @@ const OM_C_Checkout = () => {
   };
 
   const handleDownloadQR = () => {
-    const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`;
+    const qrValue = `The amount you need to pay is: $${discountedAmount.toFixed(2)}`;
     QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
       if (err) {
         console.error("Error generating QR code:", err);
@@ -212,31 +212,31 @@ const OM_C_Checkout = () => {
     <div className={styles["order-confirmation"]}>
       <div className={styles["header"]}>
         <div className={styles["arrow"]} onClick={() => navigate("/cart")}>←</div>
-        <div className={styles["title-checkout"]}>Xác nhận đơn hàng</div>
+        <div className={styles["title-checkout"]}>Confirm order</div>
       </div>
 
       <hr />
 
       <div className={styles["customer-info"]}>
         <div className={styles["title-info"]}>
-          <p>Thông tin khách hàng</p>
+          <p>Customer Information</p>
           <img src={editImg} alt="Edit" />
         </div>
         {userInfo ? (
           <div>
             <p>
-              <strong>Tên:</strong> {userInfo.first_name} {userInfo.last_name}
+              <strong>Name:</strong> {userInfo.first_name} {userInfo.last_name}
             </p>
             <p>
               <strong>Email:</strong> {userInfo.email}
             </p>
           </div>
         ) : (
-          <p>Không tìm thấy thông tin khách hàng</p>
+          <p>Unable to fetch customer's information</p>
         )}
 
         <p>
-          <strong>Bàn số:</strong> {tableNumber}
+          <strong>Table number:</strong> {tableNumber}
         </p>
       </div>
 
@@ -260,13 +260,13 @@ const OM_C_Checkout = () => {
 
       <div className={styles["summary"]}>
         <p>
-          Tổng cộng: <span>${totalPrice.toFixed(2)}</span>
+          Total: <span>${totalPrice.toFixed(2)}</span>
         </p>
         <p>
-          Giảm giá: <span>{discount}%</span>
+          Discount: <span>{discount}%</span>
         </p>
         <p>
-          Còn lại: <span>${discountedAmount.toFixed(2)}</span>
+          Amount: <span>${discountedAmount.toFixed(2)}</span>
         </p>
       </div>
 
@@ -276,7 +276,7 @@ const OM_C_Checkout = () => {
           onClick={() => handleSelectPayment("cash")}
           disabled={isOrderSent}
         >
-          Tiền mặt
+          Cash
         </button>
         <button
           className={`${styles["payment-btn"]} ${ isOrderSent ? styles["disabled-btn"] : ""}`}
@@ -289,24 +289,24 @@ const OM_C_Checkout = () => {
 
       {showPaymentInfo && (
         <p className={styles["selected-method"]}>
-          Bạn đã chọn phương thức thanh toán: {paymentMethod === "cash" ? "Tiền mặt" : "QR Code"}
+          Chosen Method: {paymentMethod === "cash" ? "Tiền mặt" : "QR Code"}
         </p>
       )}
 
       {isProcessingPayment && paymentMethod === "qr" && (
         <div className={styles["qr-code-container"]}>
-          <p>Quét mã QR để thanh toán số tiền:</p>
+          <p>Scan the QR code to pay:</p>
           <QRCode value={`Cam on quy khach da su dung dich vu cua chung toi. So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`} />
-          <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
+          <p>Expires in: {qrTimer} seconds.</p>
           <button onClick={handleDownloadQR} className={styles["download-qr-btn"]}>
-            Tải mã QR về máy
+            Download QR Code
           </button>
         </div>
       )}
 
       {isProcessingPayment && paymentMethod === "cash" && (
         <p>
-          Với phương thức thanh toán này, nhân viên sẽ tới bàn của bạn để thanh toán. Số tiền cần thanh toán là: <strong>${discountedAmount.toFixed(2)}</strong>.
+          The employee will come shortly to check out. The amount you will need to pay is: <strong>${discountedAmount.toFixed(2)}</strong>.
         </p>
       )}
 
