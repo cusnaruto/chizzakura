@@ -24,14 +24,14 @@ const getChatRooms = async (req, res) => {
 };
 
 const sendMessage = async (data, io) => {
-  const { token, room, message } = data;
+  const { token, room, message, sender_id} = data;
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     const now = new Date();
     const timestamp = now.toISOString().replace('T', ' ').replace('Z', ''); // Format to YYYY-MM-DD HH:MM:SS.SSSSSS
     const messageData = {
-      sender_id: decoded.id,
+      sender_id: sender_id,
       receiver_id: parseInt(room, 10), // Ensure receiver_id is an integer
       content: message,
       timestamp: timestamp,

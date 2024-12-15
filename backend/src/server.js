@@ -16,6 +16,9 @@ const discountRoutes = require("./route/discountRoutes");
 const messageRoutes = require("./route/messageRoutes");
 const itemReviewRoutes = require("./route/itemReviewsRoutes");
 const reportRoutes = require("./route/reportRoutes");
+const { uploadImage } = require("./controllers/uploadController");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
@@ -66,7 +69,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    sendMessage({ ...data, sender_id: socket.user.id }, io);
+    sendMessage({ ...data }, io);
   });
 
   socket.on("disconnect", () => {
@@ -96,6 +99,8 @@ app.use("/reviews", itemReviewRoutes);
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
 });
+
+app.post("/upload", upload.single("file"), uploadImage);
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);

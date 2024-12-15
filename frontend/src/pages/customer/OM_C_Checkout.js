@@ -7,6 +7,7 @@ import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { useTable } from "../../contexts/TableContext";
 import QRCode from "react-qr-code";
+import QRCodeLib from "qrcode";
 import { socket, userId, role } from "../../services/socket";
 
 const OM_C_Checkout = () => {
@@ -141,7 +142,26 @@ const OM_C_Checkout = () => {
               clearInterval(timer);
               console.log("Order created successfully:", response.data);
               dispatch({ type: "CLEAR_CART" });
-
+              const messageContent = `
+                Order created successfully!\n\n
+                Your order contains:\n
+                ${state.items
+                  .map(
+                    (item) => `${item.quantity}x ${item.name} - $${item.price}`
+                  )
+                  .join("\n")}\n\n
+                Discount: ${discount}%\n
+                Total: $${totalPrice}\n
+                Payment Method: ${paymentMethod}\n
+              `;
+              // Send the message using socket.emit
+              socket.emit("send_message", {
+                token: localStorage.getItem("authToken"),
+                room: userId,
+                message: messageContent,
+                sender_id: 2,
+                time: new Date().toLocaleTimeString(),
+              });
               // Get orderId from response
               const orderId = response.data.order.id;
               navigate(`/rateFood?orderId=${orderId}`);
@@ -155,11 +175,28 @@ const OM_C_Checkout = () => {
         setTimeout(() => {
           console.log("Order created successfully:", response.data);
           dispatch({ type: "CLEAR_CART" });
-
+          const messageContent = `
+            Order created successfully!\n\n
+            Your order contains:\n
+            ${state.items
+              .map((item) => `${item.quantity}x ${item.name} - $${item.price}`)
+              .join("\n")}\n\n
+            Discount: ${discount}%\n
+            Total: $${totalPrice}\n
+            Payment Method: ${paymentMethod}\n
+          `;
+          // Send the message using socket.emit
+          socket.emit("send_message", {
+            token: localStorage.getItem("authToken"),
+            room: userId,
+            message: messageContent,
+            sender_id: 2,
+            time: new Date().toLocaleTimeString(),
+          });
           // Get orderId from response
           const orderId = response.data.order.id;
           navigate(`/rateFood?orderId=${orderId}`);
-        }, 20000);
+        }, 7000);
       } else {
         console.error("Error creating order:", response.data.message);
         alert("Failed to create order: " + response.data.message);
@@ -172,6 +209,38 @@ const OM_C_Checkout = () => {
       );
     }
   };
+
+  const handleDownloadQR = () => {
+    const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
+      2
+    )}`;
+    QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
+      if (err) {
+        console.error("Error generating QR code:", err);
+        return;
+      }
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "qr-code.png";
+      link.click();
+    });
+  };
+
+  // const handleDownloadQR = () => {
+  //   const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
+  //     2
+  //   )}`;
+  //   QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
+  //     if (err) {
+  //       console.error("Error generating QR code:", err);
+  //       return;
+  //     }
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.download = "qr-code.png";
+  //     link.click();
+  //   });
+  // };
 
   return (
     <div className={styles["order-confirmation"]}>
@@ -269,11 +338,17 @@ const OM_C_Checkout = () => {
         <div className={styles["qr-code-container"]}>
           <p>Quét mã QR để thanh toán số tiền:</p>
           <QRCode
-            value={`So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
+            value={`Cam on quy khach da su dung dich vu cua chung toi. So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
               2
             )}`}
           />
           <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
+          <button
+            onClick={handleDownloadQR}
+            className={styles["download-qr-btn"]}
+          >
+            Tải mã QR về máy
+          </button>
         </div>
       )}
 
@@ -285,7 +360,11 @@ const OM_C_Checkout = () => {
         </p>
       )}
 
-      <button className={styles["send-order-btn"]} onClick={handleSendOrder}>
+      <button
+        className={styles["send-order-btn"]}
+        onClick={handleSendOrder}
+        disabled={isOrderSent}
+      >
         Send order
       </button>
     </div>

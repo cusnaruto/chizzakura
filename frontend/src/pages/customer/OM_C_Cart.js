@@ -33,7 +33,7 @@ const OM_C_Cart = () => {
   return (
     <div className={styles["product-page-container"]}>
       <C_Header />
-      <h2>Your Cart</h2>
+      <h2 className={styles["page-title"]}>Your Cart</h2>
       <div className={styles["product-grid"]}>
         {state.items.length === 0 ? (
           <p>Your cart is empty.</p>

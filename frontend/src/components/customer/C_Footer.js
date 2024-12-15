@@ -1,45 +1,43 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; 
-import { useCart } from '../../contexts/CartContext'; 
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCart } from '../../contexts/CartContext';
+import { FaHome, FaUtensils, FaShoppingCart, FaUser } from 'react-icons/fa';
 import styles from '../../styles/customer/CFooter.module.css';
 
-import cartImg from '../../assets/Image_C/cart.png';
-import foodImg from '../../assets/Image_C/food.png';
-import profileImg from '../../assets/Image_C/user.png';
-import homeImg from '../../assets/Image_C/home.png';
-
 const C_Footer = () => {
-
   const currentLocation = useLocation();
   const navigate = useNavigate();
   const { state } = useCart();
 
   const cartCount = state.items.reduce((total, item) => total + item.quantity, 0);
 
-  return (
-    <div className={styles['footer-nav']}>
-      <div className={`${styles['nav-item']} ${currentLocation.pathname === '/home' ? styles['active'] : ''}`} onClick={() => navigate('/home')}>
-        <img src={homeImg} alt="Home" className={styles['nav-icon']} />
-        <span>Home</span>
-      </div>
-      <div className={`${styles['nav-item']} ${currentLocation.pathname === '/menu' ? styles['active'] : ''}`} onClick={() => navigate('/menu')}>
-        <img src={foodImg} alt="Menu" className={styles['nav-icon']} />
-        <span>Menu</span>
-      </div>
-      <div className={`${styles['nav-item']} ${currentLocation.pathname === '/cart' ? styles['active'] : ''}`} onClick={() => navigate('/cart')}>
-        <img src={cartImg} alt="Cart" className={styles['nav-icon']} />
-        <span>Cart</span>
-        {cartCount > 0 && (
-           <div className={styles['cart-count']}>{cartCount}</div>
-        )}
-      </div>
-      <div className={`${styles['nav-item']} ${currentLocation.pathname === '/profile' ? styles['active'] : ''}`} onClick={() => navigate('/profile')}>
-        <img src={profileImg} alt="Profile" className={styles['nav-icon']} />
-        <span>Profile</span>
-      </div>
+  const navItems = [
+    { path: '/home', icon: <FaHome />, label: 'Home' },
+    { path: '/menu', icon: <FaUtensils />, label: 'Menu' },
+    { path: '/cart', icon: <FaShoppingCart />, label: 'Cart', count: cartCount },
+    { path: '/profile', icon: <FaUser />, label: 'Profile' }
+  ];
 
-    </div>
+  return (
+    <nav className={styles['footer-nav']}>
+      {navItems.map((item) => (
+        <div
+          key={item.path}
+          className={`${styles['nav-item']} ${
+            currentLocation.pathname === item.path ? styles['active'] : ''
+          }`}
+          onClick={() => navigate(item.path)}
+        >
+          <div className={styles['icon-container']}>
+            {item.icon}
+            {item.count > 0 && (
+              <span className={styles['cart-count']}>{item.count}</span>
+            )}
+          </div>
+          <span className={styles['nav-label']}>{item.label}</span>
+        </div>
+      ))}
+    </nav>
   );
 };
 

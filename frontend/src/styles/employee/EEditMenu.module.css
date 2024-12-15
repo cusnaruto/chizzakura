@@ -1,6 +1,7 @@
 .editMenu {
     background-color: #ffebeb;
     padding: 20px;
+    min-height: 90vh;
 }
 
 .selectOptions {
@@ -41,9 +42,9 @@
 }
   
 .menuItem img {
-    width: 100px;
+    width: 200px;
     height: auto;
-    border-radius: 50%;
+    border-radius: 10px;
 }
   
 .pagination {
