@@ -22,7 +22,7 @@ const upload = multer({ dest: "uploads/" });
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
-const Message = require("./model/message"); // Import the Message model
+const Message = require("./model/Message"); // Import the Message model
 
 //config template engine
 app.use(cors());
