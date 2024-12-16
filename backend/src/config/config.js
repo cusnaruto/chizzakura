@@ -10,11 +10,14 @@ module.exports = {
     dialect: "mysql",
   },
   test: {
-    username: process.env.TEST_DB_USERNAME || $YOUR_ACCOUNT,
-    password: process.env.TEST_DB_PASSWORD || "chizzakura",
-    database: process.env.TEST_DB_NAME || `${$YOUR_ACCOUNT}_chizzakura`,
-    host: process.env.TEST_DB_HOST || $MYSQL_SERVICE_HOST,
-    port: process.env.TEST_DB_PORT || $MYSQL_SERVICE_PORT,
+    username: process.env.YOUR_ACCOUNT || `fall2024c8g11`,
+    password: process.env.DB_PASSWORD || "chizzakura",
+    database:
+      process.env.TEST_DB_NAME ||
+      `${process.env.YOUR_ACCOUNT}_chizzakura` ||
+      "fall2024c8g11_chizzakura",
+    host: process.env.MYSQL_SERVICE_HOST || "10.104.66.205",
+    port: process.env.MYSQL_SERVICE_PORT || "3306",
     dialect: "mysql",
   },
   production: {
