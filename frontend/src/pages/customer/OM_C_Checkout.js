@@ -108,7 +108,7 @@ const OM_C_Checkout = () => {
 
         return convertedAmount;
       } else {
-        console.error("Không tìm thấy tỷ giá VNĐ trong phản hồi API.");
+        console.error("Cannot get exchange rate:", response.data);
         return null;
       }
     } catch (error) {
@@ -138,7 +138,7 @@ const OM_C_Checkout = () => {
         setQrCodeUrl(QR);
       } catch (error) {
         console.error("Error generating QR:", error);
-        alert("Không thể tạo mã QR. Vui lòng thử lại.");
+        alert("Failed to generate QR code. Please try again.");
       }
     }
   };
@@ -277,31 +277,32 @@ const OM_C_Checkout = () => {
         <div className={styles["arrow"]} onClick={() => navigate("/cart")}>
           ←
         </div>
-        <div className={styles["title-checkout"]}>Xác nhận đơn hàng</div>
+        <div className={styles["title-checkout"]}>Confirm order</div>
       </div>
 
       <hr />
 
       <div className={styles["customer-info"]}>
         <div className={styles["title-info"]}>
-          <p>Thông tin khách hàng</p>
+          <p>Customer Information</p>
           <img src={editImg} alt="Edit" />
         </div>
         {userInfo ? (
           <div>
             <p>
-              <strong>Tên:</strong> {userInfo.first_name} {userInfo.last_name}
+              <strong>Name:</strong> {userInfo.first_name} {userInfo.last_name}
             </p>
             <p>
               <strong>Email:</strong> {userInfo.email}
             </p>
           </div>
         ) : (
-          <p>Không tìm thấy thông tin khách hàng</p>
+          <p>Unable to fetch customer's information</p>
         )}
 
         <p>
-          <strong>Bàn số:</strong> {tableState.tableNumber || "Chưa chọn bàn"}
+          <strong>Table number:</strong>{" "}
+          {tableState.tableNumber || "No table selected"}
         </p>
       </div>
 
@@ -325,13 +326,13 @@ const OM_C_Checkout = () => {
 
       <div className={styles["summary"]}>
         <p>
-          Tổng cộng: <span>${totalPrice.toFixed(2)}</span>
+          Total: <span>${totalPrice.toFixed(2)}</span>
         </p>
         <p>
-          Giảm giá: <span>{discount}%</span>
+          Discount: <span>{discount}%</span>
         </p>
         <p>
-          Còn lại: <span>${discountedAmount.toFixed(2)}</span>
+          Amount: <span>${discountedAmount.toFixed(2)}</span>
         </p>
       </div>
 
@@ -343,7 +344,7 @@ const OM_C_Checkout = () => {
           onClick={() => handleSelectPayment("cash")}
           disabled={isOrderSent}
         >
-          Tiền mặt
+          Cash
         </button>
         <button
           className={`${styles["payment-btn"]} ${
@@ -358,14 +359,13 @@ const OM_C_Checkout = () => {
 
       {showPaymentInfo && (
         <p className={styles["selected-method"]}>
-          Bạn đã chọn phương thức thanh toán:{" "}
-          {paymentMethod === "cash" ? "Tiền mặt" : "QR Code"}
+          Chosen Method: {paymentMethod === "cash" ? "Cash" : "QR Code"}
         </p>
       )}
 
       {isProcessingPayment && paymentMethod === "qr" && (
         <div className={styles["qr-code-container"]}>
-          <p>Quét mã QR để thanh toán số tiền:</p>
+          <p>Scan the QR code to pay:</p>
           {qrCodeUrl ? (
             <img
               src={qrCodeUrl}
@@ -373,22 +373,22 @@ const OM_C_Checkout = () => {
               className={styles["qr-code-image"]}
             />
           ) : (
-            <p>Đang tạo mã QR...</p>
+            <p>Generating QR...</p>
           )}
-          <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
+          <p>Expires in: {qrTimer} seconds.</p>
           <button
             onClick={handleDownloadQR}
             className={styles["download-qr-btn"]}
           >
-            Tải mã QR về máy
+            Download QR Code
           </button>
         </div>
       )}
 
       {isProcessingPayment && paymentMethod === "cash" && (
         <p>
-          Với phương thức thanh toán này, nhân viên sẽ tới bàn của bạn để thanh
-          toán. Số tiền cần thanh toán là: <strong>{VNDAmount}VND</strong>.
+          The employee will come shortly to check out. The amount you will need
+          to pay is: <strong>{VNDAmount}VND</strong>.
         </p>
       )}
 

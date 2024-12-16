@@ -97,7 +97,7 @@ const CI_C_Chat = () => {
         <div className={styles['chat-page']}>
             <div className={styles['chat-header']}>
                 <img src={employeeAvtPic} alt="Avatar" className={styles['chat-employee-avt']} />
-                <h2 className={styles['chat-employee-name']}>Nhan vien quan</h2>
+                <h2 className={styles['chat-employee-name']}>Employee</h2>
                 <div className={styles['home-back']} onClick={() => navigate('/home')}>
                     <img src={homeImg} alt="Home" className={styles['nav-icon']} />
                     <span>Home</span>
