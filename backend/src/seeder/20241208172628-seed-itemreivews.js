@@ -40,10 +40,10 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert("Itemreviews", reviews, {});
+    await queryInterface.bulkInsert("ItemReviews", reviews, {});
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Itemreviews", null, {});
+    await queryInterface.bulkDelete("ItemReviews", null, {});
   },
 };
