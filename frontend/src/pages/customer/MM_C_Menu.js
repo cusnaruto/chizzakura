@@ -23,7 +23,7 @@ const MM_C_Menu = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8080/IM/get-items");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-items`);
         if (Array.isArray(response.data)) {
           setItems(response.data);
           //   console.log("Data fetched:", response.data);
@@ -46,7 +46,7 @@ const MM_C_Menu = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/IM/get-categories"
+          `${process.env.REACT_APP_API_URL}/IM/get-categories`
         );
         if (Array.isArray(response.data)) {
           setCategories(response.data); // Lưu danh sách categories vào state

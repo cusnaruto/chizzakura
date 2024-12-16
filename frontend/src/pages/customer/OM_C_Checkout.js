@@ -31,7 +31,7 @@ const OM_C_Checkout = () => {
       try {
         const token = localStorage.getItem("authToken");
         const response = await axios.get(
-          "http://localhost:8080/UM/user-profile",
+          `${process.env.REACT_APP_API_URL}/UM/user-profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ const OM_C_Checkout = () => {
     const fetchDiscount = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/DM/get-discounts"
+          `${process.env.REACT_APP_API_URL}/DM/get-discounts`
         );
         if (response.data && response.data.length > 0) {
           const now = new Date();
@@ -175,7 +175,7 @@ const OM_C_Checkout = () => {
       console.log("paymentMethod:", paymentMethod);
       console.log("Sending order data:", orderData);
 
-      const response = await axios.post("http://localhost:8080/OM/", orderData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/OM/`, orderData);
 
       if (paymentMethod === "qr" && response.data.success) {
         setQrTimer(900);

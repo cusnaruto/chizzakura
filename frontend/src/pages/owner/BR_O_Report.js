@@ -25,7 +25,7 @@ const ReportPage = () => {
   const fetchItemReports = async () => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/items-report`,
+        `${process.env.REACT_APP_API_URL}/BR/items-report`,
         { params: { days: timeframe } } // Pass the timeframe in days as query parameter
       );
       console.log("Item Reports:", response.data.data); // Debugging log

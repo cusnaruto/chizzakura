@@ -13,7 +13,7 @@ const UM_E_ConfirmOrder = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/OM/${orderId}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/OM/${orderId}`);
                 if (response.data.success) {
                     const order = response.data.order;
                     setCustomerId(order.customerId);
@@ -45,7 +45,7 @@ const UM_E_ConfirmOrder = () => {
 
     const handleStatusChange = async (newStatus) => {
         try {
-            await axios.put('http://localhost:8080/OM/update-status', {
+            await axios.put(`${process.env.REACT_APP_API_URL}/OM/update-status`, {
                 orderId: orderId,
                 status: newStatus.toLowerCase()
             });

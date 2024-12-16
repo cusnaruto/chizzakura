@@ -20,7 +20,7 @@ const CI_C_Chat = () => {
 
     const fetchMessages = async (roomId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/CI/${roomId}`);
             setMessageList(response.data);
         } catch (error) {
             console.error("Failed to fetch messages:", error);
