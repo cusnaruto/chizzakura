@@ -1,6 +1,6 @@
 // orderController.js
-const Order = require("../model/order.js");
-const OrderDetail = require("../model/orderdetail.js");
+const Order = require("../model/Order.js");
+const OrderDetail = require("../model/OrderDetail.js");
 const Table = require("../model/Table.js");
 const Items = require("../model/Items.js");
 
@@ -72,7 +72,7 @@ const getAllOrders = async (req, res) => {
           ],
         },
       ],
-      order: [['createdAt', 'DESC']] // Optional: sort by newest first
+      order: [["createdAt", "DESC"]], // Optional: sort by newest first
     });
 
     res.status(200).json({

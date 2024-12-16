@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/databaseConnection");
 const Table = require("./Table");
-const OrderDetail = require("./orderdetail");
+const OrderDetail = require("./OrderDetail");
 
 const Order = sequelize.define(
   "Order",
@@ -23,7 +23,7 @@ const Order = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    
+
     status: {
       type: DataTypes.ENUM("pending", "completed", "cancelled"),
       defaultValue: "pending",

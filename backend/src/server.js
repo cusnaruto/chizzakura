@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken"); // Import jwt
 const port = process.env.PORT || 8080;
 const hostname = process.env.HOST_NAME || "localhost"; // Provide a default value
 const { Server } = require("socket.io");
-const configViewEngine = require("./config/viewengine");
+const configViewEngine = require("./config/viewEngine");
 const userRoutes = require("./route/userRoutes");
 const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
@@ -22,7 +22,7 @@ const upload = multer({ dest: "uploads/" });
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
-const Message = require("./model/message"); // Import the Message model
+const Message = require("./model/Message"); // Import the Message model
 
 //config template engine
 app.use(cors());

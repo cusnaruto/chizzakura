@@ -1,19 +1,22 @@
 const { Op } = require("sequelize");
-const Message = require("../model/message");
+const Message = require("../model/Message");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key";
-const sequelize = require('../config/databaseConnection');
+const sequelize = require("../config/databaseConnection");
 
 // Fetch all chat rooms with messages
 const getChatRooms = async (req, res) => {
   try {
     const chatRooms = await Message.findAll({
       attributes: [
-        [sequelize.fn('DISTINCT', sequelize.col('receiver_id')), 'room_id'],
-        [sequelize.fn('MAX', sequelize.col('timestamp')), 'latest_message_timestamp'],
+        [sequelize.fn("DISTINCT", sequelize.col("receiver_id")), "room_id"],
+        [
+          sequelize.fn("MAX", sequelize.col("timestamp")),
+          "latest_message_timestamp",
+        ],
       ],
-      group: ['receiver_id'],
-      order: [[sequelize.fn('MAX', sequelize.col('timestamp')), 'DESC']],
+      group: ["receiver_id"],
+      order: [[sequelize.fn("MAX", sequelize.col("timestamp")), "DESC"]],
     });
 
     res.status(200).json(chatRooms);
@@ -24,12 +27,12 @@ const getChatRooms = async (req, res) => {
 };
 
 const sendMessage = async (data, io) => {
-  const { token, room, message, sender_id} = data;
+  const { token, room, message, sender_id } = data;
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     const now = new Date();
-    const timestamp = now.toISOString().replace('T', ' ').replace('Z', ''); // Format to YYYY-MM-DD HH:MM:SS.SSSSSS
+    const timestamp = now.toISOString().replace("T", " ").replace("Z", ""); // Format to YYYY-MM-DD HH:MM:SS.SSSSSS
     const messageData = {
       sender_id: sender_id,
       receiver_id: parseInt(room, 10), // Ensure receiver_id is an integer
@@ -46,8 +49,7 @@ const sendMessage = async (data, io) => {
     // Emit the message to the room
     if (io) {
       io.emit("receive_message", messageData);
-    }
-    else {
+    } else {
       console.log("io? what io?");
     }
   } catch (error) {
@@ -63,7 +65,7 @@ const getMessages = async (req, res) => {
     const messages = await Message.findAll({
       where: {
         [Op.or]: [
-          { sender_id: roomId  }, // Sent messages
+          { sender_id: roomId }, // Sent messages
           { receiver_id: roomId }, // Received messages
         ],
       },
@@ -103,5 +105,5 @@ module.exports = {
   getMessages,
   sendMessage,
   markAsRead,
-  getChatRooms
+  getChatRooms,
 };
