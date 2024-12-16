@@ -36,7 +36,8 @@ const CI_C_RateItem = () => {
                 const initialReviews = {};
                 response.data.forEach(item => {
                     initialReviews[item.Item.id] = {
-                        rating: 3,
+                        // 5s or dam vo mom
+                        rating: 5,
                         comment: ''
                     };
                 });
