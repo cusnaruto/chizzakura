@@ -17,6 +17,7 @@ const MM_C_Menu = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
+  const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,85 +102,125 @@ const MM_C_Menu = () => {
   );
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
+  // Group items by category
+  const itemsByCategory = useMemo(() => {
+    return categories.reduce((acc, category) => {
+      acc[category.id] = items.filter(item => item.categoryid === category.id);
+      return acc;
+    }, {});
+  }, [items, categories]);
+
+  // Handle scroll to update active category
+  useEffect(() => {
+    const handleScroll = () => {
+      const categoryElements = categories.map(cat => 
+        document.getElementById(`category-${cat.id}`)
+      );
+
+      const scrollPosition = window.scrollY + 100; // Offset for the sticky header
+
+      categoryElements.forEach(element => {
+        if (element) {
+          const position = element.offsetTop;
+          if (scrollPosition >= position) {
+            setActiveCategory(parseInt(element.dataset.categoryId));
+          }
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [categories]);
+
+  const handleTabClick = (categoryId) => {
+    const element = document.getElementById(`category-${categoryId}`);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 100,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <div className={styles["product-page-container"]}>
+    <div className={styles["page-wrapper"]}>
       <C_Header />
       {error && <div className={styles["error-message"]}>{error}</div>}
+      
       <div className={styles["tabs-container"]}>
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => handleCategoryChange(cat.id)}
+            onClick={() => handleTabClick(cat.id)}
             className={`${styles["tab"]} ${
-              category === cat.id ? styles["active"] : ""
+              activeCategory === cat.id ? styles["active"] : ""
             }`}
-            aria-label={`Select ${cat.id}`}
           >
             {cat.name}
           </button>
         ))}
       </div>
+
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className={styles["product-grid"]}>
-          {currentItems.map((item) => (
-            <div className={`${styles["product-card"]} ${!item.is_available ? styles["disabled"] : ""}`} key={item.id}>
-              <img
-                src={item.image}
-                alt={item.name}
-                className={styles["product-img"]}
-                onError={(e) => (e.target.src = "fallback-image-url.jpg")}
-                onClick={() => navigate(`/menu/item/${item.id}`)}
-              />
-              <div className={styles["product-info"]}>
-                <span className={styles["product-price"]}>${item.price}</span>
-                <h3 className={styles["product-name"]} onClick={() => navigate(`/menu/item/${item.id}`)} >{item.name}</h3>
-                {/* <div className={styles["product-rating"]}>
-                  <span className={styles["product-rate"]}>{item.rate}/10</span>
-                  <span className={styles["product-number-rate"]}>
-                    ({item.numberRate} people)
-                  </span>
-                </div> */}
-                <button
-                  disabled={!item.is_available}
-                  className={`${styles["add-to-cart-btn"]} ${!item.is_available ? styles["disabled"] : ""}`}
-                  onClick={() => handleAddToCart(item)}                  
-                  aria-label={`Add ${item.name} to cart`}
-                >
-                  {item.is_available ? (
-                    <span>add to cart</span>
-                  ) : (
-                    <span>Unavailable</span>
-                  )
-                  }
-                </button>
+        <div className={styles["categories-container"]}>
+          {categories.map((category) => (
+            <div 
+              key={category.id} 
+              id={`category-${category.id}`}
+              data-category-id={category.id}
+              className={styles["category-section"]}
+            >
+              <h2 className={styles["category-title"]}>{category.name}</h2>
+              <div className={styles["product-grid"]}>
+                {itemsByCategory[category.id]?.map((item) => (
+                  <div 
+                    key={item.id} 
+                    className={`${styles["product-card"]} ${
+                      !item.is_available ? styles["disabled"] : ""
+                    }`}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className={styles["product-img"]}
+                      onError={(e) => (e.target.src = "fallback-image-url.jpg")}
+                      onClick={() => navigate(`/menu/item/${item.id}`)}
+                    />
+                    <div className={styles["product-info"]}>
+                      <span className={styles["product-price"]}>${item.price}</span>
+                      <h3 className={styles["product-name"]}>{item.name}</h3>
+                      <button
+                        disabled={!item.is_available}
+                        className={`${styles["add-to-cart-btn"]} ${!item.is_available ? styles["disabled"] : ""}`}
+                        onClick={() => handleAddToCart(item)}                  
+                        aria-label={`Add ${item.name} to cart`}
+                      >
+                        {item.is_available ? (
+                          <span>add to cart</span>
+                        ) : (
+                          <span>Unavailable</span>
+                        )
+                        }
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
       )}
-      <div className={styles["pagination"]}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`${styles["page-btn"]} ${
-              currentPage === index + 1 ? styles["active"] : ""
-            }`}
-            aria-label={`Go to page ${index + 1}`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-      <button
+
+      {/* <button
         className={styles["view-cart-btn"]}
         onClick={() => navigate("/cart")}
         aria-label="View cart"
       >
         View cart
-      </button>
+      </button> */}
       <C_Footer />
     </div>
   );
