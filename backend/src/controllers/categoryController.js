@@ -1,5 +1,5 @@
 // controllers/categoryController.js
-const Category = require("../model/category.js");
+const Category = require("../model/Category.js");
 
 // Tạo mới một Category
 const createCategory = async (req, res) => {
