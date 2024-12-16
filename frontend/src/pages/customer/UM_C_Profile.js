@@ -13,6 +13,7 @@ import C_Header from "../../components/customer/C_Header";
 const UM_C_Profile = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+  const { state, dispatch } = useTable();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -77,10 +78,11 @@ const UM_C_Profile = () => {
   };
 
   const handleLogOut = () => {
-    // const {state, dispatch} = useTable();
-    navigate("/login");
+    dispatch({ type: "REMOVE_TABLE_NUMBER" });
     localStorage.removeItem("authToken");
     localStorage.removeItem("cart");
+    sessionStorage.removeItem("tableNo");
+    navigate("/login");
   };
 
   return (
@@ -89,14 +91,7 @@ const UM_C_Profile = () => {
       <C_Header />
 
       <div className={styles["profile-container"]}>
-        <button
-          className={styles["log-out-btn"]}
-          onClick={() => {
-            navigate("/login");
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("cart");
-          }}
-        >
+        <button className={styles["log-out-btn"]} onClick={handleLogOut}>
           Log out
         </button>
         {/* <div className={styles["profile-pic"]}>

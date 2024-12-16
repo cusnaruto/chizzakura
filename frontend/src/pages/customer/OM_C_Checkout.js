@@ -6,21 +6,24 @@ import axios from "axios";
 import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { useTable } from "../../contexts/TableContext";
-import QRCode from "react-qr-code";
-import QRCodeLib from "qrcode";
 import { socket, userId, role } from "../../services/socket";
+import { set } from "date-fns";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
   const [paymentMethod, setPaymentMethod] = useState(null);
-  const { tableNumber } = useTable();
+  const { state: tableState, dispatch: tableDispatch } = useTable();
+
   const [discount, setDiscount] = useState(0);
   const [showPaymentInfo, setShowPaymentInfo] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [qrTimer, setQrTimer] = useState(20);
+  const [qrTimer, setQrTimer] = useState(90);
   const [userInfo, setUserInfo] = useState(null);
   const [isOrderSent, setIsOrderSent] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [VNDAmount, setVNDAmount] = useState(0);
 
   // Fetch user info
   useEffect(() => {
@@ -89,53 +92,93 @@ const OM_C_Checkout = () => {
 
   const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
 
-  const handleSelectPayment = (method) => {
+  const convertUSDtoVND = async (usdAmount) => {
+    try {
+      // Gọi API để lấy tỷ giá USD -> VND
+      const response = await axios.get("https://open.er-api.com/v6/latest/USD");
+
+      if (response.data && response.data.rates && response.data.rates.VND) {
+        const rate = response.data.rates.VND; // Lấy tỷ giá USD -> VND
+        const convertedAmount = Math.round(usdAmount * rate); // Chuyển đổi sang VNĐ (làm tròn số)
+
+        // console.log(`Tỷ giá: 1 USD = ${rate} VND`);
+        // console.log(
+        //   `Số tiền chuyển đổi: ${usdAmount} USD = ${convertedAmount} VND`
+        // );
+
+        return convertedAmount;
+      } else {
+        console.error("Không tìm thấy tỷ giá VNĐ trong phản hồi API.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy tỷ giá:", error);
+      return null;
+    }
+  };
+
+  const handleSelectPayment = async (method) => {
     setPaymentMethod(method);
     setShowPaymentInfo(true);
+    setVNDAmount(await convertUSDtoVND(discountedAmount));
+    if (method === "cash") {
+      setQrCodeUrl(null);
+    } else if (method === "qr") {
+      try {
+        const bankInfo = {
+          BANK_ID: "BIDV",
+          ACCOUNT_NO: "4511129516",
+          TEMPLATE: "compact2",
+          ACCOUNT_NAME: "NGUYEN THAI DUONG",
+          AMOUNT: VNDAmount,
+          DESCRIPTION: `CHIZZAKURA Table ${parseInt(tableState.tableNumber)}`,
+          format: "text",
+        };
+        let QR = `https://img.vietqr.io/image/${bankInfo.BANK_ID}-${bankInfo.ACCOUNT_NO}-${bankInfo.TEMPLATE}.png?amount=${bankInfo.AMOUNT}&addInfo=${bankInfo.DESCRIPTION}&accountName=${bankInfo.ACCOUNT_NAME}`;
+        setQrCodeUrl(QR);
+      } catch (error) {
+        console.error("Error generating QR:", error);
+        alert("Không thể tạo mã QR. Vui lòng thử lại.");
+      }
+    }
   };
 
   const handleSendOrder = async () => {
     try {
-      if (!tableNumber) {
-        alert("No table selected! Please select a table first.");
+      if (!tableState.tableNumber) {
+        alert("Vui lòng chọn số bàn trước khi đặt hàng.");
         return;
       }
-
       if (state.items.length === 0) {
         alert("Cart is empty! Please add items before checking out.");
         return;
       }
-
       if (!paymentMethod) {
         alert("Please select a payment method before sending order.");
         return;
       }
-
       setIsProcessingPayment(true);
       setIsOrderSent(true);
-
       const orderDetails = state.items.map((item) => ({
         itemId: item.id,
         quantity: item.quantity,
         unit_price: parseFloat(item.price),
         total_price: parseFloat((item.price * item.quantity).toFixed(2)),
       }));
-
       const orderData = {
-        tableId: parseInt(tableNumber) || 3,
+        tableId: parseInt(tableState.tableNumber) || 3,
         total_price: parseFloat(discountedAmount.toFixed(2)),
         orderDetails: orderDetails,
         payment_method: paymentMethod,
         customerId: userId,
       };
-
       console.log("paymentMethod:", paymentMethod);
       console.log("Sending order data:", orderData);
 
       const response = await axios.post("http://localhost:8080/OM/", orderData);
 
       if (paymentMethod === "qr" && response.data.success) {
-        setQrTimer(20);
+        setQrTimer(900);
         const timer = setInterval(() => {
           setQrTimer((prev) => {
             if (prev <= 1) {
@@ -210,37 +253,23 @@ const OM_C_Checkout = () => {
     }
   };
 
-  const handleDownloadQR = () => {
-    const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
-      2
-    )}`;
-    QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
-      if (err) {
-        console.error("Error generating QR code:", err);
-        return;
-      }
+  const handleDownloadQR = async () => {
+    try {
+      const imageResponse = await axios.get(qrCodeUrl, {
+        responseType: "blob",
+      });
+      const blob = imageResponse.data;
+      const blobUrl = URL.createObjectURL(blob);
+
       const link = document.createElement("a");
-      link.href = url;
+      link.href = blobUrl;
       link.download = "qr-code.png";
       link.click();
-    });
+    } catch (error) {
+      console.error("Error downloading QR code:", error);
+      alert("Failed to download QR code. Please try again.");
+    }
   };
-
-  // const handleDownloadQR = () => {
-  //   const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
-  //     2
-  //   )}`;
-  //   QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
-  //     if (err) {
-  //       console.error("Error generating QR code:", err);
-  //       return;
-  //     }
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.download = "qr-code.png";
-  //     link.click();
-  //   });
-  // };
 
   return (
     <div className={styles["order-confirmation"]}>
@@ -272,7 +301,7 @@ const OM_C_Checkout = () => {
         )}
 
         <p>
-          <strong>Bàn số:</strong> {tableNumber}
+          <strong>Bàn số:</strong> {tableState.tableNumber || "Chưa chọn bàn"}
         </p>
       </div>
 
@@ -337,11 +366,15 @@ const OM_C_Checkout = () => {
       {isProcessingPayment && paymentMethod === "qr" && (
         <div className={styles["qr-code-container"]}>
           <p>Quét mã QR để thanh toán số tiền:</p>
-          <QRCode
-            value={`Cam on quy khach da su dung dich vu cua chung toi. So tien quy khach can thanh toan la: $${discountedAmount.toFixed(
-              2
-            )}`}
-          />
+          {qrCodeUrl ? (
+            <img
+              src={qrCodeUrl}
+              alt="QR Code"
+              className={styles["qr-code-image"]}
+            />
+          ) : (
+            <p>Đang tạo mã QR...</p>
+          )}
           <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
           <button
             onClick={handleDownloadQR}
@@ -355,8 +388,7 @@ const OM_C_Checkout = () => {
       {isProcessingPayment && paymentMethod === "cash" && (
         <p>
           Với phương thức thanh toán này, nhân viên sẽ tới bàn của bạn để thanh
-          toán. Số tiền cần thanh toán là:{" "}
-          <strong>${discountedAmount.toFixed(2)}</strong>.
+          toán. Số tiền cần thanh toán là: <strong>{VNDAmount}VND</strong>.
         </p>
       )}
 
