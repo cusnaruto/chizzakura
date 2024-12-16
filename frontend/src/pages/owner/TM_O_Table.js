@@ -13,7 +13,7 @@ const TM_O_Table = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/TM/get-tables');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/TM/get-tables`);
         const tableData = response.data.map((table) => ({
           id: table.id,
           table_number: table.table_number,
@@ -34,7 +34,7 @@ const TM_O_Table = () => {
       const newStatus = table.status === 'occupied' ? 'available' : 'occupied';
       
       // Update backend
-      await axios.put(`http://localhost:8080/TM/update-table/${id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/TM/update-table/${id}`, {
         is_available: newStatus === 'available'
       });
 

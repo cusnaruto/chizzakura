@@ -14,7 +14,7 @@ const TM_O_TableEdit = () => {
     useEffect(() => {
         const fetchTables = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/TM/get-tables');
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/TM/get-tables`);
                 const tableData = response.data.map((table) => ({
                     id: table.id,
                     img: tableImage,
@@ -30,7 +30,7 @@ const TM_O_TableEdit = () => {
     const deleteTable = (id) => {
         try {
             // Update backend
-            axios.delete(`http://localhost:8080/TM/delete-table/${id}`);
+            axios.delete(`${process.env.REACT_APP_API_URL}/TM/delete-table/${id}`);
             // Update frontend state
             setTables((prevTables) => prevTables.filter((table) => table.id !== id));
         } catch {
@@ -52,7 +52,7 @@ const TM_O_TableEdit = () => {
               return;
             }
         
-            const response = await axios.post('http://localhost:8080/TM/create-table', {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/TM/create-table`, {
               table_number: tableNumber
             });
         
