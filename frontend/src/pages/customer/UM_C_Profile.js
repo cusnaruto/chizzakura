@@ -14,6 +14,12 @@ const UM_C_Profile = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const { state, dispatch } = useTable();
+  const [errors, setErrors] = useState({});
+
+  // const [passwords, setPasswords] = useState({
+  //   oldPassword: "",
+  //   newPassword: "",
+  // });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -51,9 +57,79 @@ const UM_C_Profile = () => {
       ...prevInfo,
       [name]: value,
     }));
+
+    if (value.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
+  const validForm = () => {
+    const newErrors = {};
+    if (!userInfo.first_name.trim()) {
+      newErrors.first_name = "First name is required";
+    };
+
+    if (!userInfo.last_name.trim()) {
+      newErrors.last_name = "Last name is required";
+    };
+
+    if (!userInfo.email.trim()) {
+      newErrors.email = "Email is required";
+    };
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+
+  };
+
+  // const handlePasswordChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setPasswords((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
+  // const handleChangePassword = async () => {
+  //   try {
+  //     const token = localStorage.getItem("authToken");
+  
+  //     if (!userInfo?.id) {
+  //       alert("User not found");
+  //       return;
+  //     }
+  
+  //     const response = await axios.put(
+  //       `http://localhost:8080/UM/update-password/${userInfo.id}`,
+  //       passwords,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  
+  //     if (response.status === 200) {
+  //       alert("Password updated successfully");
+  //       setPasswords({ oldPassword: "", newPassword: "" });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error changing password:", error.response || error.message);
+  //     alert(
+  //       error.response?.data?.message || "Error changing password. Try again."
+  //     );
+  //   }
+  // };
+   
+
   const handleSave = async () => {
+
+    if (!validForm()) return;
+
     try {
       const token = localStorage.getItem("authToken");
 
@@ -131,6 +207,7 @@ const UM_C_Profile = () => {
               value={userInfo?.first_name || ""}
               onChange={handleChange}
             />
+            {errors.first_name && <p className={styles["error-msg"]}>{errors.first_name}</p>}
 
             <label>Last Name</label>
             <input
@@ -139,6 +216,7 @@ const UM_C_Profile = () => {
               value={userInfo?.last_name || ""}
               onChange={handleChange}
             />
+            {errors.last_name && <p className={styles["error-msg"]}>{errors.last_name}</p>}
 
             <label>Email</label>
             <input
@@ -147,6 +225,8 @@ const UM_C_Profile = () => {
               value={userInfo?.email || ""}
               onChange={handleChange}
             />
+            {errors.email && <p className={styles["error-msg"]}>{errors.email}</p>}           
+
           </form>
         </div>
 

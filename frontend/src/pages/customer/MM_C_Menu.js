@@ -213,14 +213,37 @@ const MM_C_Menu = () => {
           ))}
         </div>
       )}
+      <div className={styles["pagination"]}>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`${styles["page-btn"]} ${
+              currentPage === index + 1 ? styles["active"] : ""
+            }`}
+            aria-label={`Go to page ${index + 1}`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+      <div className={styles["btn-choice"]}>
+        <button
+          className={styles["view-cart-btn"]}
+          onClick={() => navigate("/cart")}
+          aria-label="View cart"
+        >
+          View cart
+        </button>
 
-      {/* <button
-        className={styles["view-cart-btn"]}
-        onClick={() => navigate("/cart")}
-        aria-label="View cart"
-      >
-        View cart
-      </button> */}
+        <button 
+          onClick={() => navigate("/checkout")} 
+          className={styles["check-out-btn"]}
+        >
+          Checkout
+        </button>
+      </div>
+      
       <C_Footer />
     </div>
   );

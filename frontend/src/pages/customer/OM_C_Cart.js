@@ -34,7 +34,7 @@ const OM_C_Cart = () => {
     <div className={styles["product-page-container"]}>
       <C_Header />
       <h2 className={styles["page-title"]}>Your Cart</h2>
-      <div className={styles["product-grid"]}>
+      <div className={styles["product-grid-settings"]}>
         {state.items.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
@@ -80,7 +80,7 @@ const OM_C_Cart = () => {
       </div>
       <div className={styles["pagination"]}>
         <button onClick={handleCheckout} className={styles["check-out-btn"]}>
-          Proceed to Checkout
+          Checkout
         </button>
       </div>
       <C_Footer />
