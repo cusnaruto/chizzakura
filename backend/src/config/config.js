@@ -21,10 +21,14 @@ module.exports = {
     dialect: "mysql",
   },
   production: {
-    username: process.env.PROD_DB_USERNAME || "root",
-    password: process.env.PROD_DB_PASSWORD || "null",
-    database: process.env.PROD_DB_NAME || "database_production",
-    host: process.env.PROD_DB_HOST || "127.0.0.1",
+    username: process.env.YOUR_ACCOUNT || `fall2024c8g11`,
+    password: process.env.DB_PASSWORD || "chizzakura",
+    database:
+      process.env.TEST_DB_NAME ||
+      `${process.env.YOUR_ACCOUNT}_chizzakura` ||
+      "fall2024c8g11_chizzakura",
+    host: process.env.MYSQL_SERVICE_HOST || "10.104.66.205",
+    port: process.env.MYSQL_SERVICE_PORT || "3306",
     dialect: "mysql",
   },
 };
