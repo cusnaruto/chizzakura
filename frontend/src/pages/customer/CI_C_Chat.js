@@ -131,6 +131,9 @@ const CI_C_Chat = () => {
             </div>
 
             <div className={styles['chat-input']}>
+                <span>Username: {username}</span>
+            </div>
+            <div className={styles['chat-input']}>
                 <img src={defaultAvtPic} alt="Avatar" className={styles['chat-customer-avt']} onClick={() => navigate('/profile')} />
                 <input
                     type="text"
@@ -139,10 +142,6 @@ const CI_C_Chat = () => {
                     onChange={(e) => setMessage(e.target.value)}
                 />
                 <button onClick={sendMessage}>Send</button>
-            </div>
-
-            <div className={styles['chat-input']}>
-                <span>Username: {username}</span>
             </div>
         </div>
     );
