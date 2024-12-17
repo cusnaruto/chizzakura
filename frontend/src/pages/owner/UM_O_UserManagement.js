@@ -13,7 +13,7 @@ const UM_O_UserManagement = () => {
 
   useEffect(() => {
     // Fetch users from API
-    axios.get("http://localhost:8080/UM/@").then((response) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/UM/@`).then((response) => {
       console.log(response.data);
       setUsers(response.data);
     });

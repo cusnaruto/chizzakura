@@ -16,11 +16,11 @@ const MM_E_EditMenu = () => {
         const fetchData = async () => {
             try {
                 // Fetch items
-                const itemsResponse = await axios.get('http://localhost:8080/IM/get-items');
+                const itemsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-items`);
                 setItems(itemsResponse.data);
 
                 // Fetch categories
-                const categoriesResponse = await axios.get('http://localhost:8080/IM/get-categories');
+                const categoriesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-categories`);
                 setCategories(categoriesResponse.data);
                 
                 // Set initial category

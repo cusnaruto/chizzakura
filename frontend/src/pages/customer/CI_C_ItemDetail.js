@@ -21,8 +21,8 @@ const CI_C_ItemDetail = () => {
         const fetchData = async () => {
             try {
                 const [itemResponse, reviewsResponse] = await Promise.all([
-                    axios.get(`http://localhost:8080/IM/get-item-by-id/${itemId}`),
-                    axios.get(`http://localhost:8080/reviews/item/${itemId}`)
+                    axios.get(`${process.env.REACT_APP_API_URL}/IM/get-item-by-id/${itemId}`),
+                    axios.get(`${process.env.REACT_APP_API_URL}/reviews/item/${itemId}`)
                 ]);
                 
                 setItem(itemResponse.data);

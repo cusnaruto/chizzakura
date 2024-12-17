@@ -22,7 +22,7 @@ const DM_O_Discount = () => {
     useEffect(() => {   
         const fetchDiscounts = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/get-discounts`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/DM/get-discounts`);
                 const today = new Date();
                 const discountsFormatted = response.data.map((discount) => ({
                     ...discount,
@@ -55,7 +55,7 @@ const DM_O_Discount = () => {
 
     // Delete discount
     const handleDeleteClick = (discount) => {
-        axios.delete(`${API_BASE_URL}/delete-discount/${discount.id}`)
+        axios.delete(`${process.env.REACT_APP_API_URL}/DM/delete-discount/${discount.id}`)
             .then(() => {
                 setDiscounts(discounts.filter((disc) => disc.id !== discount.id));
             })
@@ -89,12 +89,12 @@ const DM_O_Discount = () => {
 
             if (isAdding) {
                 // Gửi yêu cầu tạo mới
-                const response = await axios.post('http://localhost:8080/DM/create-discount', formattedDiscount);
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/DM/create-discount`, formattedDiscount);
                 updatedDiscount = response.data;
                 setDiscounts([...discounts, updatedDiscount]);
             } else {
                 // Gửi yêu cầu cập nhật
-                const response = await axios.put(`http://localhost:8080/DM/update-discount/${currentDiscount.id}`, formattedDiscount);
+                const response = await axios.put(`${process.env.REACT_APP_API_URL}/DM/update-discount/${currentDiscount.id}`, formattedDiscount);
                 updatedDiscount = response.data;  // Lấy discount cập nhật từ response
                 setDiscounts(discounts.map(disc => disc.id === updatedDiscount.id ? updatedDiscount : disc));
             }
