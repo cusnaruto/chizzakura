@@ -10,9 +10,10 @@
   background-color: #fca5a5;
   overflow-x: auto;
   padding: 12px 8px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  margin-top: 110px;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -44,12 +45,21 @@
 }
 
 /* Product grid */
-.product-grid {
+.product-grid,
+.product-grid-settings {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   padding: 12px;
   margin-bottom: auto;
+}
+
+.product-grid {
+  margin-top: 180px;
+}
+
+.product-grid-settings {
+  margin-top: 50px;
 }
 
 .product-card {
@@ -224,13 +234,22 @@
   box-shadow: 0 2px 8px rgba(255, 90, 95, 0.3);
 }
 
-.view-cart-btn {
+.btn-choice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.view-cart-btn,
+.check-out-btn {
   position: relative;
-  margin: 20px 20px 20px auto; /* Changed margin to push button to right */
+  /* margin: 20px 20px 20px auto; Changed margin to push button to right */
   display: block; /* Add this */
   width: auto; /* Changed from 50% */
   min-width: 120px;
   background-color: #ff5a5f;
+  margin: 0;
   color: white;
   padding: 12px 24px;
   border-radius: 24px;
@@ -239,7 +258,16 @@
   z-index: 100;
 }
 
+.view-cart-btn {
+  margin-left: 20px;
+}
+
 .check-out-btn {
+  margin-right: 20px;
+}
+
+
+/* .check-out-btn {
   position: relative;
   margin: 20px auto;
   display: block;
@@ -252,4 +280,4 @@
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
   z-index: 100;
-}
+} */

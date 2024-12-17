@@ -12,6 +12,8 @@ import C_Header from "../../components/customer/C_Header";
 const UM_C_Profile = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+  const [errors, setErrors] = useState({});
+
   // const [passwords, setPasswords] = useState({
   //   oldPassword: "",
   //   newPassword: "",
@@ -63,6 +65,33 @@ const UM_C_Profile = () => {
       ...prevInfo,
       [name]: value,
     }));
+
+    if (value.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validForm = () => {
+    const newErrors = {};
+    if (!userInfo.first_name.trim()) {
+      newErrors.first_name = "First name is required";
+    };
+
+    if (!userInfo.last_name.trim()) {
+      newErrors.last_name = "Last name is required";
+    };
+
+    if (!userInfo.email.trim()) {
+      newErrors.email = "Email is required";
+    };
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+
   };
 
   // const handlePasswordChange = (e) => {
@@ -106,6 +135,9 @@ const UM_C_Profile = () => {
    
 
   const handleSave = async () => {
+
+    if (!validForm()) return;
+
     try {
       const token = localStorage.getItem("authToken");
 
@@ -182,6 +214,7 @@ const UM_C_Profile = () => {
               value={userInfo?.first_name || ""}
               onChange={handleChange}
             />
+            {errors.first_name && <p className={styles["error-msg"]}>{errors.first_name}</p>}
 
             <label>Last Name</label>
             <input
@@ -190,6 +223,7 @@ const UM_C_Profile = () => {
               value={userInfo?.last_name || ""}
               onChange={handleChange}
             />
+            {errors.last_name && <p className={styles["error-msg"]}>{errors.last_name}</p>}
 
             <label>Email</label>
             <input
@@ -198,6 +232,7 @@ const UM_C_Profile = () => {
               value={userInfo?.email || ""}
               onChange={handleChange}
             />
+            {errors.email && <p className={styles["error-msg"]}>{errors.email}</p>}           
 
           </form>
   

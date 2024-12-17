@@ -1,5 +1,7 @@
 .order-confirmation {
     padding: 20px;
+    width: auto;
+    height: auto;
     max-width: 400px;
     margin: 0 auto;
     background-color: #ffe0e0;

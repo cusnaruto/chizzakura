@@ -172,13 +172,23 @@ const MM_C_Menu = () => {
           </button>
         ))}
       </div>
-      <button
-        className={styles["view-cart-btn"]}
-        onClick={() => navigate("/cart")}
-        aria-label="View cart"
-      >
-        View cart
-      </button>
+      <div className={styles["btn-choice"]}>
+        <button
+          className={styles["view-cart-btn"]}
+          onClick={() => navigate("/cart")}
+          aria-label="View cart"
+        >
+          View cart
+        </button>
+
+        <button 
+          onClick={() => navigate("/checkout")} 
+          className={styles["check-out-btn"]}
+        >
+          Checkout
+        </button>
+      </div>
+      
       <C_Footer />
     </div>
   );

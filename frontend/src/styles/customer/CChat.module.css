@@ -15,6 +15,10 @@ chat-header */
     padding: 10px 20px;
     background-color: #f1f7f5;
     border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .chat-header img {
@@ -56,6 +60,7 @@ chat-header */
     padding-top: 80px;
     flex-direction: column;
     margin: 0;
+    margin-top: 50px;
 }
 
 .chat-message {

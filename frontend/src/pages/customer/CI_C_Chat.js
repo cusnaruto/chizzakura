@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -26,6 +26,22 @@ const CI_C_Chat = () => {
             console.error("Failed to fetch messages:", error);
         }
     };
+
+    // Tạo một ref để tham chiếu tới phần cuối danh sách tin nhắn
+    const messageEndRef = useRef(null);
+
+    // Hàm cuộn xuống cuối danh sách
+    const scrollToBottom = () => {
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+    // Gọi scrollToBottom khi nhận tin nhắn mới hoặc khi danh sách thay đổi
+    useEffect(() => {
+        scrollToBottom();
+    }, [messageList]);
+
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
@@ -111,6 +127,7 @@ const CI_C_Chat = () => {
                         <p className={styles['chat-customer-message']}>{messageContent.content}</p> {/* Ensure the message content is correctly accessed */}
                     </div>
                 ))}
+                <div ref={messageEndRef} />
             </div>
 
             <div className={styles['chat-input']}>
