@@ -1,6 +1,6 @@
 const sequelize = require("../config/databaseConnection");
 const Items = require("../model/Items");
-const OrderDetail = require("../model/orderdetail");
+const OrderDetail = require("../model/OrderDetail");
 
 const getItemReports = async (req, res) => {
   const { days } = req.query; // User selects timeframe in days, e.g., 7, 30, 90
@@ -36,11 +36,11 @@ const getItemReports = async (req, res) => {
     res.status(200).json({ success: true, data: itemReports });
   } catch (error) {
     console.error("Error fetching item reports:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch item reports" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch item reports" });
   }
 };
-
-
 
 const getReportView = async (req, res) => {
   try {
@@ -86,9 +86,10 @@ const getRevenueReports = async (req, res) => {
     res.status(200).json({ success: true, data: itemReports });
   } catch (error) {
     console.error("Error fetching item reports:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch item reports" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch item reports" });
   }
 };
-
 
 module.exports = { getItemReports, getReportView, getRevenueReports };

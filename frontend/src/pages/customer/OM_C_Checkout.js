@@ -6,32 +6,38 @@ import axios from "axios";
 import pizzaImg from "../../assets/Image_C/product_2.1.jpg";
 import editImg from "../../assets/Image_C/edit.png";
 import { useTable } from "../../contexts/TableContext";
-import QRCode from "react-qr-code";
-import QRCodeLib from "qrcode";
-import { socket, userId, role } from '../../services/socket';
+import { socket, userId, role } from "../../services/socket";
+import { set } from "date-fns";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
   const [paymentMethod, setPaymentMethod] = useState(null);
-  const { tableNumber } = useTable();
+  const { state: tableState, dispatch: tableDispatch } = useTable();
+
   const [discount, setDiscount] = useState(0);
   const [showPaymentInfo, setShowPaymentInfo] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [qrTimer, setQrTimer] = useState(20);
+  const [qrTimer, setQrTimer] = useState(90);
   const [userInfo, setUserInfo] = useState(null);
   const [isOrderSent, setIsOrderSent] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [VNDAmount, setVNDAmount] = useState(0);
 
   // Fetch user info
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get("http://localhost:8080/UM/user-profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/UM/user-profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.data) {
           setUserInfo(response.data);
@@ -39,7 +45,10 @@ const OM_C_Checkout = () => {
           console.error("Error fetching user info:", response.error);
         }
       } catch (error) {
-        console.error("Error fetching user info:", error.response || error.message);
+        console.error(
+          "Error fetching user info:",
+          error.response || error.message
+        );
       }
     };
 
@@ -50,7 +59,9 @@ const OM_C_Checkout = () => {
   useEffect(() => {
     const fetchDiscount = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/DM/get-discounts");
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/DM/get-discounts`
+        );
         if (response.data && response.data.length > 0) {
           const now = new Date();
           const validDiscounts = response.data.filter((d) => {
@@ -81,54 +92,93 @@ const OM_C_Checkout = () => {
 
   const discountedAmount = totalPrice * (1 - (discount || 0) / 100);
 
-  const handleSelectPayment = (method) => {
+  const convertUSDtoVND = async (usdAmount) => {
+    try {
+      // Gọi API để lấy tỷ giá USD -> VND
+      const response = await axios.get("https://open.er-api.com/v6/latest/USD");
+
+      if (response.data && response.data.rates && response.data.rates.VND) {
+        const rate = response.data.rates.VND; // Lấy tỷ giá USD -> VND
+        const convertedAmount = Math.round(usdAmount * rate); // Chuyển đổi sang VNĐ (làm tròn số)
+
+        // console.log(`Tỷ giá: 1 USD = ${rate} VND`);
+        // console.log(
+        //   `Số tiền chuyển đổi: ${usdAmount} USD = ${convertedAmount} VND`
+        // );
+
+        return convertedAmount;
+      } else {
+        console.error("Cannot get exchange rate:", response.data);
+        return null;
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy tỷ giá:", error);
+      return null;
+    }
+  };
+
+  const handleSelectPayment = async (method) => {
     setPaymentMethod(method);
     setShowPaymentInfo(true);
+    setVNDAmount(await convertUSDtoVND(discountedAmount));
+    if (method === "cash") {
+      setQrCodeUrl(null);
+    } else if (method === "qr") {
+      try {
+        const bankInfo = {
+          BANK_ID: "BIDV",
+          ACCOUNT_NO: "4511129516",
+          TEMPLATE: "compact2",
+          ACCOUNT_NAME: "NGUYEN THAI DUONG",
+          AMOUNT: VNDAmount,
+          DESCRIPTION: `CHIZZAKURA Table ${parseInt(tableState.tableNumber)}`,
+          format: "text",
+        };
+        let QR = `https://img.vietqr.io/image/${bankInfo.BANK_ID}-${bankInfo.ACCOUNT_NO}-${bankInfo.TEMPLATE}.png?amount=${bankInfo.AMOUNT}&addInfo=${bankInfo.DESCRIPTION}&accountName=${bankInfo.ACCOUNT_NAME}`;
+        setQrCodeUrl(QR);
+      } catch (error) {
+        console.error("Error generating QR:", error);
+        alert("Failed to generate QR code. Please try again.");
+      }
+    }
   };
 
   const handleSendOrder = async () => {
     try {
-      if (!tableNumber) {
-        alert("No table selected! Please select a table first.");
+      if (!tableState.tableNumber) {
+        alert("Vui lòng chọn số bàn trước khi đặt hàng.");
         return;
       }
-
       if (state.items.length === 0) {
         alert("Cart is empty! Please add items before checking out.");
         return;
       }
-
       if (!paymentMethod) {
         alert("Please select a payment method before sending order.");
         return;
       }
-
       setIsProcessingPayment(true);
       setIsOrderSent(true);
-
       const orderDetails = state.items.map((item) => ({
         itemId: item.id,
         quantity: item.quantity,
         unit_price: parseFloat(item.price),
-        total_price: parseFloat((item.price * item.quantity).toFixed(2))
+        total_price: parseFloat((item.price * item.quantity).toFixed(2)),
       }));
-
       const orderData = {
-        tableId: parseInt(tableNumber) || 3,
+        tableId: parseInt(tableState.tableNumber) || 3,
         total_price: parseFloat(discountedAmount.toFixed(2)),
         orderDetails: orderDetails,
         payment_method: paymentMethod,
-        customerId: userId
+        customerId: userId,
       };
-
       console.log("paymentMethod:", paymentMethod);
       console.log("Sending order data:", orderData);
 
-      const response = await axios.post("http://localhost:8080/OM/", orderData);
-
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/OM/`, orderData);
 
       if (paymentMethod === "qr" && response.data.success) {
-        setQrTimer(20);
+        setQrTimer(900);
         const timer = setInterval(() => {
           setQrTimer((prev) => {
             if (prev <= 1) {
@@ -138,7 +188,11 @@ const OM_C_Checkout = () => {
               const messageContent = `
                 Order created successfully!\n\n
                 Your order contains:\n
-                ${state.items.map((item) => `${item.quantity}x ${item.name} - $${item.price}`).join("\n")}\n\n
+                ${state.items
+                  .map(
+                    (item) => `${item.quantity}x ${item.name} - $${item.price}`
+                  )
+                  .join("\n")}\n\n
                 Discount: ${discount}%\n
                 Total: $${totalPrice}\n
                 Payment Method: ${paymentMethod}\n
@@ -167,7 +221,9 @@ const OM_C_Checkout = () => {
           const messageContent = `
             Order created successfully!\n\n
             Your order contains:\n
-            ${state.items.map((item) => `${item.quantity}x ${item.name} - $${item.price}`).join("\n")}\n\n
+            ${state.items
+              .map((item) => `${item.quantity}x ${item.name} - $${item.price}`)
+              .join("\n")}\n\n
             Discount: ${discount}%\n
             Total: $${totalPrice}\n
             Payment Method: ${paymentMethod}\n
@@ -190,53 +246,63 @@ const OM_C_Checkout = () => {
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      alert("Failed to create order: " + (error.response?.data?.message || "Network error"));
+      alert(
+        "Failed to create order: " +
+          (error.response?.data?.message || "Network error")
+      );
     }
   };
 
-  const handleDownloadQR = () => {
-    const qrValue = `So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`;
-    QRCodeLib.toDataURL(qrValue, { width: 300 }, (err, url) => {
-      if (err) {
-        console.error("Error generating QR code:", err);
-        return;
-      }
+  const handleDownloadQR = async () => {
+    try {
+      const imageResponse = await axios.get(qrCodeUrl, {
+        responseType: "blob",
+      });
+      const blob = imageResponse.data;
+      const blobUrl = URL.createObjectURL(blob);
+
       const link = document.createElement("a");
-      link.href = url;
+      link.href = blobUrl;
       link.download = "qr-code.png";
       link.click();
-    });
+    } catch (error) {
+      console.error("Error downloading QR code:", error);
+      alert("Failed to download QR code. Please try again.");
+    }
   };
 
   return (
     <div className={styles["order-confirmation"]}>
       <div className={styles["header"]}>
-        <div className={styles["arrow"]} onClick={() => navigate("/cart")}>←</div>
-        <div className={styles["title-checkout"]}>Xác nhận đơn hàng</div>
+        <div className={styles["arrow"]} onClick={() => navigate("/cart")}>
+          ←
+        </div>
+        <div className={styles["title-checkout"]}>Confirm order</div>
       </div>
 
       <hr />
 
       <div className={styles["customer-info"]}>
         <div className={styles["title-info"]}>
-          <p>Thông tin khách hàng</p>
+          <p>Customer Information</p>
           <img src={editImg} alt="Edit" />
         </div>
         {userInfo ? (
           <div>
             <p>
-              <strong>Tên:</strong> {userInfo.first_name} {userInfo.last_name}
+              <strong>Name:</strong> {userInfo.first_name} {userInfo.last_name}
             </p>
             <p>
               <strong>Email:</strong> {userInfo.email}
             </p>
           </div>
         ) : (
-          <p>Không tìm thấy thông tin khách hàng</p>
+          <p>Unable to fetch customer's information</p>
         )}
 
         <p>
-          <strong>Bàn số:</strong> {tableNumber}
+          <strong>Table number:</strong>{" "}
+          {tableState.tableNumber || "No table selected"}
         </p>
       </div>
 
@@ -260,26 +326,30 @@ const OM_C_Checkout = () => {
 
       <div className={styles["summary"]}>
         <p>
-          Tổng cộng: <span>${totalPrice.toFixed(2)}</span>
+          Total: <span>${totalPrice.toFixed(2)}</span>
         </p>
         <p>
-          Giảm giá: <span>{discount}%</span>
+          Discount: <span>{discount}%</span>
         </p>
         <p>
-          Còn lại: <span>${discountedAmount.toFixed(2)}</span>
+          Amount: <span>${discountedAmount.toFixed(2)}</span>
         </p>
       </div>
 
       <div className={styles["payment-method"]}>
         <button
-          className={`${styles["payment-btn"]} ${ isOrderSent ? styles["disabled-btn"] : ""}`}
+          className={`${styles["payment-btn"]} ${
+            isOrderSent ? styles["disabled-btn"] : ""
+          }`}
           onClick={() => handleSelectPayment("cash")}
           disabled={isOrderSent}
         >
-          Tiền mặt
+          Cash
         </button>
         <button
-          className={`${styles["payment-btn"]} ${ isOrderSent ? styles["disabled-btn"] : ""}`}
+          className={`${styles["payment-btn"]} ${
+            isOrderSent ? styles["disabled-btn"] : ""
+          }`}
           onClick={() => handleSelectPayment("qr")}
           disabled={isOrderSent}
         >
@@ -289,31 +359,43 @@ const OM_C_Checkout = () => {
 
       {showPaymentInfo && (
         <p className={styles["selected-method"]}>
-          Bạn đã chọn phương thức thanh toán: {paymentMethod === "cash" ? "Tiền mặt" : "QR Code"}
+          Chosen Method: {paymentMethod === "cash" ? "Cash" : "QR Code"}
         </p>
       )}
 
       {isProcessingPayment && paymentMethod === "qr" && (
         <div className={styles["qr-code-container"]}>
-          <p>Quét mã QR để thanh toán số tiền:</p>
-          <QRCode value={`Cam on quy khach da su dung dich vu cua chung toi. So tien quy khach can thanh toan la: $${discountedAmount.toFixed(2)}`} />
-          <p>Mã QR sẽ hết hạn sau: {qrTimer} giây.</p>
-          <button onClick={handleDownloadQR} className={styles["download-qr-btn"]}>
-            Tải mã QR về máy
+          <p>Scan the QR code to pay:</p>
+          {qrCodeUrl ? (
+            <img
+              src={qrCodeUrl}
+              alt="QR Code"
+              className={styles["qr-code-image"]}
+            />
+          ) : (
+            <p>Generating QR...</p>
+          )}
+          <p>Expires in: {qrTimer} seconds.</p>
+          <button
+            onClick={handleDownloadQR}
+            className={styles["download-qr-btn"]}
+          >
+            Download QR Code
           </button>
         </div>
       )}
 
       {isProcessingPayment && paymentMethod === "cash" && (
         <p>
-          Với phương thức thanh toán này, nhân viên sẽ tới bàn của bạn để thanh toán. Số tiền cần thanh toán là: <strong>${discountedAmount.toFixed(2)}</strong>.
+          The employee will come shortly to check out. The amount you will need
+          to pay is: <strong>{VNDAmount}VND</strong>.
         </p>
       )}
 
       <button
-         className={styles["send-order-btn"]}
-         onClick={handleSendOrder}
-         disabled={isOrderSent}
+        className={styles["send-order-btn"]}
+        onClick={handleSendOrder}
+        disabled={isOrderSent}
       >
         Send order
       </button>

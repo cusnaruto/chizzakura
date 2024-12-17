@@ -17,7 +17,7 @@ const CI_E_Chat = () => {
     const [chatData, setChatData] = useState([]); // Define chatData
     const getChatRooms = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/CI/rooms");
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/CI/rooms`);
             const chatRooms = response.data.map(room => ({
                 id: room.room_id,
                 name: `User ${room.room_id}`, // Replace with actual user name if available
@@ -43,7 +43,7 @@ const CI_E_Chat = () => {
 
     const fetchMessages = async (roomId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/CI/${roomId}`);
             setMessages(response.data);
         } catch (error) {
             console.error("Failed to fetch messages:", error);

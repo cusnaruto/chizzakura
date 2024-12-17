@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/customer/CProfile.module.css";
+import { useTable } from "../../contexts/TableContext";
 
 // import defaultAvtPic from "../../assets/Image_C/default_avt.jpg";
 
@@ -12,6 +13,7 @@ import C_Header from "../../components/customer/C_Header";
 const UM_C_Profile = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+  const { state, dispatch } = useTable();
   const [errors, setErrors] = useState({});
 
   // const [passwords, setPasswords] = useState({
@@ -22,42 +24,32 @@ const UM_C_Profile = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem("authToken"); 
-        const response = await axios.get("http://localhost:8080/UM/user-profile", {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
-  
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/UM/user-profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         if (response.data) {
           setUserInfo(response.data);
-          console.log("User info:", response.data); 
+          console.log("User info:", response.data);
         } else {
           console.error("Error fetching user info:", response.error);
         }
       } catch (error) {
-        console.error("Error fetching user info:", error.response || error.message);
+        console.error(
+          "Error fetching user info:",
+          error.response || error.message
+        );
       }
     };
-  
+
     fetchUserInfo();
   }, []);
-
-
-  // const handleImageUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-
-  //     reader.onload = () => {
-  //       setUserInfo((prevInfo) => ({
-  //         ...prevInfo,
-  //         avatar: reader.result,
-  //       }));
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -146,7 +138,7 @@ const UM_C_Profile = () => {
         return;
       }
       await axios.put(
-        `http://localhost:8080/UM/update-customer/${userInfo.id}`,
+        `${process.env.REACT_APP_API_URL}/UM/update-customer/${userInfo.id}`,
         userInfo,
         {
           headers: {
@@ -159,7 +151,15 @@ const UM_C_Profile = () => {
       console.error("Error updating user:", error.response || error.message);
       alert("Error updating user");
     }
-  }
+  };
+
+  const handleLogOut = () => {
+    dispatch({ type: "REMOVE_TABLE_NUMBER" });
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("cart");
+    sessionStorage.removeItem("tableNo");
+    navigate("/login");
+  };
 
   return (
     <div className={styles["profile-page"]}>
@@ -167,13 +167,7 @@ const UM_C_Profile = () => {
       <C_Header />
 
       <div className={styles["profile-container"]}>
-        <button
-          className={styles["log-out-btn"]}
-          onClick={() => {
-            navigate("/login");
-            localStorage.removeItem("authToken");
-          }}
-        >
+        <button className={styles["log-out-btn"]} onClick={handleLogOut}>
           Log out
         </button>
         {/* <div className={styles["profile-pic"]}>
@@ -204,7 +198,6 @@ const UM_C_Profile = () => {
 
         <div className={styles["user-info"]}>
           <h2 className={styles["title-user-info"]}>User Information</h2>
-          
 
           <form className={styles["user-info-form"]}>
             <label>First Name</label>
@@ -235,7 +228,6 @@ const UM_C_Profile = () => {
             {errors.email && <p className={styles["error-msg"]}>{errors.email}</p>}           
 
           </form>
-  
         </div>
 
         <button className={styles["save-btn"]} onClick={handleSave}>
@@ -267,7 +259,6 @@ const UM_C_Profile = () => {
             Change Password
           </button>
         </div> */}
-
       </div>
 
       {/* Footer */}

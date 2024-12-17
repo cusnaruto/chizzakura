@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 
-const SOCKET_URL = "http://localhost:8080"; // Replace with your backend URL
+const SOCKET_URL = process.env.REACT_APP_API_URL; // Replace with your backend URL
 
 const token = localStorage.getItem("authToken");
 let userId = null;

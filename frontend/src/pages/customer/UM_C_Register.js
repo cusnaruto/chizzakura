@@ -29,7 +29,7 @@ const UM_C_Register = () => {
     try {
       console.log(formData);
       const response = await axios.post(
-        "http://localhost:8080/UM/create-user",
+        `${process.env.REACT_APP_API_URL}/UM/create-user`,
         formData
       );
 
@@ -101,7 +101,7 @@ const UM_C_Register = () => {
               type="text"
               name="username"
               id="username"
-              placeholder="Enter your user name"
+              placeholder="Enter your username"
               value={formData.username}
               onChange={handleChange}
               required

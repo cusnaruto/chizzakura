@@ -5,11 +5,13 @@ import { message } from "antd";
 import { useTable } from "../../contexts/TableContext";
 import styles from "../../styles/customer/CLoginRegister.module.css";
 import logoImg from "../../assets/Image_C/logo.jpg";
+import { jwtDecode } from "jwt-decode";
+import { de } from "@faker-js/faker";
 
 const UM_C_Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { tableNumber, setTableNumber } = useTable();
+  const { state, dispatch } = useTable();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -18,11 +20,11 @@ const UM_C_Login = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const tableNo = params.get('table_number');
+    const tableNo = params.get("table_number");
     if (tableNo) {
-      setTableNumber(tableNo);
+      dispatch({ type: "SET_TABLE_NUMBER", payload: tableNo });
     }
-  }, [location, setTableNumber]);
+  }, [location, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +35,7 @@ const UM_C_Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8080/UM/login", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/UM/login`, {
         username: formData.username,
         password: formData.password,
       });
@@ -41,8 +43,21 @@ const UM_C_Login = () => {
       if (response.data.token) {
         message.success("Login successful!");
         localStorage.setItem("authToken", response.data.token);
-        localStorage.setItem("tableNumber", tableNumber);
-        navigate("/home");
+        const decoded = jwtDecode(response.data.token);
+        switch (decoded.role) {
+          case "customer":
+            navigate("/home");
+            break;
+          case "employee":
+            navigate("/employee/listorder");
+            break;
+          case "owner":
+            navigate("/admin/mm_o_editmenu");
+            break;
+          default:
+            navigate("/home");
+            break;
+        }
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -59,7 +74,9 @@ const UM_C_Login = () => {
         <h1>Chizzakura</h1>
 
         <form className={styles["login-form"]} onSubmit={handleSubmit}>
-          <div className={`${styles["user-login-name"]} ${styles["form-group"]}`}>
+          <div
+            className={`${styles["user-login-name"]} ${styles["form-group"]}`}
+          >
             <label htmlFor="customer-login-username">Username:</label>
             <input
               type="text"

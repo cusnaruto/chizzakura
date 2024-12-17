@@ -4,11 +4,28 @@
   flex-direction: column;
 }
 
+.categories-container {
+  padding: 0px;
+}
+
+.category-section {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ff5a5f;
+  color: #333;
+}
+
 /* Category tabs */
 .tabs-container {
-  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background-color: #fca5a5;
-  overflow-x: auto;
   padding: 12px 8px;
   margin-top: 110px;
   position: fixed;
@@ -32,6 +49,12 @@
   font-weight: 500;
   transition: all 0.3s ease;
   border: 1px solid #ff5a5f;
+}
+
+.tab.active {
+  background-color: #ff5a5f;
+  color: #fff;
+  transform: scale(1.05);
 }
 
 .product-card:active {

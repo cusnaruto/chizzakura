@@ -2,13 +2,13 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const http = require("http");
-
+const path = require("path");
 const app = express();
 const jwt = require("jsonwebtoken"); // Import jwt
 const port = process.env.PORT || 8080;
-const hostname = process.env.HOST_NAME || 'localhost'; // Provide a default value
+const hostname = process.env.HOST_NAME || "localhost"; // Provide a default value
 const { Server } = require("socket.io");
-const configViewEngine = require("./config/viewengine");
+const configViewEngine = require("./config/viewEngine");
 const userRoutes = require("./route/userRoutes");
 const tableRoutes = require("./route/tableRoutes");
 const itemRoutes = require("./route/itemRoutes");
@@ -18,11 +18,11 @@ const itemReviewRoutes = require("./route/itemReviewsRoutes");
 const reportRoutes = require("./route/reportRoutes");
 const { uploadImage } = require("./controllers/uploadController");
 const multer = require("multer");
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
-const Message = require("./model/message"); // Import the Message model
+const Message = require("./model/Message"); // Import the Message model
 
 //config template engine
 app.use(cors());
@@ -33,6 +33,17 @@ const io = new Server(server, {
     methods: ["GET", "POST", "PUT"],
   },
 });
+
+// switch between url
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "http://fall2024c8g11.int3306.freeddns.org"
+        : "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Middleware để gắn io vào request object
 app.use((req, res, next) => {
@@ -78,11 +89,13 @@ io.on("connection", (socket) => {
 });
 
 configViewEngine(app);
+
 const orderRoutes = require("./route/orderRoutes");
 const { report } = require("process");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../../frontend/build")));
 
 // Setup routes
 app.use("/UM/", userRoutes);
@@ -94,7 +107,21 @@ app.use("/CI/", messageRoutes);
 app.use("/BR/", reportRoutes);
 app.use("/reviews", itemReviewRoutes);
 
-app.post("/upload", upload.single('file'), uploadImage);
+console.log("Hello");
+
+app.get("/test", (req, res) => {
+  console.log("Hello1");
+  res.send("Hello World from Express!");
+  console.log("Hello2");
+});
+
+console.log("Hello3");
+
+// app.get("/*", function (req, res) {
+//   res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
+// });
+
+app.post("/upload", upload.single("file"), uploadImage);
 
 server.listen(port, hostname, () => {
   console.log(`Server running on http://${hostname}:${port}`);

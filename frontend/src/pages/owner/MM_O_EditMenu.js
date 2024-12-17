@@ -21,6 +21,7 @@ const MmOEditMenu = () => {
     price: '',
     categoryid: 1,
     image: '',
+    description: ''
   });
   const [categories, setCategories] = useState([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -33,7 +34,7 @@ const MmOEditMenu = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/IM/get-items');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-items`);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -46,7 +47,7 @@ const MmOEditMenu = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/IM/get-categories');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-categories`);
         if (Array.isArray(response.data)) {
           setCategories(response.data);
         } else {
@@ -118,7 +119,7 @@ const MmOEditMenu = () => {
     const itemId = itemIndex[index].id;
   
     try {
-      const response = await axios.get(`http://localhost:8080/IM/get-item-by-id/${itemId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-item-by-id/${itemId}`);
       const item = response.data;
    
       // Set the current item to be edited
@@ -135,7 +136,7 @@ const MmOEditMenu = () => {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/IM/create-category', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/IM/create-category`, {
         name: newCategory.name
       });
   
@@ -175,7 +176,7 @@ const MmOEditMenu = () => {
         formData.append('file', currentItem.image);
         formData.append('upload_preset', 'chizza');
   
-        const uploadResponse = await axios.post('http://localhost:8080/upload', formData, {
+        const uploadResponse = await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -190,10 +191,11 @@ const MmOEditMenu = () => {
         price: parseFloat(currentItem.price),
         categoryid: parseInt(currentItem.categoryid),
         image: imageUrl,
+        description: currentItem.description
       };
   
       // Update item in the backend
-      await axios.put(`http://localhost:8080/IM/update-item/${currentItem.id}`, updatedItemData);
+      await axios.put(`${process.env.REACT_APP_API_URL}/IM/update-item/${currentItem.id}`, updatedItemData);
   
       // Update local state
       const updatedData = [...data];
@@ -216,7 +218,7 @@ const MmOEditMenu = () => {
       }
 
       // Delete from backend
-      await axios.delete(`http://localhost:8080/IM/delete-item/${currentItem.id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/IM/delete-item/${currentItem.id}`);
 
       const updatedData = data.filter((_, index) => index !== currentItem.index);
       
@@ -248,7 +250,7 @@ const MmOEditMenu = () => {
         formData.append('file', newItem.image);
         formData.append('upload_preset', 'chizza');
   
-        const uploadResponse = await axios.post('http://localhost:8080/upload', formData, {
+        const uploadResponse = await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -262,9 +264,10 @@ const MmOEditMenu = () => {
         price: price,
         categoryid: parseInt(newItem.categoryid),
         image: imageUrl,
+        description: newItem.description
       };
   
-      const response = await axios.post('http://localhost:8080/IM/create-item', itemData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/IM/create-item`, itemData, {
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
       });
@@ -478,6 +481,16 @@ const MmOEditMenu = () => {
                   />
                 </div>
               </div>
+              <div className={styles.formGroupMenuRow}>
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={currentItem.description || ''}
+                  onChange={handleFormChange}
+                  placeholder="Enter item description"
+                />
+              </div>
               <span className={styles.fileName}>{fileName}</span>
               <button type="submit" className={styles.saveButton}>Save</button>
               <button type="button" className={styles.delButton} onClick={handleDelete}>Delete</button>
@@ -536,6 +549,15 @@ const MmOEditMenu = () => {
                     onChange={handleAddFileChange}
                   />
                 </div>
+              </div>
+              <div className={styles.formGroupMenuRow}>
+                <label htmlFor="newDescription">Description</label>
+                <textarea
+                  id="newDescription"
+                  value={newItem.description}
+                  onChange={(e) => setNewItem(prev => ({...prev, description: e.target.value}))}
+                  placeholder="Enter item description"
+                />
               </div>
               <span className={styles.fileName}>{fileName}</span>
               <button type="submit" className={styles.saveButton}>Add Item</button>
