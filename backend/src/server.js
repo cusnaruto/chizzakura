@@ -35,12 +35,15 @@ const io = new Server(server, {
 });
 
 // switch between url
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'http://fall2024c8g11.int3306.freeddns.org'
-    : 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "http://fall2024c8g11.int3306.freeddns.org"
+        : "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Middleware để gắn io vào request object
 app.use((req, res, next) => {
@@ -103,6 +106,16 @@ app.use("/OM/", orderRoutes);
 app.use("/CI/", messageRoutes);
 app.use("/BR/", reportRoutes);
 app.use("/reviews", itemReviewRoutes);
+
+console.log("Hello");
+
+app.get("/test", (req, res) => {
+  console.log("Hello1");
+  res.send("Hello World");
+  console.log("Hello2");
+});
+
+console.log("Hello3");
 
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
