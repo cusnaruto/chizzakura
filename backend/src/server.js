@@ -117,9 +117,9 @@ app.get("/test", (req, res) => {
 
 console.log("Hello3");
 
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
-});
+// app.get("/*", function (req, res) {
+//   res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
+// });
 
 app.post("/upload", upload.single("file"), uploadImage);
 
