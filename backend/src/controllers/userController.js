@@ -157,6 +157,7 @@ const updateUser = async (req, res) => {
 // }
 
 const getAllUsers = async (req, res) => {
+  console.log("Get all users");
   try {
     const users = await User.findAll({
       attributes: { exclude: ["password"] }, // Ẩn mật khẩu khỏi kết quả trả về
@@ -171,7 +172,6 @@ const getAllUsers = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
-
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "No token provided" });
@@ -179,7 +179,14 @@ const getUserProfile = async (req, res) => {
 
     const decoded = jwt.verify(token, SECRET_KEY);
     const user = await User.findByPk(decoded.id, {
-      attributes: ["id", "first_name", "last_name", "email", "username", "password"], 
+      attributes: [
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "username",
+        "password",
+      ],
     });
     // console.log("User:", user);
 
