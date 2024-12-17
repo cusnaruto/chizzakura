@@ -1,13 +1,15 @@
 .header {
     display: flex;
     justify-content: space-between;
+    height: 70px;
     align-items: center;
     padding: 10px;
     background-color: #ffb3b3;
-    position: fixed;
+    position: sticky;
     top: 0;
-    z-index: 10;
-    width: 100%;
+    z-index: 1000;
+    width: 95%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
   
 .logo {

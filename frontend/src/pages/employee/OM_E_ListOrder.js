@@ -16,7 +16,7 @@ const OM_E_ListOrder = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/OM/`);
+                const response = await axios.get(`http://localhost:8080/OM/`);
                 if (response.data.success) {
                     const formattedOrders = response.data.orders.map(order => ({
                         id: order.id,

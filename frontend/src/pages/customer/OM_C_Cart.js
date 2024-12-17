@@ -31,15 +31,15 @@ const OM_C_Cart = () => {
   };
 
   return (
-    <div className={styles["product-page-container"]}>
+    <div className={styles["cart-container"]}>
       <C_Header />
-      <h2 className={styles["page-title"]}>Your Cart</h2>
-      <div className={styles["product-grid-settings"]}>
+      <h2>Your Cart</h2>
+      <div className={styles["product-grid"]}>
         {state.items.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
           state.items.map((item) => (
-            <div key={item.id} className={`${styles["product-card"]} ${styles["product-sold"]}`}>
+            <div key={item.id} className={`${styles["product-card"]}`}>
               <button
                 onClick={() => handleRemoveFromCart(item.id)}
                 className={styles["remove-btn"]}
@@ -78,11 +78,9 @@ const OM_C_Cart = () => {
           ))
         )}
       </div>
-      <div className={styles["pagination"]}>
         <button onClick={handleCheckout} className={styles["check-out-btn"]}>
-          Checkout
+          Proceed to Checkout
         </button>
-      </div>
       <C_Footer />
     </div>
   );

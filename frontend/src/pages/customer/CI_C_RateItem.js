@@ -29,7 +29,7 @@ const CI_C_RateItem = () => {
 
         const fetchItems = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/reviews/${orderId}`);
+                const response = await axios.get(`http://localhost:8080/reviews/${orderId}`);
                 setItems(response.data);
                 
                 // Initialize reviews state with item IDs
@@ -62,7 +62,7 @@ const CI_C_RateItem = () => {
                     throw new Error(`Please rate all items before submitting`);
                 }
 
-                return axios.post(`${process.env.REACT_APP_API_URL}/reviews/create-review`, {
+                return axios.post("http://localhost:8080/reviews/create-review", {
                     orderId: parseInt(orderId),
                     itemId: parseInt(itemId),
                     userId: userId,

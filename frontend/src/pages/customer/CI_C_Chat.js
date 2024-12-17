@@ -20,7 +20,7 @@ const CI_C_Chat = () => {
 
     const fetchMessages = async (roomId) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/CI/${roomId}`);
+            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
             setMessageList(response.data);
         } catch (error) {
             console.error("Failed to fetch messages:", error);
@@ -131,6 +131,9 @@ const CI_C_Chat = () => {
             </div>
 
             <div className={styles['chat-input']}>
+                <span>Username: {username}</span>
+            </div>
+            <div className={styles['chat-input']}>
                 <img src={defaultAvtPic} alt="Avatar" className={styles['chat-customer-avt']} onClick={() => navigate('/profile')} />
                 <input
                     type="text"
@@ -139,10 +142,6 @@ const CI_C_Chat = () => {
                     onChange={(e) => setMessage(e.target.value)}
                 />
                 <button onClick={sendMessage}>Send</button>
-            </div>
-
-            <div className={styles['chat-input']}>
-                <span>Username: {username}</span>
             </div>
         </div>
     );

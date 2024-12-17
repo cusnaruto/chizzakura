@@ -3,11 +3,19 @@ import { FaAccessibleIcon } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import styles from "../styles/owner/header.module.css";
 import logo from "../assets/Emu_02_st.ayaka.one.webp";
+import { useNavigate } from "react-router-dom";
+import { useTable } from "../contexts/TableContext";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { state, dispatch } = useTable();
   // Handle logout, add logic later based on the backend
   const handleLogout = () => {
-    // Log out the user
+    dispatch({ type: "REMOVE_TABLE_NUMBER" });
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("cart");
+    sessionStorage.removeItem("tableNo");
+    navigate("/login");
   };
 
   return (
