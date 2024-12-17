@@ -4,7 +4,6 @@ import axios from 'axios';
 import styles from '../../styles/employee/EChat.module.css';
 import Header from '../../components/E_Header';
 import imgC from '../../assets/Image_C/avt.png';
-import imgE from '../../assets/Image_C/avtE.png';
 import { socket, userId, role } from '../../services/socket'; // Import the WebSocket connection and userId
 import { markMessagesAsRead } from '../../services/messageServices'; // Import API services
 
@@ -17,7 +16,7 @@ const CI_E_Chat = () => {
     const [chatData, setChatData] = useState([]); // Define chatData
     const getChatRooms = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/CI/rooms`);
+            const response = await axios.get("http://localhost:8080/CI/rooms");
             const chatRooms = response.data.map(room => ({
                 id: room.room_id,
                 name: `User ${room.room_id}`, // Replace with actual user name if available
@@ -43,7 +42,7 @@ const CI_E_Chat = () => {
 
     const fetchMessages = async (roomId) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/CI/${roomId}`);
+            const response = await axios.get(`http://localhost:8080/CI/${roomId}`);
             setMessages(response.data);
         } catch (error) {
             console.error("Failed to fetch messages:", error);

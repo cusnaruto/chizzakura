@@ -23,7 +23,7 @@ const MM_C_Menu = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/IM/get-items`);
+        const response = await axios.get("http://localhost:8080/IM/get-items");
         if (Array.isArray(response.data)) {
           setItems(response.data);
           //   console.log("Data fetched:", response.data);
@@ -46,7 +46,7 @@ const MM_C_Menu = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/IM/get-categories`
+          "http://localhost:8080/IM/get-categories"
         );
         if (Array.isArray(response.data)) {
           setCategories(response.data); // Lưu danh sách categories vào state
@@ -137,14 +137,14 @@ const MM_C_Menu = () => {
     const element = document.getElementById(`category-${categoryId}`);
     if (element) {
       window.scrollTo({
-        top: element.offsetTop - 100,
+        top: element.offsetTop - 70,
         behavior: 'smooth'
       });
     }
   };
 
   return (
-    <div className={styles["page-wrapper"]}>
+    <div>
       <C_Header />
       {error && <div className={styles["error-message"]}>{error}</div>}
       
@@ -213,37 +213,14 @@ const MM_C_Menu = () => {
           ))}
         </div>
       )}
-      <div className={styles["pagination"]}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`${styles["page-btn"]} ${
-              currentPage === index + 1 ? styles["active"] : ""
-            }`}
-            aria-label={`Go to page ${index + 1}`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-      <div className={styles["btn-choice"]}>
-        <button
-          className={styles["view-cart-btn"]}
-          onClick={() => navigate("/cart")}
-          aria-label="View cart"
-        >
-          View cart
-        </button>
 
-        <button 
-          onClick={() => navigate("/checkout")} 
-          className={styles["check-out-btn"]}
-        >
-          Checkout
-        </button>
-      </div>
-      
+      <button
+        className={styles["view-cart-btn"]}
+        onClick={() => navigate("/cart")}
+        aria-label="View cart"
+      >
+        View cart
+      </button>
       <C_Footer />
     </div>
   );

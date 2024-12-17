@@ -26,7 +26,7 @@ const UM_C_Profile = () => {
       try {
         const token = localStorage.getItem("authToken");
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/UM/user-profile`,
+          "http://localhost:8080/UM/user-profile",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ const UM_C_Profile = () => {
         return;
       }
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/UM/update-customer/${userInfo.id}`,
+        `http://localhost:8080/UM/update-customer/${userInfo.id}`,
         userInfo,
         {
           headers: {

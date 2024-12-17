@@ -29,7 +29,7 @@ const UM_C_Register = () => {
     try {
       console.log(formData);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/UM/create-user`,
+        "http://localhost:8080/UM/create-user",
         formData
       );
 

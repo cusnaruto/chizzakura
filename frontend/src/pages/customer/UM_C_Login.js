@@ -35,7 +35,7 @@ const UM_C_Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/UM/login`, {
+      const response = await axios.post("http://localhost:8080/UM/login", {
         username: formData.username,
         password: formData.password,
       });
