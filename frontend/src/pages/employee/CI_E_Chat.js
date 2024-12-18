@@ -14,15 +14,29 @@ const CI_E_Chat = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [chatData, setChatData] = useState([]); // Define chatData
+  const fetchUserName = async (userId) => {
+    try {
+      const response = await axios.get(`${URL}/UM/get-customer/${userId}`);
+      const name = `${response.data.first_name} ${response.data.last_name}`;
+      return name; // Adjust based on your API response structure
+    } catch (error) {
+      console.error(`Failed to fetch user name for userId ${userId}`, error);
+      return `User ${userId}`;
+    }
+  };
   const getChatRooms = async () => {
     try {
       const response = await axios.get(`${URL}/CI/rooms`);
-      const chatRooms = response.data.map((room) => ({
-        id: room.room_id,
-        name: `User ${room.room_id}`, // Replace with actual user name if available
-        table: `Table ${room.room_id}`, // Replace with actual table number if available
-        messages: [],
-      }));
+      const chatRooms = await Promise.all(
+        response.data.map(async (room) => {
+          const name = await fetchUserName(room.room_id);
+          return {
+            id: room.room_id,
+            name: name, // Use fetched user name
+            messages: [],
+          };
+        })
+      );
       setChatData(chatRooms);
     } catch (error) {
       console.error("Failed to load chat rooms", error);
@@ -167,8 +181,7 @@ const CI_E_Chat = () => {
                 <img src={imgC} alt="avatar" className={styles.avatar} />
                 <div className={styles.chatInfo}>
                   <div className={styles.infoCus}>
-                    <p className={styles.chatName}>{chat.name} - </p>
-                    <span className={styles.table}>Table {chat.table}</span>
+                    <p className={styles.chatName}>{chat.name}</p>
                   </div>
                   <p className={styles.chatPreview}>
                     {chat.messages[chat.messages.length - 1]?.content}
