@@ -8,6 +8,8 @@ import logoImg from "../../assets/Image_C/logo.jpg";
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
 
+const URL = "http://fall2024c8g11.int3306.freeddns.org";
+
 const UM_C_Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,7 +37,7 @@ const UM_C_Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8080/UM/login", {
+      const response = await axios.post(`${URL}/UM/login`, {
         username: formData.username,
         password: formData.password,
       });
