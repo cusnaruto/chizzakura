@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
-
-const SOCKET_URL = "http://localhost:8080";
+import URL from "../url";
+const SOCKET_URL = URL;
 
 const token = localStorage.getItem("authToken");
 let userId = null;

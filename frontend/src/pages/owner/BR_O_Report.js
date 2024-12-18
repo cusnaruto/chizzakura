@@ -3,14 +3,12 @@ import Header from "../../components/O_Header";
 import styles from "../../styles/owner/report.module.css";
 import axios from "axios";
 import { FaDollarSign, FaBox, FaConciergeBell } from "react-icons/fa"; // Import icons
-
+import URL from "../../url";
 const ReportPage = () => {
   const [timeframe, setTimeframe] = useState(30); // Default to the last 30 days
   const [activeTab, setActiveTab] = useState("items");
   const [currentTime, setCurrentTime] = useState(new Date());
   const [itemReports, setItemReports] = useState([]);
-
-  const API_BASE_URL = "http://localhost:8080/BR";
 
   // Fetch current time every second
   useEffect(() => {
@@ -25,7 +23,7 @@ const ReportPage = () => {
   const fetchItemReports = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/BR/items-report`,
+        `${URL}/BR/items-report`,
         { params: { days: timeframe } } // Pass the timeframe in days as query parameter
       );
       console.log("Item Reports:", response.data.data); // Debugging log
@@ -41,79 +39,91 @@ const ReportPage = () => {
     }
   }, [timeframe, activeTab]);
 
-// Render Items Report
-const renderItemsReport = () => {
-  // Calculate total revenue
-  const totalRevenue = itemReports.reduce((acc, item) => acc + (item.total_sales * item.item_price), 0);
+  // Render Items Report
+  const renderItemsReport = () => {
+    // Calculate total revenue
+    const totalRevenue = itemReports.reduce(
+      (acc, item) => acc + item.total_sales * item.item_price,
+      0
+    );
 
-  return (
-    <div className={styles.reportSection}>
-      <h2>Items Report</h2>
-      <div>
-        <label>
-          Select Timeframe (in days):
-          <select
-            value={timeframe}
-            onChange={(e) => setTimeframe(parseInt(e.target.value))}
-          >
-            <option value={1}>Last 24 Hours</option>
-            <option value={7}>Last 7 Days</option>
-            <option value={30}>Last 30 Days</option>
-            <option value={90}>Last 90 Days</option>
-            <option value={180}>Last 180 Days</option>
-            <option value={365}>Last 365 Days</option>
-          </select>
-        </label>
-      </div>
-      <table className={styles.reportTable}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Sales</th>
-            <th>Rating</th>
-            <th>Reviews</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {itemReports.map((item) => (
-            <tr key={item.item_id}>
-              <td>{item.item_id}</td>
-              <td>{item.item_name}</td>
-              <td>{item.category_name}</td>
-              <td>${item.item_price}</td>
-              <td>{item.total_sales}</td>
-              <td>
-                {!isNaN(parseFloat(item.average_rating))
-                  ? parseFloat(item.average_rating).toFixed(1)
-                  : "N/A"}
-              </td>
-              <td>{item.review_count}</td>
-              <td>${(item.total_sales * item.item_price).toFixed(2)}</td>
+    return (
+      <div className={styles.reportSection}>
+        <h2>Items Report</h2>
+        <div>
+          <label>
+            Select Timeframe (in days):
+            <select
+              value={timeframe}
+              onChange={(e) => setTimeframe(parseInt(e.target.value))}
+            >
+              <option value={1}>Last 24 Hours</option>
+              <option value={7}>Last 7 Days</option>
+              <option value={30}>Last 30 Days</option>
+              <option value={90}>Last 90 Days</option>
+              <option value={180}>Last 180 Days</option>
+              <option value={365}>Last 365 Days</option>
+            </select>
+          </label>
+        </div>
+        <table className={styles.reportTable}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Sales</th>
+              <th>Rating</th>
+              <th>Reviews</th>
+              <th>Total</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <p>Total Revenue: ${totalRevenue.toFixed(2)}</p>
-    </div>
-  );
-};
+          </thead>
+          <tbody>
+            {itemReports.map((item) => (
+              <tr key={item.item_id}>
+                <td>{item.item_id}</td>
+                <td>{item.item_name}</td>
+                <td>{item.category_name}</td>
+                <td>${item.item_price}</td>
+                <td>{item.total_sales}</td>
+                <td>
+                  {!isNaN(parseFloat(item.average_rating))
+                    ? parseFloat(item.average_rating).toFixed(1)
+                    : "N/A"}
+                </td>
+                <td>{item.review_count}</td>
+                <td>${(item.total_sales * item.item_price).toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p>Total Revenue: ${totalRevenue.toFixed(2)}</p>
+      </div>
+    );
+  };
   return (
     <div>
       <Header />
       <div className={styles.reportPage}>
         {/* Navigation buttons for each report type */}
         <div className={styles.tabButtons}>
-          <button onClick={() => setActiveTab("items")} className={activeTab === "items" ? styles.activeTab : ""}>
+          <button
+            onClick={() => setActiveTab("items")}
+            className={activeTab === "items" ? styles.activeTab : ""}
+          >
             <FaBox />
           </button>
-          <button onClick={() => setActiveTab("revenue")} className={activeTab === "revenue" ? styles.activeTab : ""}>
+          <button
+            onClick={() => setActiveTab("revenue")}
+            className={activeTab === "revenue" ? styles.activeTab : ""}
+          >
             <FaDollarSign />
           </button>
-          <button onClick={() => setActiveTab("service")} className={activeTab === "service" ? styles.activeTab : ""}>
+          <button
+            onClick={() => setActiveTab("service")}
+            className={activeTab === "service" ? styles.activeTab : ""}
+          >
             <FaConciergeBell />
           </button>
         </div>
@@ -126,10 +136,7 @@ const renderItemsReport = () => {
         </main>
 
         {/* Print button */}
-        <button
-          className={styles.printButton}
-          onClick={() => window.print()}
-        >
+        <button className={styles.printButton} onClick={() => window.print()}>
           Print Report
         </button>
       </div>

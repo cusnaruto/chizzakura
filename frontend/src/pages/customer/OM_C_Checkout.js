@@ -9,6 +9,7 @@ import { useTable } from "../../contexts/TableContext";
 import { socket, userId, role } from "../../services/socket";
 import { set } from "date-fns";
 import { CgNametag } from "react-icons/cg";
+import URL from "../../url";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
@@ -31,14 +32,11 @@ const OM_C_Checkout = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get(
-          "http://localhost:8080/UM/user-profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${URL}/UM/user-profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.data) {
           setUserInfo(response.data);
@@ -60,9 +58,7 @@ const OM_C_Checkout = () => {
   useEffect(() => {
     const fetchDiscount = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/DM/get-discounts"
-        );
+        const response = await axios.get(`${URL}/DM/get-discounts`);
         if (response.data && response.data.length > 0) {
           const now = new Date();
           const validDiscounts = response.data.filter((d) => {
@@ -182,7 +178,7 @@ const OM_C_Checkout = () => {
 
       console.log("Order data:", orderData);
 
-      const response = await axios.post("http://localhost:8080/OM/", orderData);
+      const response = await axios.post(`${URL}/OM/`, orderData);
 
       if (paymentMethod === "qr" && response.data.success) {
         setQrTimer(900);

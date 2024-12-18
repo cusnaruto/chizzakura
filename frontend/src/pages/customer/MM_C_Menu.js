@@ -6,6 +6,7 @@ import C_Footer from "../../components/customer/C_Footer.js";
 import axios from "axios";
 import { useCart } from "../../contexts/CartContext.js";
 import { message } from "antd";
+import URL from "../../url";
 
 const MM_C_Menu = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const MM_C_Menu = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8080/IM/get-items");
+        const response = await axios.get(`${URL}/IM/get-items`);
         if (Array.isArray(response.data)) {
           setItems(response.data);
           //   console.log("Data fetched:", response.data);
@@ -45,9 +46,7 @@ const MM_C_Menu = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/IM/get-categories"
-        );
+        const response = await axios.get(`${URL}/IM/get-categories`);
         if (Array.isArray(response.data)) {
           setCategories(response.data); // Lưu danh sách categories vào state
         } else {
@@ -105,7 +104,9 @@ const MM_C_Menu = () => {
   // Group items by category
   const itemsByCategory = useMemo(() => {
     return categories.reduce((acc, category) => {
-      acc[category.id] = items.filter(item => item.categoryid === category.id);
+      acc[category.id] = items.filter(
+        (item) => item.categoryid === category.id
+      );
       return acc;
     }, {});
   }, [items, categories]);
@@ -113,13 +114,13 @@ const MM_C_Menu = () => {
   // Handle scroll to update active category
   useEffect(() => {
     const handleScroll = () => {
-      const categoryElements = categories.map(cat => 
+      const categoryElements = categories.map((cat) =>
         document.getElementById(`category-${cat.id}`)
       );
 
       const scrollPosition = window.scrollY + 100; // Offset for the sticky header
 
-      categoryElements.forEach(element => {
+      categoryElements.forEach((element) => {
         if (element) {
           const position = element.offsetTop;
           if (scrollPosition >= position) {
@@ -129,8 +130,8 @@ const MM_C_Menu = () => {
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [categories]);
 
   const handleTabClick = (categoryId) => {
@@ -138,7 +139,7 @@ const MM_C_Menu = () => {
     if (element) {
       window.scrollTo({
         top: element.offsetTop - 70,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -147,7 +148,7 @@ const MM_C_Menu = () => {
     <div>
       <C_Header />
       {error && <div className={styles["error-message"]}>{error}</div>}
-      
+
       <div className={styles["tabs-container"]}>
         {categories.map((cat) => (
           <button
@@ -167,8 +168,8 @@ const MM_C_Menu = () => {
       ) : (
         <div className={styles["categories-container"]}>
           {categories.map((category) => (
-            <div 
-              key={category.id} 
+            <div
+              key={category.id}
               id={`category-${category.id}`}
               data-category-id={category.id}
               className={styles["category-section"]}
@@ -176,8 +177,8 @@ const MM_C_Menu = () => {
               <h2 className={styles["category-title"]}>{category.name}</h2>
               <div className={styles["product-grid"]}>
                 {itemsByCategory[category.id]?.map((item) => (
-                  <div 
-                    key={item.id} 
+                  <div
+                    key={item.id}
                     className={`${styles["product-card"]} ${
                       !item.is_available ? styles["disabled"] : ""
                     }`}
@@ -190,20 +191,23 @@ const MM_C_Menu = () => {
                       onClick={() => navigate(`/menu/item/${item.id}`)}
                     />
                     <div className={styles["product-info"]}>
-                      <span className={styles["product-price"]}>${item.price}</span>
+                      <span className={styles["product-price"]}>
+                        ${item.price}
+                      </span>
                       <h3 className={styles["product-name"]}>{item.name}</h3>
                       <button
                         disabled={!item.is_available}
-                        className={`${styles["add-to-cart-btn"]} ${!item.is_available ? styles["disabled"] : ""}`}
-                        onClick={() => handleAddToCart(item)}                  
+                        className={`${styles["add-to-cart-btn"]} ${
+                          !item.is_available ? styles["disabled"] : ""
+                        }`}
+                        onClick={() => handleAddToCart(item)}
                         aria-label={`Add ${item.name} to cart`}
                       >
                         {item.is_available ? (
                           <span>add to cart</span>
                         ) : (
                           <span>Unavailable</span>
-                        )
-                        }
+                        )}
                       </button>
                     </div>
                   </div>
