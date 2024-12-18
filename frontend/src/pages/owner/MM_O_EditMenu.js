@@ -122,21 +122,21 @@ const MmOEditMenu = () => {
 
   // Edit function
   const handleEdit = async (index) => {
-    // get items id when sorted or not
-    const itemIndex = getFilteredAndSortedItems();
-    const itemId = itemIndex[index].id;
-
+    // Get the current page items after sorting and filtering
+    const currentPageItems = getCurrentPageItems();
+    const itemId = currentPageItems[index].id;
+  
     try {
       const response = await axios.get(`${URL}/IM/get-item-by-id/${itemId}`);
       const item = response.data;
-
+  
       // Set the current item to be edited
-      setCurrentItem({ ...item, index: itemIndex });
-      setFileName("");
+      setCurrentItem({ ...item, index });
+      setFileName('');
       setIsModalOpen(true);
     } catch (error) {
-      console.error("Error fetching item details:", error);
-      alert("Failed to fetch item details");
+      console.error('Error fetching item details:', error);
+      alert('Failed to fetch item details');
     }
   };
 
