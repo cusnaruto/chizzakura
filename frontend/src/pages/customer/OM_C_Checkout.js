@@ -180,6 +180,8 @@ const OM_C_Checkout = () => {
       // console.log("paymentMethod:", paymentMethod);
       // console.log("Sending order data:", orderData);
 
+      console.log("Order data:", orderData);
+
       const response = await axios.post("http://localhost:8080/OM/", orderData);
 
       if (paymentMethod === "qr" && response.data.success) {
