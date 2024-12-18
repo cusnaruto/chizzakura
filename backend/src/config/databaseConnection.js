@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const { Sequelize } = require("sequelize");
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 
 const config = {
   development: {
@@ -18,7 +18,14 @@ const config = {
     password: process.env.DB_PASSWORD || "chizzakura",
     host: process.env.MYSQL_SERVICE_HOST || "10.104.66.205",
     port: process.env.MYSQL_SERVICE_PORT || "3306",
-  }
+  },
+  production: {
+    database: process.env.TEST_DB_NAME || "fall2024c8g11_chizzakura",
+    username: process.env.YOUR_ACCOUNT || "fall2024c8g11",
+    password: process.env.DB_PASSWORD || "chizzakura",
+    host: process.env.MYSQL_SERVICE_HOST || "10.104.66.205",
+    port: process.env.MYSQL_SERVICE_PORT || "3306",
+  },
 };
 
 const sequelize = new Sequelize(
