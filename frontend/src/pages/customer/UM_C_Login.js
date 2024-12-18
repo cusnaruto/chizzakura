@@ -37,6 +37,7 @@ const UM_C_Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      console.log("url go go: ", `${URL}/UM/login`);
       const response = await axios.post(`${URL}/UM/login`, {
         username: formData.username,
         password: formData.password,
