@@ -7,7 +7,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./styles/index.css";
-import App from "./App";
 import { socket, userId } from "./services/socket";
 
 import MM_C_Menu from "./pages/customer/MM_C_Menu";
@@ -252,8 +251,6 @@ root.render(
               element={<UmEConfirmOrder />}
             />
             <Route path="/employee/listorder" element={<OmEListOrder />} />
-
-            <Route path="/app" element={<App />} />
 
             <Route
               path="/menu/item/:itemId"

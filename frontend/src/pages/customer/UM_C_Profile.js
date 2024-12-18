@@ -10,6 +10,8 @@ import { useTable } from "../../contexts/TableContext";
 import C_Footer from "../../components/customer/C_Footer";
 import C_Header from "../../components/customer/C_Header";
 
+import URL from "../../url";
+
 const UM_C_Profile = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
@@ -25,14 +27,11 @@ const UM_C_Profile = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/UM/user-profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${URL}/UM/user-profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.data) {
           setUserInfo(response.data);
@@ -70,64 +69,22 @@ const UM_C_Profile = () => {
     const newErrors = {};
     if (!userInfo.first_name.trim()) {
       newErrors.first_name = "First name is required";
-    };
+    }
 
     if (!userInfo.last_name.trim()) {
       newErrors.last_name = "Last name is required";
-    };
+    }
 
     if (!userInfo.email.trim()) {
       newErrors.email = "Email is required";
-    };
+    }
 
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
-
   };
 
-  // const handlePasswordChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setPasswords((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const handleChangePassword = async () => {
-  //   try {
-  //     const token = localStorage.getItem("authToken");
-  
-  //     if (!userInfo?.id) {
-  //       alert("User not found");
-  //       return;
-  //     }
-  
-  //     const response = await axios.put(
-  //       `http://localhost:8080/UM/update-password/${userInfo.id}`,
-  //       passwords,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  
-  //     if (response.status === 200) {
-  //       alert("Password updated successfully");
-  //       setPasswords({ oldPassword: "", newPassword: "" });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error changing password:", error.response || error.message);
-  //     alert(
-  //       error.response?.data?.message || "Error changing password. Try again."
-  //     );
-  //   }
-  // };
-   
-
   const handleSave = async () => {
-
     if (!validForm()) return;
 
     try {
@@ -137,15 +94,11 @@ const UM_C_Profile = () => {
         alert("User not found");
         return;
       }
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/UM/update-customer/${userInfo.id}`,
-        userInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${URL}/UM/update-customer/${userInfo.id}`, userInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("User updated successfully");
     } catch (error) {
       console.error("Error updating user:", error.response || error.message);
@@ -207,7 +160,9 @@ const UM_C_Profile = () => {
               value={userInfo?.first_name || ""}
               onChange={handleChange}
             />
-            {errors.first_name && <p className={styles["error-msg"]}>{errors.first_name}</p>}
+            {errors.first_name && (
+              <p className={styles["error-msg"]}>{errors.first_name}</p>
+            )}
 
             <label>Last Name</label>
             <input
@@ -216,7 +171,9 @@ const UM_C_Profile = () => {
               value={userInfo?.last_name || ""}
               onChange={handleChange}
             />
-            {errors.last_name && <p className={styles["error-msg"]}>{errors.last_name}</p>}
+            {errors.last_name && (
+              <p className={styles["error-msg"]}>{errors.last_name}</p>
+            )}
 
             <label>Email</label>
             <input
@@ -225,8 +182,9 @@ const UM_C_Profile = () => {
               value={userInfo?.email || ""}
               onChange={handleChange}
             />
-            {errors.email && <p className={styles["error-msg"]}>{errors.email}</p>}           
-
+            {errors.email && (
+              <p className={styles["error-msg"]}>{errors.email}</p>
+            )}
           </form>
         </div>
 

@@ -1,10 +1,12 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:8080/CI"; // Replace with your backend URL
+import URL from "../url";
 
 export const markMessagesAsRead = async (senderId, receiverId) => {
   try {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/CI/read`, { senderId, receiverId });
+    const response = await axios.put(`${URL}/CI/read`, {
+      senderId,
+      receiverId,
+    });
     return response.data;
   } catch (error) {
     console.error("Error marking messages as read:", error);

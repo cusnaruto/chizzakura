@@ -34,17 +34,6 @@ const io = new Server(server, {
   },
 });
 
-// switch between url
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? "http://fall2024c8g11.int3306.freeddns.org"
-        : "http://localhost:3000",
-    credentials: true,
-  })
-);
-
 // Middleware để gắn io vào request object
 app.use((req, res, next) => {
   req.io = io;
@@ -117,9 +106,9 @@ app.get("/test", (req, res) => {
 
 console.log("Hello3");
 
-// app.get("/*", function (req, res) {
-//   res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
-// });
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));
+});
 
 app.post("/upload", upload.single("file"), uploadImage);
 

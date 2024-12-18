@@ -6,6 +6,8 @@ import { message } from "antd";
 import styles from "../../styles/customer/CLoginRegister.module.css";
 import logoImg from "../../assets/Image_C/logo.jpg";
 
+import URL from "../../url";
+
 const UM_C_Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -28,10 +30,7 @@ const UM_C_Register = () => {
 
     try {
       console.log(formData);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/UM/create-user`,
-        formData
-      );
+      const response = await axios.post(`${URL}/UM/create-user`, formData);
 
       if (response.data.success) {
         message.success("Register successful!...");

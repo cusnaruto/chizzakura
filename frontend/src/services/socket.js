@@ -1,7 +1,6 @@
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
-
-const SOCKET_URL = process.env.REACT_APP_API_URL; // Replace with your backend URL
+import URL from "../url";
 
 const token = localStorage.getItem("authToken");
 let userId = null;
@@ -14,7 +13,7 @@ if (token) {
   console.log("from socket.js, this userId is", userId);
 }
 
-const socket = io(SOCKET_URL, {
+const socket = io(URL, {
   auth: {
     token: token, // Send token for authentication
   },

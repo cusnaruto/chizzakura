@@ -7,6 +7,7 @@ import styles from "../../styles/customer/CLoginRegister.module.css";
 import logoImg from "../../assets/Image_C/logo.jpg";
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
+import URL from "../../url";
 
 const UM_C_Login = () => {
   const navigate = useNavigate();
@@ -35,7 +36,8 @@ const UM_C_Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/UM/login`, {
+      console.log("url go go: ", `${URL}/UM/login`);
+      const response = await axios.post(`${URL}/UM/login`, {
         username: formData.username,
         password: formData.password,
       });

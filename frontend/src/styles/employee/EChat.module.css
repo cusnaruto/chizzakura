@@ -1,8 +1,10 @@
 .chatContainer {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    height: 100vh;
+    height: calc(100vh - 70px); /* Subtract header height */
     background-color: #fdd7d7;
+    margin-top: 0;
+    overflow: hidden;
 }
   
 .chatSidebar {
@@ -10,6 +12,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
+    overflow-y: auto;
 }
   
 .searchInput {
@@ -20,12 +24,18 @@
     margin-bottom: 20px;
     border-radius: 10px;
     border: none;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
   
 .chatList {
     width: 100%;
-    margin: 0;
+    max-height: calc(100vh - 140px); /* Subtract header + search input height */
+    overflow-y: auto;
     padding: 0;
+    margin: 0;
+    list-style: none;
 }
   
 .chatItem {
@@ -109,7 +119,8 @@
     flex-direction: column;
     flex-grow: 1;
     overflow-y: auto;
-    max-height: 700px;
+    max-height: calc(100vh - 250px); /* Adjust for header + input area */
+    padding: 10px;
 }
   
 .message {
@@ -143,24 +154,28 @@
   
 .messageInputContainer {
     display: flex;
+    flex-direction: row;
+    align-items: center;
     border-top: 1px solid #ddd;
     padding: 10px;
+    width: 95%;
 }
   
 .messageInput {
-    flex-grow: 1;
+    flex: 1;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #ddd;
+    margin-right: 10px;
 }
   
 .sendButton {
-    margin-left: 10px;
     padding: 10px 20px;
+    margin: auto;
+    width: auto;
     border: none;
     background-color: #f08b8b;
     color: white;
     border-radius: 10px;
     cursor: pointer;
 }
-  
