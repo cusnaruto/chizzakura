@@ -8,6 +8,7 @@ import editImg from "../../assets/Image_C/edit.png";
 import { useTable } from "../../contexts/TableContext";
 import { socket, userId, role } from "../../services/socket";
 import { set } from "date-fns";
+import { CgNametag } from "react-icons/cg";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
@@ -101,10 +102,10 @@ const OM_C_Checkout = () => {
         const rate = response.data.rates.VND; // Lấy tỷ giá USD -> VND
         const convertedAmount = Math.round(usdAmount * rate); // Chuyển đổi sang VNĐ (làm tròn số)
 
-        // console.log(`Tỷ giá: 1 USD = ${rate} VND`);
-        // console.log(
-        //   `Số tiền chuyển đổi: ${usdAmount} USD = ${convertedAmount} VND`
-        // );
+        console.log(`Tỷ giá: 1 USD = ${rate} VND`);
+        console.log(
+          `Số tiền chuyển đổi: ${usdAmount} USD = ${convertedAmount} VND`
+        );
 
         return convertedAmount;
       } else {
@@ -120,7 +121,10 @@ const OM_C_Checkout = () => {
   const handleSelectPayment = async (method) => {
     setPaymentMethod(method);
     setShowPaymentInfo(true);
-    setVNDAmount(await convertUSDtoVND(discountedAmount));
+    const temp = await convertUSDtoVND(discountedAmount);
+    console.log("temp:", temp);
+    setVNDAmount(temp);
+    console.log("VND Amount:", VNDAmount);
     if (method === "cash") {
       setQrCodeUrl(null);
     } else if (method === "qr") {
@@ -130,12 +134,13 @@ const OM_C_Checkout = () => {
           ACCOUNT_NO: "4511129516",
           TEMPLATE: "compact2",
           ACCOUNT_NAME: "NGUYEN THAI DUONG",
-          AMOUNT: VNDAmount,
+          AMOUNT: temp,
           DESCRIPTION: `CHIZZAKURA Table ${parseInt(tableState.tableNumber)}`,
           format: "text",
         };
         let QR = `https://img.vietqr.io/image/${bankInfo.BANK_ID}-${bankInfo.ACCOUNT_NO}-${bankInfo.TEMPLATE}.png?amount=${bankInfo.AMOUNT}&addInfo=${bankInfo.DESCRIPTION}&accountName=${bankInfo.ACCOUNT_NAME}`;
         setQrCodeUrl(QR);
+        console.log("QR Code URL:", QR);
       } catch (error) {
         console.error("Error generating QR:", error);
         alert("Failed to generate QR code. Please try again.");
@@ -172,8 +177,8 @@ const OM_C_Checkout = () => {
         payment_method: paymentMethod,
         customerId: userId,
       };
-      console.log("paymentMethod:", paymentMethod);
-      console.log("Sending order data:", orderData);
+      // console.log("paymentMethod:", paymentMethod);
+      // console.log("Sending order data:", orderData);
 
       const response = await axios.post("http://localhost:8080/OM/", orderData);
 
