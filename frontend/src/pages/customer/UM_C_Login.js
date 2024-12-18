@@ -8,7 +8,7 @@ import logoImg from "../../assets/Image_C/logo.jpg";
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
 
-const URL = "http://fall2024c8g11.int3306.freeddns.org";
+const URL = process.env.REACT_APP_API_SERVER_URL;
 
 const UM_C_Login = () => {
   const navigate = useNavigate();
