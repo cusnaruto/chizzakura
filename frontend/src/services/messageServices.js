@@ -1,10 +1,9 @@
 import axios from "axios";
 import URL from "../url";
-const API_URL = `${URL}/CI`; // Replace with your backend URL
 
 export const markMessagesAsRead = async (senderId, receiverId) => {
   try {
-    const response = await axios.put(`${API_URL}/read`, {
+    const response = await axios.put(`${URL}/CI/read`, {
       senderId,
       receiverId,
     });
