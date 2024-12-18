@@ -7,8 +7,7 @@ import styles from "../../styles/customer/CLoginRegister.module.css";
 import logoImg from "../../assets/Image_C/logo.jpg";
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
-
-const URL = process.env.REACT_APP_API_SERVER_URL;
+import URL from "../../url";
 
 const UM_C_Login = () => {
   const navigate = useNavigate();
