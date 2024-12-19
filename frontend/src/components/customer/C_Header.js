@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoImg from '../../assets/Image_C/logo.jpg';
+import logoImg from '../../assets/Emu_02_st.ayaka.one.webp';
 
 import styles from '../../styles/customer/CHeader.module.css';
 
