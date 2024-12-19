@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../../components/O_Header";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus , FaTrash } from "react-icons/fa";
 import styles from "../../styles/owner/menu.module.css";
 
 // troll image
@@ -27,6 +27,8 @@ const MmOEditMenu = () => {
   const [categories, setCategories] = useState([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "" });
+  const [currentCategory, setCurrentCategory] = useState(null);
+  const [isEditingCategory, setIsEditingCategory] = useState(false);
   const [data, setData] = useState([]); // State to hold fetched data
   const itemsPerPage = 8;
   const maxPageButtons = 3;
@@ -140,25 +142,55 @@ const MmOEditMenu = () => {
     }
   };
 
-  // Add new category handler
-  const handleAddCategory = async (e) => {
-    e.preventDefault();
-    try {
+  // Add category management functions
+const handleEditCategory = (category) => {
+  setCurrentCategory(category);
+  setIsEditingCategory(true);
+  setIsCategoryModalOpen(true);
+};
+
+const handleDeleteCategory = async (categoryId) => {
+  if (!window.confirm("Are you sure you want to delete this category?")) {
+    return;
+  }
+
+  try {
+    await axios.delete(`${URL_BE}/IM/delete-category/${categoryId}`);
+    setCategories(categories.filter(cat => cat.id !== categoryId));
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    alert("Failed to delete category");
+  }
+};
+
+const handleCategorySubmit = async (e) => {
+  e.preventDefault();
+  try {
+    if (isEditingCategory) {
+      // Update existing category
+      const response = await axios.put(
+        `${URL_BE}/IM/update-category/${currentCategory.id}`,
+        { name: currentCategory.name }
+      );
+      setCategories(categories.map(cat =>
+        cat.id === currentCategory.id ? response.data : cat
+      ));
+    } else {
+      // Add new category
       const response = await axios.post(`${URL_BE}/IM/create-category`, {
         name: newCategory.name,
       });
-
-      // Update categories state with new category
       setCategories([...categories, response.data]);
-
-      // Reset form and close modal
-      setNewCategory({ name: "" });
-      setIsCategoryModalOpen(false);
-    } catch (error) {
-      console.error("Error adding category:", error);
-      alert("Failed to add category");
     }
-  };
+    setIsCategoryModalOpen(false);
+    setIsEditingCategory(false);
+    setCurrentCategory(null);
+    setNewCategory({ name: "" });
+  } catch (error) {
+    console.error("Error managing category:", error);
+    alert("Failed to manage category");
+  }
+};
 
   // Form submit handler for editing items
   const handleFormSubmit = async (e) => {
@@ -399,11 +431,13 @@ const MmOEditMenu = () => {
               <option value="price-desc">Price: High to Low</option>
               <option value="name-asc">Name: A to Z</option>
               <option value="name-desc">Name: Z to A</option>
-              {categories.map((category) => (
-                <option key={category.id} value={`category-${category.id}`}>
-                  {category.name}
-                </option>
-              ))}
+              <optgroup label="Filter by Category">
+                {categories.map((category) => (
+                  <option key={category.id} value={`category-${category.id}`}>
+                    {category.name}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
         </div>
@@ -654,32 +688,81 @@ const MmOEditMenu = () => {
       {isCategoryModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2>Add New Category</h2>
-            <form onSubmit={handleAddCategory}>
+            <h2>Manage Categories</h2>
+            {/* List existing categories */}
+            <div className={styles.categoryList}>
+              {categories.map((category) => (
+                <div key={category.id} className={styles.categoryManageRow}>
+                  <span>{category.name}</span>
+                  <div className={styles.categoryActions}>
+                    <FaEdit
+                      className={styles.editIcon}
+                      onClick={() => handleEditCategory(category)}
+                    />
+                    <FaTrash
+                      className={styles.deleteIcon}
+                      onClick={() => handleDeleteCategory(category.id)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Add/Edit Category Form */}
+            <form onSubmit={handleCategorySubmit} className={styles.categoryForm}>
               <div className={styles.formGroupMenuRow}>
-                <label htmlFor="categoryName">Category Name</label>
+                <label htmlFor="categoryName">
+                  {isEditingCategory ? 'Edit Category Name' : 'Add New Category'}
+                </label>
                 <input
                   type="text"
                   id="categoryName"
-                  value={newCategory.name}
-                  onChange={(e) => setNewCategory({ name: e.target.value })}
+                  value={isEditingCategory ? currentCategory.name : newCategory.name}
+                  onChange={(e) => {
+                    if (isEditingCategory) {
+                      setCurrentCategory({ ...currentCategory, name: e.target.value });
+                    } else {
+                      setNewCategory({ name: e.target.value });
+                    }
+                  }}
                   required
                 />
               </div>
-              <button type="submit" className={styles.saveButton}>
-                Add Category
-              </button>
-              <button
-                type="button"
-                className={styles.cancelButton}
-                onClick={() => setIsCategoryModalOpen(false)}
-              >
-                Cancel
-              </button>
+              <div className={styles.modalActions}>
+                <button type="submit" className={styles.saveButton}>
+                  {isEditingCategory ? 'Update Category' : 'Add Category'}
+                </button>
+                {isEditingCategory && (
+                  <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={() => {
+                      setIsEditingCategory(false);
+                      setCurrentCategory(null);
+                    }}
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={() => {
+                    setIsCategoryModalOpen(false);
+                    setIsEditingCategory(false);
+                    setCurrentCategory(null);
+                    setNewCategory({ name: "" });
+                  }}
+                >
+                  Close
+                </button>
+              </div>
             </form>
           </div>
         </div>
       )}
+
+
     </div>
   );
 };
