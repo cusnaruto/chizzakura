@@ -167,25 +167,28 @@ Chủ quán là người có nhiều quyền hạn nhất, với các khả năn
 
 <!-- CONTACT -->
 <a name="members"></a>
-## Các thành viên và đóng góp
+## Các thành viên
 
-Nguyễn Thái Dương - 22026533
-Quàng Thế Anh - 22026554
-Lê Công Hoàng - 22026555
-Trần Minh Tuấn - 22026557
++ Nguyễn Thái Dương - 22026533
+
++ Quàng Thế Anh - 22026554
+
++ Lê Công Hoàng - 22026555
+
++ Trần Minh Tuấn - 22026557
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/TaiZuon/chizzakura.svg?style=for-the-badge
 [contributors-url]: https://github.com/TaiZuon/chizzakura/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/TaiZuon/chizzakura.svg?style=for-the-badge
 [forks-url]: https://github.com/TaiZuon/chizzakura/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/TaiZuon/chizzakura.svg?style=for-the-badge
 [stars-url]: https://github.com/TaiZuon/chizzakura/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/TaiZuon/chizzakura.svg?style=for-the-badge
 [issues-url]: https://github.com/TaiZuon/chizzakura/issues
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
