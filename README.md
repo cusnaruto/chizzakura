@@ -109,6 +109,7 @@ npm install
 npm run start
 ```
 Cài đặt và chạy Backend
+
 Tạo một CSDL MySQL trên máy với tên `chizzakura`, chỉnh lại thông số như port, mật khẩu, username trong file .env cho phù hợp
 Chạy lệnh ở dưới để seed data
 ```sh
@@ -175,7 +176,7 @@ Chủ quán là người có nhiều quyền hạn nhất, với các khả năn
 <a name="members"></a>
 ## Các thành viên
 
-+ Nguyễn Thái Dương - 22026533
++ Nguyễn Thái Dương - 22026533(⭐)
 
 + Quàng Thế Anh - 22026554
 
