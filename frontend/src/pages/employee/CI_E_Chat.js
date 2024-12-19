@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/employee/EChat.module.css";
 import Header from "../../components/E_Header";
 import imgC from "../../assets/Image_C/avt.png";
 import { socket, userId, role } from "../../services/socket"; // Import the WebSocket connection and userId
-import { markMessagesAsRead } from "../../services/messageServices"; // Import API services
+import { markMessagesAsRead } from "../../services/messageServices"; // Import API  services
 import URL from "../../url";
 const CI_E_Chat = () => {
   const navigate = useNavigate();
@@ -42,6 +42,19 @@ const CI_E_Chat = () => {
       console.error("Failed to load chat rooms", error);
     }
   };
+
+  const messageEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);  
+
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
       navigate("/login");
@@ -222,7 +235,8 @@ const CI_E_Chat = () => {
                     </span>
                   </div>
                 ))}
-              </div>
+                <div ref={messageEndRef} />
+              </div>              
               <form
                 onSubmit={handleSendMessage}
                 className={styles.messageInputContainer}
