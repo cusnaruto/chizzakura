@@ -9,7 +9,7 @@ import { useTable } from "../../contexts/TableContext";
 import { socket, userId, role } from "../../services/socket";
 import { set } from "date-fns";
 import { CgNametag } from "react-icons/cg";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const OM_C_Checkout = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const OM_C_Checkout = () => {
   const [discount, setDiscount] = useState(0);
   const [showPaymentInfo, setShowPaymentInfo] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [qrTimer, setQrTimer] = useState(90);
+  const [qrTimer, setQrTimer] = useState(60);
   const [userInfo, setUserInfo] = useState(null);
   const [isOrderSent, setIsOrderSent] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
@@ -32,7 +32,7 @@ const OM_C_Checkout = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get(`${URL}/UM/user-profile`, {
+        const response = await axios.get(`${URL_BE}/UM/user-profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,7 +58,7 @@ const OM_C_Checkout = () => {
   useEffect(() => {
     const fetchDiscount = async () => {
       try {
-        const response = await axios.get(`${URL}/DM/get-discounts`);
+        const response = await axios.get(`${URL_BE}/DM/get-discounts`);
         if (response.data && response.data.length > 0) {
           const now = new Date();
           const validDiscounts = response.data.filter((d) => {
@@ -178,10 +178,10 @@ const OM_C_Checkout = () => {
 
       console.log("Order data:", orderData);
 
-      const response = await axios.post(`${URL}/OM/`, orderData);
+      const response = await axios.post(`${URL_BE}/OM/`, orderData);
 
       if (paymentMethod === "qr" && response.data.success) {
-        setQrTimer(900);
+        setQrTimer(60);
         const timer = setInterval(() => {
           setQrTimer((prev) => {
             if (prev <= 1) {
