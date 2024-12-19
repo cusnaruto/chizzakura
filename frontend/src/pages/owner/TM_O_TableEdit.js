@@ -4,7 +4,7 @@ import Header from "../../components/O_Header";
 import styles from "../../styles/owner/table.module.css";
 import tableImage from "../../assets/table_topview.png";
 import axios from "axios";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const TM_O_TableEdit = () => {
   const [tables, setTables] = useState([]);
@@ -15,7 +15,7 @@ const TM_O_TableEdit = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get(`${URL}/TM/get-tables`);
+        const response = await axios.get(`${URL_BE}/TM/get-tables`);
         const tableData = response.data.map((table) => ({
           id: table.id,
           img: tableImage,
@@ -31,7 +31,7 @@ const TM_O_TableEdit = () => {
   const deleteTable = (id) => {
     try {
       // Update backend
-      axios.delete(`${URL}/TM/delete-table/${id}`);
+      axios.delete(`${URL_BE}/TM/delete-table/${id}`);
       // Update frontend state
       setTables((prevTables) => prevTables.filter((table) => table.id !== id));
     } catch {
@@ -53,7 +53,7 @@ const TM_O_TableEdit = () => {
         return;
       }
 
-      const response = await axios.post(`${URL}/TM/create-table`, {
+      const response = await axios.post(`${URL_BE}/TM/create-table`, {
         table_number: tableNumber,
       });
 

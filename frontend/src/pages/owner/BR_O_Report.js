@@ -3,7 +3,7 @@ import Header from "../../components/O_Header";
 import styles from "../../styles/owner/report.module.css";
 import axios from "axios";
 import { FaDollarSign, FaBox, FaConciergeBell } from "react-icons/fa"; // Import icons
-import URL from "../../url";
+import URL_BE from "../../url";
 const ReportPage = () => {
   const [timeframe, setTimeframe] = useState(30); // Default to the last 30 days
   const [activeTab, setActiveTab] = useState("items");
@@ -23,7 +23,7 @@ const ReportPage = () => {
   const fetchItemReports = async () => {
     try {
       const response = await axios.get(
-        `${URL}/BR/items-report`,
+        `${URL_BE}/BR/items-report`,
         { params: { days: timeframe } } // Pass the timeframe in days as query parameter
       );
       console.log("Item Reports:", response.data.data); // Debugging log

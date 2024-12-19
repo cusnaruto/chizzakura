@@ -6,7 +6,7 @@ import C_Footer from "../../components/customer/C_Footer.js";
 import axios from "axios";
 import { useCart } from "../../contexts/CartContext.js";
 import { message } from "antd";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const MM_C_Menu = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const MM_C_Menu = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${URL}/IM/get-items`);
+        const response = await axios.get(`${URL_BE}/IM/get-items`);
         if (Array.isArray(response.data)) {
           setItems(response.data);
           //   console.log("Data fetched:", response.data);
@@ -46,7 +46,7 @@ const MM_C_Menu = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${URL}/IM/get-categories`);
+        const response = await axios.get(`${URL_BE}/IM/get-categories`);
         if (Array.isArray(response.data)) {
           setCategories(response.data); // Lưu danh sách categories vào state
         } else {
@@ -204,7 +204,7 @@ const MM_C_Menu = () => {
                         aria-label={`Add ${item.name} to cart`}
                       >
                         {item.is_available ? (
-                          <span>add to cart</span>
+                          <span>Add to cart</span>
                         ) : (
                           <span>Unavailable</span>
                         )}

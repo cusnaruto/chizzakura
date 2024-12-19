@@ -11,11 +11,17 @@ const Header = () => {
   const { state, dispatch } = useTable();
   // Handle logout, add logic later based on the backend
   const handleLogout = () => {
+    const tableNo = sessionStorage.getItem("tableNo");
     dispatch({ type: "REMOVE_TABLE_NUMBER" });
     localStorage.removeItem("authToken");
     localStorage.removeItem("cart");
-    sessionStorage.removeItem("tableNo");
-    navigate("/login");
+    
+    // Redirect to login with table number if exists
+    if (tableNo) {
+      navigate(`/login?table_number=${tableNo}`);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (

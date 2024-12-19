@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "../../styles/customer/CRateItem.module.css";
 import { jwtDecode } from "jwt-decode";
 import C_Header from "../../components/customer/C_Header.js";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const CI_C_RateItem = () => {
   const location = useLocation();
@@ -30,7 +30,7 @@ const CI_C_RateItem = () => {
 
     const fetchItems = async () => {
       try {
-        const response = await axios.get(`${URL}/reviews/${orderId}`);
+        const response = await axios.get(`${URL_BE}/reviews/${orderId}`);
         setItems(response.data);
 
         // Initialize reviews state with item IDs
@@ -63,7 +63,7 @@ const CI_C_RateItem = () => {
           throw new Error(`Please rate all items before submitting`);
         }
 
-        return axios.post(`${URL}/reviews/create-review`, {
+        return axios.post(`${URL_BE}/reviews/create-review`, {
           orderId: parseInt(orderId),
           itemId: parseInt(itemId),
           userId: userId,

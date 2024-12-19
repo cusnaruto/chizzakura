@@ -6,7 +6,7 @@ import C_Header from "../../components/customer/C_Header";
 import C_Footer from "../../components/customer/C_Footer";
 import { useCart } from "../../contexts/CartContext";
 import { message } from "antd";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const CI_C_ItemDetail = () => {
   const { itemId } = useParams();
@@ -22,8 +22,8 @@ const CI_C_ItemDetail = () => {
     const fetchData = async () => {
       try {
         const [itemResponse, reviewsResponse] = await Promise.all([
-          axios.get(`${URL}/IM/get-item-by-id/${itemId}`),
-          axios.get(`${URL}/reviews/item/${itemId}`),
+          axios.get(`${URL_BE}/IM/get-item-by-id/${itemId}`),
+          axios.get(`${URL_BE}/reviews/item/${itemId}`),
         ]);
 
         setItem(itemResponse.data);

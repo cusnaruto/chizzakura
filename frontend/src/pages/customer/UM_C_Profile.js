@@ -10,7 +10,7 @@ import { useTable } from "../../contexts/TableContext";
 import C_Footer from "../../components/customer/C_Footer";
 import C_Header from "../../components/customer/C_Header";
 
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const UM_C_Profile = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const UM_C_Profile = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get(`${URL}/UM/user-profile`, {
+        const response = await axios.get(`${URL_BE}/UM/user-profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -94,7 +94,7 @@ const UM_C_Profile = () => {
         alert("User not found");
         return;
       }
-      await axios.put(`${URL}/UM/update-customer/${userInfo.id}`, userInfo, {
+      await axios.put(`${URL_BE}/UM/update-customer/${userInfo.id}`, userInfo, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -107,11 +107,17 @@ const UM_C_Profile = () => {
   };
 
   const handleLogOut = () => {
+    const tableNo = sessionStorage.getItem("tableNo");
     dispatch({ type: "REMOVE_TABLE_NUMBER" });
     localStorage.removeItem("authToken");
     localStorage.removeItem("cart");
-    sessionStorage.removeItem("tableNo");
-    navigate("/login");
+    
+    // Redirect to login with table number if exists
+    if (tableNo) {
+      navigate(`/login?table_number=${tableNo}`);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (

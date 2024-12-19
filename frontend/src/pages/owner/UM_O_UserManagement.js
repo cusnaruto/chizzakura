@@ -3,7 +3,7 @@ import Header from "../../components/O_Header";
 import { FaUserEdit, FaUserTimes, FaSave, FaPlusCircle } from "react-icons/fa";
 import styles from "../../styles/owner/list.module.css";
 import axios from "axios";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const UM_O_UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -14,7 +14,7 @@ const UM_O_UserManagement = () => {
 
   useEffect(() => {
     // Fetch users from API
-    axios.get(`${URL}/UM/@`).then((response) => {
+    axios.get(`${URL_BE}/UM/@`).then((response) => {
       console.log(response.data);
       setUsers(response.data);
     });

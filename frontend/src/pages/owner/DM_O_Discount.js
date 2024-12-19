@@ -4,7 +4,7 @@ import { FaEdit, FaTrash, FaSave, FaPlusCircle } from "react-icons/fa";
 import styles from "../../styles/owner/list.module.css";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
-import URL from "../../url";
+import URL_BE from "../../url";
 const DM_O_Discount = () => {
   const [discounts, setDiscounts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +20,7 @@ const DM_O_Discount = () => {
   useEffect(() => {
     const fetchDiscounts = async () => {
       try {
-        const response = await axios.get(`${URL}/DM/get-discounts`);
+        const response = await axios.get(`${URL_BE}/DM/get-discounts`);
         const today = new Date();
         const discountsFormatted = response.data.map((discount) => ({
           ...discount,
@@ -60,7 +60,7 @@ const DM_O_Discount = () => {
   // Delete discount
   const handleDeleteClick = (discount) => {
     axios
-      .delete(`${URL}/DM/delete-discount/${discount.id}`)
+      .delete(`${URL_BE}/DM/delete-discount/${discount.id}`)
       .then(() => {
         setDiscounts(discounts.filter((disc) => disc.id !== discount.id));
       })
@@ -97,7 +97,7 @@ const DM_O_Discount = () => {
       if (isAdding) {
         // Gửi yêu cầu tạo mới
         const response = await axios.post(
-          `${URL}/DM/create-discount`,
+          `${URL_BE}/DM/create-discount`,
           formattedDiscount
         );
         updatedDiscount = response.data;
@@ -105,7 +105,7 @@ const DM_O_Discount = () => {
       } else {
         // Gửi yêu cầu cập nhật
         const response = await axios.put(
-          `${URL}/DM/update-discount/${currentDiscount.id}`,
+          `${URL_BE}/DM/update-discount/${currentDiscount.id}`,
           formattedDiscount
         );
         updatedDiscount = response.data; // Lấy discount cập nhật từ response
