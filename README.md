@@ -89,7 +89,7 @@
 * [![Sequelize](https://img.shields.io/badge/Sequelize-blue)](#): Công cụ ORM giúp hỗ trợ tương tác với MySQL.
 * [![Cloudinary](https://img.shields.io/badge/Cloudinary-pink)](#): Giúp host ảnh ở trên cloud.
 ### Development
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#): Đóng gói toàn bộ ứng dụng, bao gồm mã nguồn, thư viện, phụ thuộc, và cả môi trường (hệ điều hành, công cụ) vào trong một container. Giúp việc phát triển và triển khai trở nên dễ dàng và linh hoạt hơn.
+* [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#): Đóng gói toàn bộ ứng dụng, bao gồm mã nguồn, thư viện, phụ thuộc, và cả môi trường (hệ điều hành, công cụ) vào trong một container. Giúp việc phát triển và triển khai trở nên dễ dàng và linh hoạt hơn.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -176,7 +176,7 @@ Chủ quán là người có nhiều quyền hạn nhất, với các khả năn
 <a name="members"></a>
 ## Các thành viên
 
-+ Nguyễn Thái Dương - 22026533(⭐)
++ Nguyễn Thái Dương - 22026533⭐
 
 + Quàng Thế Anh - 22026554
 
