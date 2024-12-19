@@ -7,7 +7,7 @@ import styles from "../../styles/owner/menu.module.css";
 // troll image
 import mariIdolru from "../../assets/mari_idolru.jpg";
 import cute from "../../assets/hail.png";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const MmOEditMenu = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +35,7 @@ const MmOEditMenu = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${URL}/IM/get-items`);
+        const response = await axios.get(`${URL_BE}/IM/get-items`);
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,7 +48,7 @@ const MmOEditMenu = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${URL}/IM/get-categories`);
+        const response = await axios.get(`${URL_BE}/IM/get-categories`);
         if (Array.isArray(response.data)) {
           setCategories(response.data);
         } else {
@@ -127,7 +127,7 @@ const MmOEditMenu = () => {
     const itemId = currentPageItems[index].id;
   
     try {
-      const response = await axios.get(`${URL}/IM/get-item-by-id/${itemId}`);
+      const response = await axios.get(`${URL_BE}/IM/get-item-by-id/${itemId}`);
       const item = response.data;
   
       // Set the current item to be edited
@@ -144,7 +144,7 @@ const MmOEditMenu = () => {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${URL}/IM/create-category`, {
+      const response = await axios.post(`${URL_BE}/IM/create-category`, {
         name: newCategory.name,
       });
 
@@ -169,30 +169,28 @@ const MmOEditMenu = () => {
         alert("Please fill in all required fields");
         return;
       }
-
+  
       // Validate price format
       if (isNaN(parseFloat(currentItem.price))) {
         alert("Price must be a valid number");
         return;
       }
-
-      // Handle image upload if a new image is selected
+  
       let imageUrl = currentItem.image;
       if (fileName && typeof currentItem.image !== "string") {
         const formData = new FormData();
         formData.append("file", currentItem.image);
         formData.append("upload_preset", "chizza");
-
-        const uploadResponse = await axios.post(`${URL}/upload`, formData, {
+  
+        const uploadResponse = await axios.post(`${URL_BE}/upload`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-
+  
         imageUrl = uploadResponse.data.url;
       }
-
-      // Prepare updated item data
+  
       const updatedItemData = {
         name: currentItem.name,
         price: parseFloat(currentItem.price),
@@ -200,23 +198,25 @@ const MmOEditMenu = () => {
         image: imageUrl,
         description: currentItem.description,
       };
-
+  
       // Update item in the backend
       await axios.put(
-        `${URL}/IM/update-item/${currentItem.id}`,
+        `${URL_BE}/IM/update-item/${currentItem.id}`,
         updatedItemData
       );
-
+  
       // Update local state
-      const updatedData = [...data];
-      updatedData[currentItem.index] = {
-        ...updatedItemData,
-        id: currentItem.id,
-      };
-
-      setData(updatedData);
+      setData(prevData => 
+        prevData.map(item => 
+          item.id === currentItem.id 
+            ? { ...updatedItemData, id: currentItem.id }
+            : item
+        )
+      );
+  
       setIsModalOpen(false);
       setCurrentItem(null);
+      
     } catch (error) {
       console.error("Error updating item:", error);
       alert("Failed to update item");
@@ -231,7 +231,7 @@ const MmOEditMenu = () => {
       }
 
       // Delete from backend
-      await axios.delete(`${URL}/IM/delete-item/${currentItem.id}`);
+      await axios.delete(`${URL_BE}/IM/delete-item/${currentItem.id}`);
 
       const updatedData = data.filter(
         (_, index) => index !== currentItem.index
@@ -266,7 +266,7 @@ const MmOEditMenu = () => {
         formData.append("file", newItem.image);
         formData.append("upload_preset", "chizza");
 
-        const uploadResponse = await axios.post(`${URL}/upload`, formData, {
+        const uploadResponse = await axios.post(`${URL_BE}/upload`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -283,7 +283,7 @@ const MmOEditMenu = () => {
         description: newItem.description,
       };
 
-      const response = await axios.post(`${URL}/IM/create-item`, itemData, {
+      const response = await axios.post(`${URL_BE}/IM/create-item`, itemData, {
         maxContentLength: Infinity,
         maxBodyLength: Infinity,
       });
@@ -310,6 +310,9 @@ const MmOEditMenu = () => {
       );
     }
   };
+
+  // Update totalPages calculation to use filtered and sorted items
+  const totalPages = Math.ceil(getFilteredAndSortedItems().length / itemsPerPage);
 
   // Page change handler
   const handlePageChange = (page) => {
@@ -358,9 +361,6 @@ const MmOEditMenu = () => {
       }));
     }
   };
-
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(data.length / itemsPerPage);
 
   // Calculate the range of page buttons to display
   const startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));

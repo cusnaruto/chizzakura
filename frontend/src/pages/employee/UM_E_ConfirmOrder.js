@@ -4,7 +4,7 @@ import Header from "../../components/E_Header";
 import styles from "../../styles/employee/ConfirmOrder.module.css";
 import axios from "axios";
 import { socket } from "../../services/socket"; // Import the WebSocket connection and userId
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const UM_E_ConfirmOrder = () => {
   const { orderId } = useParams();
@@ -14,7 +14,7 @@ const UM_E_ConfirmOrder = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await axios.get(`${URL}/OM/${orderId}`);
+        const response = await axios.get(`${URL_BE}/OM/${orderId}`);
         if (response.data.success) {
           const order = response.data.order;
           setCustomerId(order.customerId);
@@ -46,7 +46,7 @@ const UM_E_ConfirmOrder = () => {
 
   const handleStatusChange = async (newStatus) => {
     try {
-      await axios.put(`${URL}/OM/update-status`, {
+      await axios.put(`${URL_BE}/OM/update-status`, {
         orderId: orderId,
         status: newStatus.toLowerCase(),
       });

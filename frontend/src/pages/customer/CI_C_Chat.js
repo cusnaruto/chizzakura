@@ -13,7 +13,7 @@ import {
   fetchMessages,
   markMessagesAsRead,
 } from "../../services/messageServices"; // Import API services
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const CI_C_Chat = () => {
   const [username, setUsername] = useState("");
@@ -24,7 +24,7 @@ const CI_C_Chat = () => {
 
   const fetchMessages = async (roomId) => {
     try {
-      const response = await axios.get(`${URL}/CI/${roomId}`);
+      const response = await axios.get(`${URL_BE}/CI/${roomId}`);
       setMessageList(response.data);
     } catch (error) {
       console.error("Failed to fetch messages:", error);

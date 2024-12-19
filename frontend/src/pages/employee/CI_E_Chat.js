@@ -6,7 +6,7 @@ import Header from "../../components/E_Header";
 import imgC from "../../assets/Image_C/avt.png";
 import { socket, userId, role } from "../../services/socket"; // Import the WebSocket connection and userId
 import { markMessagesAsRead } from "../../services/messageServices"; // Import API  services
-import URL from "../../url";
+import URL_BE from "../../url";
 const CI_E_Chat = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
@@ -16,7 +16,7 @@ const CI_E_Chat = () => {
   const [chatData, setChatData] = useState([]); // Define chatData
   const fetchUserName = async (userId) => {
     try {
-      const response = await axios.get(`${URL}/UM/get-customer/${userId}`);
+      const response = await axios.get(`${URL_BE}/UM/get-customer/${userId}`);
       const name = `${response.data.first_name} ${response.data.last_name}`;
       return name; // Adjust based on your API response structure
     } catch (error) {
@@ -26,7 +26,7 @@ const CI_E_Chat = () => {
   };
   const getChatRooms = async () => {
     try {
-      const response = await axios.get(`${URL}/CI/rooms`);
+      const response = await axios.get(`${URL_BE}/CI/rooms`);
       const chatRooms = await Promise.all(
         response.data.map(async (room) => {
           const name = await fetchUserName(room.room_id);
@@ -67,7 +67,7 @@ const CI_E_Chat = () => {
 
   const fetchMessages = async (roomId) => {
     try {
-      const response = await axios.get(`${URL}/CI/${roomId}`);
+      const response = await axios.get(`${URL_BE}/CI/${roomId}`);
       setMessages(response.data);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
