@@ -5,7 +5,7 @@ import { message } from "antd";
 import { useTable } from "../../contexts/TableContext";
 
 import styles from "../../styles/customer/CLoginRegister.module.css";
-import logoImg from "../../assets/Image_C/logo.jpg";
+import logoImg from '../../assets/Emu_02_st.ayaka.one.webp';
 
 import URL_BE from "../../url";
 

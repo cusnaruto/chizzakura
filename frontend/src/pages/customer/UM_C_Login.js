@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { message } from "antd";
 import { useTable } from "../../contexts/TableContext";
 import styles from "../../styles/customer/CLoginRegister.module.css";
-import logoImg from "../../assets/Image_C/logo.jpg";
+import logoImg from '../../assets/Emu_02_st.ayaka.one.webp';
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
 import URL_BE from "../../url";
