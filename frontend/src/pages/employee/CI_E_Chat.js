@@ -88,9 +88,8 @@ const CI_E_Chat = () => {
       console.log("selected chat is:", selectedChat);
       if (
         message.receiver_id === selectedChat ||
-        message.sender_id === 2 ||
-        message.receiver_id === message.sender_id
-      ) {
+        message.sender_id === 2
+        ) {
         setMessages((prev) => [...prev, message]);
         console.log("this message is setted");
       }
