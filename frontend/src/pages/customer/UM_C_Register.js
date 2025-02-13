@@ -1,23 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { message } from "antd";
+import { useTable } from "../../contexts/TableContext";
 
 import styles from "../../styles/customer/CLoginRegister.module.css";
-import logoImg from "../../assets/Image_C/logo.jpg";
+import logoImg from '../../assets/Emu_02_st.ayaka.one.webp';
 
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const UM_C_Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { dispatch } = useTable();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    email: "", // Đổi từ phone thành email
+    email: "",
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    // Get table number from URL or sessionStorage
+    const params = new URLSearchParams(location.search);
+    const tableNo = params.get("table_number") || sessionStorage.getItem("tableNo");
+    if (tableNo) {
+      dispatch({ type: "SET_TABLE_NUMBER", payload: tableNo });
+      sessionStorage.setItem("tableNo", tableNo);
+    }
+  }, [location, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,14 +40,19 @@ const UM_C_Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      console.log(formData);
-      const response = await axios.post(`${URL}/UM/create-user`, formData);
+      const response = await axios.post(`${URL_BE}/UM/create-user`, formData);
 
       if (response.data.success) {
-        message.success("Register successful!...");
-        navigate("/home");
+        message.success("Register successful!");
+        // Get table number before redirecting
+        const tableNo = sessionStorage.getItem("tableNo");
+        // Redirect to login with table number if exists
+        if (tableNo) {
+          navigate(`/login?table_number=${tableNo}`);
+        } else {
+          navigate("/login");
+        }
       } else {
         message.error(response.data.message || "Register failed.");
       }

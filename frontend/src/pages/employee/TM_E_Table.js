@@ -5,7 +5,7 @@ import Header from "../../components/E_Header";
 import styles from "../../styles/owner/table.module.css";
 import tableImage from "../../assets/table_topview.png";
 import axios from "axios";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const UM_O_Profile = () => {
   const [tables, setTables] = useState([]);
@@ -14,7 +14,7 @@ const UM_O_Profile = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get(`${URL}/TM/get-tables`);
+        const response = await axios.get(`${URL_BE}/TM/get-tables`);
         const tableData = response.data.map((table) => ({
           id: table.id,
           table_number: table.table_number,
@@ -35,7 +35,7 @@ const UM_O_Profile = () => {
       const newStatus = table.status === "occupied" ? "available" : "occupied";
 
       // Update backend
-      await axios.put(`${URL}/TM/update-table/${id}`, {
+      await axios.put(`${URL_BE}/TM/update-table/${id}`, {
         is_available: newStatus === "available",
       });
 

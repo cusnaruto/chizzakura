@@ -3,7 +3,7 @@ import Header from "../../components/E_Header";
 import styles from "../../styles/employee/Listorder.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const OM_E_ListOrder = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const OM_E_ListOrder = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`${URL}/OM/`);
+        const response = await axios.get(`${URL_BE}/OM/`);
         if (response.data.success) {
           const formattedOrders = response.data.orders.map((order) => ({
             id: order.id,

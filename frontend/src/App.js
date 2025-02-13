@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 
 import socketIO from "socket.io-client";
 
-import URL from "url.js";
+import URL_BE from "url.js";
 
 function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     // Gọi API từ backend
-    fetch(`${URL}/UM/hello`)
+    fetch(`${URL_BE}/UM/hello`)
       .then((response) => response.json())
       .then((data) => setMessage(data.message))
       .catch((error) => console.error("Error fetching data:", error));

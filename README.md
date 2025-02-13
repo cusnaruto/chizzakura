@@ -72,18 +72,24 @@
 <a name="introduction"></a>
 ## Giới thiệu về dự án
 
-Đây là một website giúp việc quản lý nhà hàng và giao tiếp giữa nhân viên và khách hàng trở nên dễ dàng hơn. Dự án này là sản phẩm bài tập lớn của môn Phát triển ứng dụng Web (2425I_INT3306_8)
+Đây là một website giúp việc quản lý nhà hàng và giao tiếp giữa nhân viên và khách hàng trở nên dễ dàng hơn. Dự án này là sản phẩm bài tập lớn của môn Phát triển ứng dụng Web. (2425I_INT3306_8)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <a name="technology"></a>
 ## Công nghệ sử dụng
-
-* [![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
-* [![NodeJS](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](#)
-* [![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff)](#)
-* [![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?logo=express&logoColor=%2361DAFB)](#)
+### Frontend
+* [![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#): Có khả năng tạo ra các trang web với độ responsive cao, phù hợp với yêu cầu sử dụng được trên cả máy tính và điện thoại của dự án.
+* [![TailwindCSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](#): Tạo kiểu cho web, giúp tăng độ thẩm mỹ và cảm giác mượt mà khi sử dụng.
+### Backend
+* [![NodeJS](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](#): Môi trường runtime giúp cho phép chạy JavaScript trên server.
+* [![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff)](#): CSDL dạng bảng giúp lưu trữ dữ liệu dưới 1 trật tự nhất định.
+* [![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?logo=express&logoColor=%2361DAFB)](#): Cung cấp các backend API để Frontend (React) có thể giao tiếp được với Backend (MySQL)
+* [![Sequelize](https://img.shields.io/badge/Sequelize-blue)](#): Công cụ ORM giúp hỗ trợ tương tác với MySQL.
+* [![Cloudinary](https://img.shields.io/badge/Cloudinary-pink)](#): Giúp host ảnh ở trên cloud.
+### Development
+* [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](#): Đóng gói toàn bộ ứng dụng, bao gồm mã nguồn, thư viện, phụ thuộc, và cả môi trường (hệ điều hành, công cụ) vào trong một container. Giúp việc phát triển và triển khai trở nên dễ dàng và linh hoạt hơn.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -103,7 +109,9 @@ npm install
 npm run start
 ```
 Cài đặt và chạy Backend
+
 Tạo một CSDL MySQL trên máy với tên `chizzakura`, chỉnh lại thông số như port, mật khẩu, username trong file .env cho phù hợp
+Chạy lệnh ở dưới để seed data
 ```sh
 cd backend
 npm install
@@ -127,28 +135,27 @@ http://fall2024c8g11.int3306.freeddns.org/
 ### 1. Khách hàng (Customer)
 
 Khách hàng chính là đối tượng sử dụng chính của website, và họ có thể thực hiện các việc sau:
-- Tạo tài khoản, đăng nhập
-- Xem thực đơn
-- Thêm các món vào giỏ hàng, gọi đơn hàng, sử dụng mã giảm giá
-- Nhắn tin với nhân viên hỗ trợ
-- Đánh giá món ăn đã đặt
+- Tạo tài khoản, đăng nhập.
+- Xem thực đơn.
+- Thêm các món vào giỏ hàng, gọi đơn hàng, sử dụng mã giảm giá.
+- Nhắn tin với nhân viên hỗ trợ.
+- Đánh giá món ăn đã đặt.
 
 ### 2. Nhân viên (Employee)
 
 Nhân viên sẽ là những người xử lý các hoạt động diễn ra trong quán, cụ thể bao gồm:
 
-- Quản lý trạng thái các bàn trong quán
-- Quản lý trạng thái của các món trong thực đơn
-- Xử lý đơn hàng của khách
-- Nhắn tin hỗ trợ khách hàng
+- Quản lý trạng thái các bàn trong quán.
+- Quản lý trạng thái của các món trong thực đơn.
+- Xử lý đơn hàng của khách.
+- Nhắn tin hỗ trợ khách hàng.
 
 ### 3. Chủ quán (Owner)
 
 Chủ quán là người có nhiều quyền hạn nhất, với các khả năng sau:
 
-- Thêm, xoá, sửa các món, bàn, mã giảm giá của quán
-- Tạo, chỉnh sửa các tài khoản của nhân viên
-
+- Thêm, xoá, sửa các món, bàn, mã giảm giá của quán.
+- Quản lý các tài khoản.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -157,35 +164,38 @@ Chủ quán là người có nhiều quyền hạn nhất, với các khả năn
 <a name="roadmap"></a>
 ## Các cải tiến trong tương lai
 
-- [ ] Hoàn thiện tính năng đánh giá dịch vụ cho khách hàng
-- [ ] Hoàn thiện tính năng báo cáo doanh thu cho chủ quán
-- [ ] Tích hợp đặt món Online
-- [ ] Cải thiện bảo mật của website
+- [ ] Hoàn thiện tính năng đánh giá dịch vụ cho khách hàng.
+- [ ] Hoàn thiện tính năng báo cáo doanh thu cho chủ quán.
+- [ ] Tích hợp đặt món Online.
+- [ ] Cải thiện bảo mật của website.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 <a name="members"></a>
-## Các thành viên và đóng góp
+## Các thành viên
 
-Nguyễn Thái Dương - 22026533
-Quàng Thế Anh - 22026554
-Lê Công Hoàng - 22026555
-Trần Minh Tuấn - 22026557
++ Nguyễn Thái Dương - 22026533⭐
+
++ Quàng Thế Anh - 22026554
+
++ Lê Công Hoàng - 22026555
+
++ Trần Minh Tuấn - 22026557
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/TaiZuon/chizzakura.svg?style=for-the-badge
 [contributors-url]: https://github.com/TaiZuon/chizzakura/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/TaiZuon/chizzakura.svg?style=for-the-badge
 [forks-url]: https://github.com/TaiZuon/chizzakura/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/TaiZuon/chizzakura.svg?style=for-the-badge
 [stars-url]: https://github.com/TaiZuon/chizzakura/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/TaiZuon/chizzakura.svg?style=for-the-badge
 [issues-url]: https://github.com/TaiZuon/chizzakura/issues
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/

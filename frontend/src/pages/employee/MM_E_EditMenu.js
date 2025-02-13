@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/employee/EEditMenu.module.css";
 import Header from "../../components/E_Header";
-import URL from "../../url";
+import URL_BE from "../../url";
 const MM_E_EditMenu = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -16,11 +16,11 @@ const MM_E_EditMenu = () => {
     const fetchData = async () => {
       try {
         // Fetch items
-        const itemsResponse = await axios.get(`${URL}/IM/get-items`);
+        const itemsResponse = await axios.get(`${URL_BE}/IM/get-items`);
         setItems(itemsResponse.data);
 
         // Fetch categories
-        const categoriesResponse = await axios.get(`${URL}/IM/get-categories`);
+        const categoriesResponse = await axios.get(`${URL_BE}/IM/get-categories`);
         setCategories(categoriesResponse.data);
 
         // Set initial category
@@ -47,7 +47,7 @@ const MM_E_EditMenu = () => {
 
   const toggleAvailability = async (itemId, currentAvailability) => {
     try {
-      await axios.put(`${URL}/IM/update-item/${itemId}`, {
+      await axios.put(`${URL_BE}/IM/update-item/${itemId}`, {
         is_available: !currentAvailability,
       });
 

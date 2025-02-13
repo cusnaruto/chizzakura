@@ -4,10 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { message } from "antd";
 import { useTable } from "../../contexts/TableContext";
 import styles from "../../styles/customer/CLoginRegister.module.css";
-import logoImg from "../../assets/Image_C/logo.jpg";
+import logoImg from '../../assets/Emu_02_st.ayaka.one.webp';
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
-import URL from "../../url";
+import URL_BE from "../../url";
 
 const UM_C_Login = () => {
   const navigate = useNavigate();
@@ -20,10 +20,12 @@ const UM_C_Login = () => {
   });
 
   useEffect(() => {
+    // Get table number from URL or sessionStorage
     const params = new URLSearchParams(location.search);
-    const tableNo = params.get("table_number");
+    const tableNo = params.get("table_number") || sessionStorage.getItem("tableNo");
     if (tableNo) {
       dispatch({ type: "SET_TABLE_NUMBER", payload: tableNo });
+      sessionStorage.setItem("tableNo", tableNo); // Save table number
     }
   }, [location, dispatch]);
 
@@ -36,8 +38,8 @@ const UM_C_Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      console.log("url go go: ", `${URL}/UM/login`);
-      const response = await axios.post(`${URL}/UM/login`, {
+      console.log("url go go: ", `${URL_BE}/UM/login`);
+      const response = await axios.post(`${URL_BE}/UM/login`, {
         username: formData.username,
         password: formData.password,
       });
@@ -46,15 +48,25 @@ const UM_C_Login = () => {
         message.success("Login successful!");
         localStorage.setItem("authToken", response.data.token);
         const decoded = jwtDecode(response.data.token);
+        
+        // Store login timestamp to handle refresh
+        localStorage.setItem('loginTimestamp', Date.now().toString());
+        
         switch (decoded.role) {
           case "customer":
             navigate("/home");
+            // Reload page after navigation
+            window.location.reload();
             break;
           case "employee":
             navigate("/employee/listorder");
+            // Reload page after navigation
+            window.location.reload();
             break;
           case "owner":
             navigate("/admin/mm_o_editmenu");
+            // Reload page after navigation
+            window.location.reload();
             break;
           default:
             navigate("/home");

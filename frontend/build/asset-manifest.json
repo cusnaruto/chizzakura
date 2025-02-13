@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.37cea887.css",
-    "main.js": "/static/js/main.2d91db2d.js",
+    "main.css": "/static/css/main.b0556151.css",
+    "main.js": "/static/js/main.a9ee354f.js",
     "static/js/453.8ab44547.chunk.js": "/static/js/453.8ab44547.chunk.js",
     "static/media/hail.png": "/static/media/hail.632f3b050c01bd6b187a.png",
     "static/media/mari_idolru.jpg": "/static/media/mari_idolru.2f78b68401c9a097d61d.jpg",
@@ -9,17 +9,16 @@
     "static/media/product_2.1.jpg": "/static/media/product_2.1.f15385546f60c8d0f0d9.jpg",
     "static/media/default_avt.jpg": "/static/media/default_avt.9a96ccdf88a8ebca499e.jpg",
     "static/media/Emu_02_st.ayaka.one.webp": "/static/media/Emu_02_st.ayaka.one.3952b9e23d7dcf43bdd3.webp",
-    "static/media/logo.jpg": "/static/media/logo.085d18d3965cf66ae185.jpg",
     "static/media/avt.png": "/static/media/avt.a6143582309785dca610.png",
     "static/media/avtE.png": "/static/media/avtE.984ef91f79206f6c5b3a.png",
     "static/media/edit.png": "/static/media/edit.0f46e2728eb984e21ce8.png",
     "index.html": "/index.html",
-    "main.37cea887.css.map": "/static/css/main.37cea887.css.map",
-    "main.2d91db2d.js.map": "/static/js/main.2d91db2d.js.map",
+    "main.b0556151.css.map": "/static/css/main.b0556151.css.map",
+    "main.a9ee354f.js.map": "/static/js/main.a9ee354f.js.map",
     "453.8ab44547.chunk.js.map": "/static/js/453.8ab44547.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.37cea887.css",
-    "static/js/main.2d91db2d.js"
+    "static/css/main.b0556151.css",
+    "static/js/main.a9ee354f.js"
   ]
 }

@@ -15,7 +15,7 @@ const CI_E_Chat = () => {
   const [chatData, setChatData] = useState([]); // Define chatData
   const fetchUserName = async (userId) => {
     try {
-      const response = await axios.get(`${URL}/UM/get-customer/${userId}`);
+      const response = await axios.get(`${URL_BE}/UM/get-customer/${userId}`);
       const name = `${response.data.first_name} ${response.data.last_name}`;
       return name; // Adjust based on your API response structure
     } catch (error) {
@@ -34,7 +34,7 @@ const CI_E_Chat = () => {
   };
   const getChatRooms = async () => {
     try {
-      const response = await axios.get(`${URL}/CI/rooms`);
+      const response = await axios.get(`${URL_BE}/CI/rooms`);
       const chatRooms = await Promise.all(
         response.data.map(async (room) => {
           const name = await fetchUserName(room._id);
@@ -50,6 +50,19 @@ const CI_E_Chat = () => {
       console.error("Failed to load chat rooms", error);
     }
   };
+
+  const messageEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);  
+
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
       navigate("/login");
@@ -219,7 +232,8 @@ const CI_E_Chat = () => {
                     </span>
                   </div>
                 ))}
-              </div>
+                <div ref={messageEndRef} />
+              </div>              
               <form
                 onSubmit={handleSendMessage}
                 className={styles.messageInputContainer}
