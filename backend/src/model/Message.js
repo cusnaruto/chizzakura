@@ -1,38 +1,15 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/databaseConnection');
+const mongoose = require("mongoose");
 
-const Message = sequelize.define('Message', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-    allowNull: false,
-  },
-  sender_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  receiver_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  content: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  timestamp: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.NOW,
-  },
-  status: {
-      type: DataTypes.ENUM("sent", "read"),
-      defaultValue: "sent",
-  }
-}, {
-    tableName: 'messages',
-    freezeTableName: true,
-    timestamps: false,
+const messageSchema = new mongoose.Schema({
+  sender: { type: String, required: true },
+  message: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now }
 });
 
-module.exports = Message;
+const conversationSchema = new mongoose.Schema({
+  _id: { type: String, required: true },  // Set _id to be a string (userId)
+  participants: [{ type: String, required: true }],
+  messages: [messageSchema]
+});
+
+module.exports = mongoose.model("Conversation", conversationSchema);

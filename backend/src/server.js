@@ -5,6 +5,7 @@ const http = require("http");
 const path = require("path");
 const app = express();
 const jwt = require("jsonwebtoken"); // Import jwt
+const mongoose = require("mongoose");
 const port = process.env.PORT || 8080;
 const hostname = process.env.HOST_NAME || "localhost"; // Provide a default value
 const { Server } = require("socket.io");
@@ -19,10 +20,10 @@ const reportRoutes = require("./route/reportRoutes");
 const { uploadImage } = require("./controllers/uploadController");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
-
+const connectMongoDB = require("./config/mongoConnection");
 const { sendMessage } = require("./controllers/messageController"); // Import sendMessage function
 
-const Message = require("./model/Message"); // Import the Message model
+const Message = require("./model/Message.js"); // Import the Message model
 
 //config template engine
 app.use(cors());
@@ -34,13 +35,19 @@ const io = new Server(server, {
   },
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../../frontend/build")));
+
 // Middleware để gắn io vào request object
 app.use((req, res, next) => {
+  console.log(`Received request: ${req.method} ${req.originalUrl}`);
   req.io = io;
   next();
 });
 
 const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; // Define SECRET_KEY
+connectMongoDB();
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
@@ -64,7 +71,7 @@ io.on("connection", (socket) => {
 
   socket.on("join_room", (data) => {
     socket.join(data.room);
-    console.log(`${data.username} joined room: ${data.room}`);
+    console.log(`${socket.user.id} joined room: ${data.room}`);
     return data.room;
   });
 
@@ -82,9 +89,6 @@ configViewEngine(app);
 const orderRoutes = require("./route/orderRoutes");
 const { report } = require("process");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "../../frontend/build")));
 
 // Setup routes
 app.use("/UM/", userRoutes);
@@ -95,16 +99,6 @@ app.use("/OM/", orderRoutes);
 app.use("/CI/", messageRoutes);
 app.use("/BR/", reportRoutes);
 app.use("/reviews", itemReviewRoutes);
-
-console.log("Hello");
-
-app.get("/test", (req, res) => {
-  console.log("Hello1");
-  res.send("Hello World from Express!");
-  console.log("Hello2");
-});
-
-console.log("Hello3");
 
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "../../frontend/build", "index.html"));

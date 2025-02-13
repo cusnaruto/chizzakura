@@ -9,10 +9,6 @@ import employeeAvtPic from "../../assets/Image_C/avtE.png";
 import homeImg from "../../assets/Image_C/home.png";
 
 import { socket, userId } from "../../services/socket"; // Import the WebSocket connection and userId
-import {
-  fetchMessages,
-  markMessagesAsRead,
-} from "../../services/messageServices"; // Import API services
 import URL from "../../url";
 
 const CI_C_Chat = () => {
@@ -22,15 +18,20 @@ const CI_C_Chat = () => {
   const [messageList, setMessageList] = useState([]);
   const navigate = useNavigate();
 
-  const fetchMessages = async (roomId) => {
+  const fetchMessages = async (userId) => {
     try {
-      const response = await axios.get(`${URL}/CI/${roomId}`);
-      setMessageList(response.data);
+        const response = await axios.get(`${URL}/CI/${userId}`);
+        console.log("Messages fetched:", response.data);
+        if (response.data === null) {
+            setMessageList([]); 
+            return;
+        }
+        setMessageList(response.data); 
     } catch (error) {
-      console.error("Failed to fetch messages:", error);
+        console.error("Failed to fetch messages:", error);
+        setMessageList([]); 
     }
-  };
-
+};
   // Tạo một ref để tham chiếu tới phần cuối danh sách tin nhắn
   const messageEndRef = useRef(null);
 
@@ -55,8 +56,9 @@ const CI_C_Chat = () => {
     // Join the selected room
     setRoom(userId);
     socket.emit("join_room", { room: userId });
+    console.log("Joined room:", userId);
     fetchMessages(userId);
-    handleMarkAsRead();
+    // handleMarkAsRead();
 
     if (Notification.permission !== "granted") {
       Notification.requestPermission();
@@ -67,52 +69,29 @@ const CI_C_Chat = () => {
     if (message !== "") {
       const token = localStorage.getItem("authToken");
       const messageData = {
-        token: localStorage.getItem("authToken"), // Include user's token
-        room: userId, // Room ID = selected chat ID
-        message: message, // Ensure the message content is correctly set
-        sender_id: userId, // Include the sender_id in the message data
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
+        token: localStorage.getItem("authToken"),
+        message: message,
+        sender_id: userId,
+        receiver_id: room
       };
       await socket.emit("send_message", messageData);
-      //setMessageList((prev) => [...prev, { ...messageData, content: message }]); // Update the state directly with the correct content
       setMessage("");
-    }
-  };
-
-  const handleMarkAsRead = async () => {
-    try {
-      await markMessagesAsRead(2, userId);
-      console.log("Messages marked as read");
-    } catch (error) {
-      console.error("Failed to mark messages as read");
     }
   };
 
   useEffect(() => {
     const handleReceiveMessage = (data) => {
-      if (data.receiver_id === userId) {
-        console.log("I got the fucking message! data:", data);
-        setMessageList((list) => [...list, data]);
-        // if (Notification.permission === "granted") {
-        //     new Notification("New Message", {
-        //         body: data.message,
-        //         icon: employeeAvtPic,
-        //     });
-        // }
+      if (String(data.conversationId) === String(room)) {
+        console.log("I got the message! data:", data);
+        console.log("all of them:", data.messageData.sender, data.conversationId, room)
+        setMessageList((list) => [...list, data.messageData]);
       }
     };
-
     socket.on("receive_message", handleReceiveMessage);
-    // socket.on("receive_message", handleReceiveMessage);
-
-    // Clean up the effect to avoid multiple connections
     return () => {
       socket.off("receive_message", handleReceiveMessage);
     };
-  }, []);
+  }, [room]);
 
   return (
     <div className={styles["chat-page"]}>
@@ -130,30 +109,30 @@ const CI_C_Chat = () => {
       </div>
 
       <div className={styles["chat-box"]}>
-        {messageList.map((messageContent, index) => (
-          <div
-            key={index}
-            className={`${styles["chat-message"]} ${
-              messageContent.sender_id === userId
-                ? styles["customer"]
-                : styles["employee"]
-            }`}
-          >
-            <img
-              src={
-                messageContent.sender_id === userId
-                  ? defaultAvtPic
-                  : employeeAvtPic
-              }
-              alt="Avatar"
-              className={styles["chat-customer-avt"]}
-            />
-            <p className={styles["chat-customer-message"]}>
-              {messageContent.content}
-            </p>{" "}
-            {/* Ensure the message content is correctly accessed */}
-          </div>
-        ))}
+      {messageList.map((messageContent, index) => (
+      <div
+        key={index}
+        className={`${styles["chat-message"]} ${
+          messageContent.sender !== "2" 
+            ? styles["customer"]
+            : styles["employee"]
+        }`}
+      >
+        <img
+          src={
+            messageContent.sender !== "2" 
+              ? defaultAvtPic
+              : employeeAvtPic
+          }
+          alt="Avatar"
+          className={styles["chat-customer-avt"]}
+        />
+        <p className={styles["chat-customer-message"]}>
+          {messageContent.message}
+        </p>
+      </div>
+    ))}
+
         <div ref={messageEndRef} />
       </div>
 

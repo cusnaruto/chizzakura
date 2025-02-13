@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: .
+    container_name: express_app
+    restart: always
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://admin:secret@mongodb:27017/messagesDB?authSource=admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
