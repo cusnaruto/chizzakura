@@ -50,15 +50,7 @@ const CI_E_Chat = () => {
       console.error("Failed to load chat rooms", error);
     }
   };
-
-  const messageEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages]);  
