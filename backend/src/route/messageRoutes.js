@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getMessages, sendMessage, getChatRooms } = require("../controllers/messageController");
+const { getMessages, sendMessage, getChatRooms, getAll } = require("../controllers/messageController");
 
 router.get("/rooms", getChatRooms); // Fetch all chat rooms
 router.get("/:roomId", getMessages); // Fetch messages for a room
+router.get("/find/all", getAll);
 router.post("/send", async (req, res) => {
   try {
     await sendMessage(req.body, null); // No socket.io for REST

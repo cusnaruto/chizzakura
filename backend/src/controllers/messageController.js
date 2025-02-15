@@ -81,11 +81,30 @@ const getMessages = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const conversations = await Conversation.aggregate([
+      {
+        $addFields: {
+          latestMessage: { $arrayElemAt: ["$messages", -1] }  // Get last message
+        }
+      },
+      { $sort: { "latestMessage.timestamp": -1 } }  // Sort by newest message
+    ]);
+
+    res.json(conversations);
+  } catch (error) {
+    console.error("Error fetching chat rooms:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 module.exports = {
   getChatRooms,
   sendMessage,
   getMessages,
+  getAll
 };
 
 

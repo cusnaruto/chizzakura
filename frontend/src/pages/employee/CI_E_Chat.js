@@ -15,7 +15,7 @@ const CI_E_Chat = () => {
   const [chatData, setChatData] = useState([]); // Define chatData
   const fetchUserName = async (userId) => {
     try {
-      const response = await axios.get(`${URL_BE}/UM/get-customer/${userId}`);
+      const response = await axios.get(`${URL}/UM/get-customer/${userId}`);
       const name = `${response.data.first_name} ${response.data.last_name}`;
       return name; // Adjust based on your API response structure
     } catch (error) {
@@ -34,14 +34,14 @@ const CI_E_Chat = () => {
   };
   const getChatRooms = async () => {
     try {
-      const response = await axios.get(`${URL_BE}/CI/rooms`);
+      const response = await axios.get(`${URL}/CI/find/all`);
       const chatRooms = await Promise.all(
         response.data.map(async (room) => {
           const name = await fetchUserName(room._id);
           return {
             id: room._id,
             name: name, // Use fetched user name
-            messages: [],
+            messages: [room.messages],
           };
         })
       );
@@ -88,16 +88,11 @@ const CI_E_Chat = () => {
 
   useEffect(() => {
     const handleReceiveMessage = (message) => {
-      console.log("Got da gud shit dawgs:", message);
-      console.log("selected chat is:", selectedChat);
       if (
         message.conversationId === selectedChat
       ) {
-        console.log("all of them:", message.messageData.sender, message.conversationId, selectedChat)
         setMessages((prev) => [...prev, message.messageData]);
-        console.log("this message is setted");
       }
-      updateChatData(message);
       getChatRooms();
     };
 
@@ -107,31 +102,6 @@ const CI_E_Chat = () => {
       socket.off("receive_message", handleReceiveMessage);
     };
   }, [selectedChat]);
-
-  const updateChatData = (message) => {
-    setChatData((prevChatData) => {
-      const updatedChatData = prevChatData.map((chat) => {
-        if (chat.id === message.receiver_id || chat.id === message.sender_id) {
-          return {
-            ...chat,
-            messages: [...chat.messages, message],
-          };
-        }
-        return chat;
-      });
-
-      // Sort chat rooms by the timestamp of the newest message
-      updatedChatData.sort((a, b) => {
-        const aLastMessage = a.messages[a.messages.length - 1];
-        const bLastMessage = b.messages[b.messages.length - 1];
-        return (
-          new Date(bLastMessage?.timestamp) - new Date(aLastMessage?.timestamp)
-        );
-      });
-
-      return updatedChatData;
-    });
-  };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
