@@ -1,25 +1,59 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secret
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "27017:27017"
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://backend:5000
 
   backend:
-    build: .
-    container_name: express_app
-    restart: always
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
     depends_on:
+      - mysql
       - mongodb
     environment:
-      MONGO_URI: mongodb://admin:secret@mongodb:27017/messagesDB?authSource=admin
+      - URL_BE=0.0.0.0 
+      - SECRET_KEY=your_secret_key
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=chizzakura
+      - MONGODB_URI=mongodb://admin:secret@mongodb:27017/messagesDB?authSource=admin
+
+  mysql:
+    image: mysql:8.0
     ports:
-      - "8080:8080"
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=chizzakura
     volumes:
-      - .:/app
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=messagesDB
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mysql_data:
+  mongodb_data:

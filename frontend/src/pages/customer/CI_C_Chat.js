@@ -74,11 +74,20 @@ const CI_C_Chat = () => {
         sender_id: userId,
         receiver_id: room
       };
-      await socket.emit("send_message", messageData);
-      setMessage("");
+      try {
+        // Send via HTTP POST
+        await axios.post(`${URL}/CI/send`, messageData);
+        
+        // Also emit via WebSocket for real-time updates
+        socket.emit("send_message", messageData);
+        
+        console.log("Message sent:", messageData);
+        setMessage("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
-
   useEffect(() => {
     const handleReceiveMessage = (data) => {
       if (String(data.conversationId) === String(room)) {

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoURI = "mongodb://admin:secret@localhost:27017/messagesDB?authSource=admin";
+const mongoURI = process.env.MONGODB_URI || "mongodb://admin:secret@localhost:27017/messagesDB?authSource=admin";
 
 const connectMongoDB = async () => {
     try {

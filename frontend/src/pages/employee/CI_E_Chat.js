@@ -113,7 +113,6 @@ const CI_E_Chat = () => {
         receiver_id: selectedChat,
       };
       socket.emit("send_message", messageData);
-      //setMessages((prev) => [...prev, { ...messageData, content: newMessage }]); // Update the state directly with the correct content
       setNewMessage(""); // Clear input field
       getChatRooms();
     }

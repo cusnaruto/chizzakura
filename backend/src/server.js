@@ -75,8 +75,18 @@ io.on("connection", (socket) => {
     return data.room;
   });
 
-  socket.on("send_message", (data) => {
-    sendMessage({ ...data }, io);
+  socket.on("send_message", async (data) => {
+    try {
+      // Call your message controller here
+      const result = await messageController.sendMessage(data);
+      // Broadcast the message
+      io.to(data.receiver_id).emit("receive_message", {
+        messageData: result,
+        conversationId: data.receiver_id
+      });
+    } catch (error) {
+      console.error("Socket message error:", error);
+    }
   });
 
   socket.on("disconnect", () => {
@@ -106,6 +116,11 @@ app.get("/*", function (req, res) {
 
 app.post("/upload", upload.single("file"), uploadImage);
 
-server.listen(port, hostname, () => {
-  console.log(`Server running on http://${hostname}:${port}`);
+app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${process.env.PORT || 5000}`);
+});
+
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
 });
