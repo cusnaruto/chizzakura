@@ -201,6 +201,61 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const handleGoogleLogin = async (req, res) => {
+  try {
+    const { email, first_name, last_name } = req.body;
+
+    // Check if user exists by email
+    let user = await User.findOne({ 
+      where: { 
+        email: email 
+      }
+    });
+
+    if (!user) {
+      // Create new user if doesn't exist
+      const username = email.split('@')[0];
+      const randomPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = await User.create({
+        first_name,
+        last_name,
+        email,
+        username,
+        password: hashedPassword,
+        role: 'customer',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      SECRET_KEY,
+      { expiresIn: "24h" }
+    );
+
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error during Google login:", error);
+    return res.status(500).json({ 
+      error: "Internal server error", 
+      details: error.message 
+    });
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -209,4 +264,5 @@ module.exports = {
   updateUser,
   // updatePassword,
   loginUser,
+  handleGoogleLogin,
 };

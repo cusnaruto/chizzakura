@@ -17,6 +17,7 @@ const socket = io(URL, {
   auth: {
     token: token, // Send token for authentication
   },
+  transports: ["websocket", "polling"],
 });
 
 export { socket, userId, role };

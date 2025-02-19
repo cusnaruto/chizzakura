@@ -8,6 +8,7 @@ import logoImg from '../../assets/Emu_02_st.ayaka.one.webp';
 import { jwtDecode } from "jwt-decode";
 import { de } from "@faker-js/faker";
 import URL_BE from "../../url";
+import { GoogleLogin } from '@react-oauth/google';
 
 const UM_C_Login = () => {
   const navigate = useNavigate();
@@ -85,8 +86,7 @@ const UM_C_Login = () => {
     <div className={styles["login-page"]}>
       <div className={styles["login-container"]}>
         <img src={logoImg} alt="logo-page" />
-        <h1>Chizzakura</h1>
-
+        
         <form className={styles["login-form"]} onSubmit={handleSubmit}>
           <div
             className={`${styles["user-login-name"]} ${styles["form-group"]}`}
@@ -129,6 +129,42 @@ const UM_C_Login = () => {
             <p>Don't have an account yet?</p>
             <a href="/register">Register</a>
           </div>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                const credentialResponseDecoded = jwtDecode(credentialResponse.credential);
+                
+                // Send Google credentials to backend
+                const response = await axios.post(`${URL_BE}/UM/google-login`, {
+                  email: credentialResponseDecoded.email,
+                  first_name: credentialResponseDecoded.given_name,
+                  last_name: credentialResponseDecoded.family_name,
+                });
+
+                if (response.data.token) {
+                  message.success("Login successful!");
+                  localStorage.setItem("authToken", response.data.token);
+                  const decoded = jwtDecode(response.data.token);
+                  
+                  localStorage.setItem('loginTimestamp', Date.now().toString());
+                  
+                  // Use the same navigation logic as regular login
+                  switch (decoded.role) {
+                    case "customer":
+                      navigate("/home");
+                      window.location.reload();
+                      break;
+                  }
+                }
+              } catch (error) {
+                console.error("Google login failed:", error);
+                message.error("Login failed. Please try again.");
+              }
+            }}
+            onError={() => {
+              message.error('Google login failed');
+            }}
+          />
         </form>
       </div>
     </div>

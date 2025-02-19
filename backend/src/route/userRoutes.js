@@ -10,10 +10,12 @@ const {
   loginUser,
   getUserById,
   getUserProfile,
+  handleGoogleLogin,
 } = require("../controllers/userController");
 
 router.post("/create-user", createUser);
 router.post("/login", loginUser);
+router.post('/google-login', handleGoogleLogin);
 router.get("/@", getAllUsers);
 router.get("/user-profile", getUserProfile);
 router.get("/get-customer/:id", getUserById);

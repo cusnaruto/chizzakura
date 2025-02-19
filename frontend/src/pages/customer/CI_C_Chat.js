@@ -75,9 +75,6 @@ const CI_C_Chat = () => {
         receiver_id: room
       };
       try {
-        // Send via HTTP POST
-        await axios.post(`${URL}/CI/send`, messageData);
-        
         // Also emit via WebSocket for real-time updates
         socket.emit("send_message", messageData);
         

@@ -6,7 +6,7 @@ const path = require("path");
 const app = express();
 const jwt = require("jsonwebtoken"); // Import jwt
 const mongoose = require("mongoose");
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5000;
 const hostname = process.env.HOST_NAME || "localhost"; // Provide a default value
 const { Server } = require("socket.io");
 const configViewEngine = require("./config/viewEngine");
@@ -77,15 +77,10 @@ io.on("connection", (socket) => {
 
   socket.on("send_message", async (data) => {
     try {
-      // Call your message controller here
-      const result = await messageController.sendMessage(data);
-      // Broadcast the message
-      io.to(data.receiver_id).emit("receive_message", {
-        messageData: result,
-        conversationId: data.receiver_id
-      });
+      const result = await sendMessage(data, io);
     } catch (error) {
-      console.error("Socket message error:", error);
+      console.error("❌ Socket message error:", error);
+      socket.emit("message_error", { error: error.message });
     }
   });
 
@@ -116,8 +111,8 @@ app.get("/*", function (req, res) {
 
 app.post("/upload", upload.single("file"), uploadImage);
 
-app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${process.env.PORT || 5000}`);
+server.listen(process.env.PORT, "0.0.0.0", () => { // <-- Use 'server.listen()' instead of 'app.listen()'
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
 
 app.use((req, res, next) => {

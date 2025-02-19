@@ -46,6 +46,7 @@ import { TableProvider } from "./contexts/TableContext";
 
 import { message } from "antd";
 import NotFound_C_Alert from "./pages/customer/NotFound_C_Alert";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -66,6 +67,7 @@ socket.on("receive_message", handleReceiveMessage);
 
 root.render(
   <React.StrictMode>
+    <GoogleOAuthProvider clientId="1077133936320-5g4mp0f5mp6t5gsmln0lvr3k556ld1kg.apps.googleusercontent.com">
     <TableProvider>
       <CartProvider>
         <Router>
@@ -264,6 +266,7 @@ root.render(
         </Router>
       </CartProvider>
     </TableProvider>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
 

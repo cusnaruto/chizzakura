@@ -54,8 +54,6 @@ const sendMessage = async (data, io) => {
         conversationId: conversation._id,
         messageData});
     }
-    // 🔹 Return the conversation ID
-    console.log("✅ Conversation ID:", conversation._id);
     return conversation._id;
 
   } catch (error) {

@@ -33,7 +33,7 @@ services:
       - MONGODB_URI=mongodb://admin:secret@mongodb:27017/messagesDB?authSource=admin
 
   mysql:
-    image: mysql:8.0
+    image: mysql:latest
     ports:
       - "3306:3306"
     environment:
