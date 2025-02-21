@@ -43,15 +43,17 @@ const UM_O_UserManagement = () => {
   };
 
   // Delete user
-  const handleDeleteClick = (user) => {
-    // Call delete API here
-    fetch(`/api/users/${user.id}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        setUsers(users.filter((usr) => usr.id !== user.id));
-      })
-      .catch((err) => console.error("Failed to delete user", err));
+  const handleDeleteUser = async (userId) => {
+    try {
+      const response = await axios.delete(`${URL_BE}/UM/delete-user/${userId}`);
+      if (response.status === 200) {
+        console.log('User deleted successfully');
+        // Update your UI state
+      }
+    } catch (error) {
+      console.log('Failed to delete user');
+      console.error('Delete user error:', error);
+    }
   };
 
   // Save user
@@ -142,13 +144,9 @@ const UM_O_UserManagement = () => {
                   <td>{user.lastName}</td>
                   <td>{user.role}</td>
                   <td className={styles.actionCell}>
-                    <FaUserEdit
-                      className={styles.actionIcon}
-                      onClick={() => handleEditClick(user)}
-                    />
                     <FaUserTimes
                       className={styles.actionIcon}
-                      onClick={() => handleDeleteClick(user)}
+                      onClick={() => handleDeleteUser(user.id)}
                     />
                   </td>
                 </tr>

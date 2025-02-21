@@ -19,11 +19,11 @@ const getItemReports = async (req, res) => {
           SUM(od.quantity) AS total_sales,
           AVG(ir.rating) AS average_rating,
           COUNT(ir.rating) AS review_count
-      FROM items i
-      INNER JOIN categories c ON i.categoryId = c.id
-      INNER JOIN orderdetails od ON i.id = od.itemId
-      INNER JOIN orders o ON od.orderId = o.id
-      LEFT JOIN itemreviews ir ON i.id = ir.itemId
+      FROM Items i
+      INNER JOIN Categories c ON i.categoryId = c.id
+      INNER JOIN OrderDetails od ON i.id = od.itemId
+      INNER JOIN Orders o ON od.orderId = o.id
+      LEFT JOIN ItemReviews ir ON i.id = ir.itemId
       WHERE o.createdAt >= :startDate
       GROUP BY i.id, i.name, c.name, i.price;
     `;

@@ -114,18 +114,6 @@ const ReportPage = () => {
           >
             <FaBox />
           </button>
-          <button
-            onClick={() => setActiveTab("revenue")}
-            className={activeTab === "revenue" ? styles.activeTab : ""}
-          >
-            <FaDollarSign />
-          </button>
-          <button
-            onClick={() => setActiveTab("service")}
-            className={activeTab === "service" ? styles.activeTab : ""}
-          >
-            <FaConciergeBell />
-          </button>
         </div>
 
         <main className={styles.mainContent}>

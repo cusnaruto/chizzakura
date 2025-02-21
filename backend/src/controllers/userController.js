@@ -3,6 +3,9 @@ require("dotenv").config();
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
+const Conversation = require('../model/Message'); // Import MongoDB Conversation model
+const sequelize = require("../config/databaseConnection");
 
 const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key";
 
@@ -256,6 +259,41 @@ const handleGoogleLogin = async (req, res) => {
   }
 };
 
+
+const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  
+  try {
+    // Start a transaction in MySQL
+    const result = await sequelize.transaction(async (t) => {
+      // Delete user from MySQL
+      const deletedUser = await User.destroy({
+        where: { id: userId },
+        transaction: t
+      });
+
+      if (!deletedUser) {
+        throw new Error('User not found');
+      }
+
+      // Delete associated conversations from MongoDB
+      await Conversation.deleteOne({ _id: userId.toString() });
+
+      return deletedUser;
+    });
+
+    res.status(200).json({ 
+      message: 'User and associated conversations deleted successfully' 
+    });
+
+  } catch (error) {
+    console.error('Error during user deletion:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete user and conversations' 
+    });
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -265,4 +303,5 @@ module.exports = {
   // updatePassword,
   loginUser,
   handleGoogleLogin,
+  deleteUser,
 };

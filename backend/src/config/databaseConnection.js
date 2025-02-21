@@ -37,6 +37,7 @@ const sequelize = new Sequelize(
     port: config[env].port,
     dialect: "mysql",
     timezone: "+07:00",
+    isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.READ_COMMITTED
   }
 );
 

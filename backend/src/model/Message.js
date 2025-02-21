@@ -12,4 +12,8 @@ const conversationSchema = new mongoose.Schema({
   messages: [messageSchema]
 });
 
+// Add indexes for better query performance
+conversationSchema.index({ _id: 1 });
+conversationSchema.index({ 'participants': 1 });
+
 module.exports = mongoose.model("Conversation", conversationSchema);

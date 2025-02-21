@@ -11,6 +11,7 @@ const {
   getUserById,
   getUserProfile,
   handleGoogleLogin,
+  deleteUser,
 } = require("../controllers/userController");
 
 router.post("/create-user", createUser);
@@ -20,6 +21,7 @@ router.get("/@", getAllUsers);
 router.get("/user-profile", getUserProfile);
 router.get("/get-customer/:id", getUserById);
 router.put("/update-customer/:id", updateUser);
+router.delete("/delete-user/:id", deleteUser);
 // router.put("/update-password/:id", updatePassword);
 
 module.exports = router;
